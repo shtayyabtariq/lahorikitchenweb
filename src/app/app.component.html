@@ -1,0 +1,29 @@
+<!-- vertical-layout -->
+<ng-container *ngIf="coreConfig.layout.type === 'vertical'">
+    <vertical-layout></vertical-layout>
+</ng-container>
+<!-- / vertical-layout -->
+
+<!-- horizontal-layout -->
+<ng-container *ngIf="coreConfig.layout.type === 'horizontal'">
+    <horizontal-layout></horizontal-layout>
+</ng-container>
+<!-- / horizontal-layout -->
+
+<!-- theme customizer -->
+<!-- <core-sidebar name="themeCustomizer" class="customizer d-none d-md-block" [invisibleOverlay]="true" *ngIf="coreConfig.layout.customizer">
+    <a class="customizer-toggle d-flex align-items-center justify-content-center" (click)="toggleSidebar('themeCustomizer')">
+        <span [data-feather]="'settings'" [class]="'spinner'"></span>
+    </a>
+    <core-theme-customizer></core-theme-customizer>
+</core-sidebar> -->
+<!-- / theme customizer -->
+
+<ngb-toast [autohide]="true">
+    <ng-template ngbToastHeader>
+        <img src="assets/images/logo/logo.png" height="18" width="25" class="mr-2" alt="Toast image" />
+        <strong class="mr-auto toast-title">MIS</strong>
+        <small class="text-muted toast-time ml-5 mr-1 pl-3">11 mins ago</small>
+    </ng-template>
+    Hello, world! This is a toast message.
+</ngb-toast>

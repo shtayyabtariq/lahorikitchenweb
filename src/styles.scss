@@ -1,0 +1,22 @@
+@import '@core/scss/core.scss';
+@import './assets/scss/styles';
+@import '@core/scss/base/bootstrap-extended/include';
+@import '@core/scss/angular/libs/datatables.component.scss';
+@import '@core/scss/angular/libs/select.component.scss';
+@import '@core/scss/angular/libs/form-wizard.component.scss';
+.transparent .modal-content {
+    background-color: transparent !important;
+    box-shadow: none !important;
+    /* box-shadow: 0 5px 20px 0 rgb(34 41 47 / 10%); */
+}
+
+.transparent {
+    background-color: transparent !important;
+    border-bottom: none;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.swal2-input {
+    max-width: 100% !important;
+}

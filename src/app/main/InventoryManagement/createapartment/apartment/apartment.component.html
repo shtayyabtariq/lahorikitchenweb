@@ -1,0 +1,138 @@
+<form [formGroup]="form" *ngIf="this.start">
+    <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel1">Apartments</h4>
+        <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    </div>
+    <div class="modal-body" tabindex="0" ngbAutofocus>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="form-group">
+                    <label for="floorno">Floor No</label>
+                    <input type="text" [class.error]="
+    isSubmit && form.controls.floorno.errors
+  " class="form-control" id="floorno" formControlName="floorno" required />
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="form-group">
+                    <label for="apartmenttype">Apartment</label>
+                    <select id="apartmenttype" formControlName="apartmenttype" [(value)]="this.ApputilsService.ApartmentType[0]" [ngModel]="this.apartmenttype" (change)="onApartmentTypeSelect($event.target.value)" class="form-control">
+            <option
+              value="{{ food }}"
+              *ngFor="let food of ApputilsService.ApartmentType"
+              >
+              {{ food }}
+            </option>
+          </select>
+
+                </div>
+            </div>
+            <div class="col-12" *ngIf="this.showType">
+                <div class="form-group">
+                    <label for="type">Type</label>
+                    <select id="type" formControlName="type" [(value)]="this.ApputilsService.Type[0]" [ngModel]="this.type" class="form-control">
+                  <option
+                    value="{{ food }}"
+                    *ngFor="let food of ApputilsService.Type"
+                    selected
+                  >
+                    {{ food }}
+                  </option>
+                </select>
+                </div>
+            </div>
+
+
+            <div class="col-12">
+                <div class="form-group">
+                    <label for="grossarea">Gross Area Sqft</label>
+                    <input type="number" [class.error]="
+        isSubmit && form.controls.grossarea.errors
+      " class="form-control" id="grossarea" formControlName="grossarea" required />
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="form-group">
+                    <label for="netarea">Net Area Sqft</label>
+                    <input type="number" [class.error]="
+            isSubmit && form.controls.netarea.errors
+          " class="form-control" id="netarea" formControlName="netarea" required />
+                </div>
+            </div>
+
+
+            <div class="col-12">
+                <div class="form-group">
+                    <label for="Name">Apartment Name</label>
+                    <input [class.error]="
+              isSubmit && form.controls.name.errors
+            " type="text" class="form-control" id="Name" formControlName="name" />
+                </div>
+            </div>
+
+
+
+
+            <!-- <div class="col-12">
+                <div class="form-group">
+                    <label for="apartmentno">Apartment No</label>
+                    <input type="number" [class.error]="
+        isSubmit && form.controls.no.errors
+      " class="form-control" id="apartmentno" formControlName="no" required />
+                </div>
+            </div> -->
+
+            <div class="col-12">
+                <div class="form-group">
+                    <label for="price">Rate Sqft</label>
+                    <input type="number" [class.error]="
+      isSubmit && form.controls.price.errors
+    " class="form-control" id="price" formControlName="price" required />
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="form-group">
+                    <label for="discount">Discount %</label>
+                    <input type="number" [class.error]="
+    isSubmit && form.controls.price.errors
+  " class="form-control" id="discount" formControlName="discount" />
+                </div>
+            </div>
+
+            <div class="col-12">
+                <div class="form-group">
+                    <label for="status">Status</label>
+                    <select id="status" formControlName="status" [(value)]="this.ApputilsService.Status[0]" [ngModel]="this.status" class="form-control">
+                <option
+                  value="{{ food }}"
+                  *ngFor="let food of ApputilsService.Status"
+                  selected
+                >
+                  {{ food }}
+                </option>
+              </select>
+                </div>
+            </div>
+
+            <div class="col-12">
+                <div class="form-group">
+                    <label for="notes">Notes</label>
+                    <input type="text" [class.error]="
+      isSubmit && form.controls.notes.errors
+    " class="form-control" id="notes" formControlName="notes" />
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary" (click)="onSubmit()" rippleEffect>
+      Save
+    </button>
+    </div>
+</form>

@@ -1,0 +1,212 @@
+<div class="content-wrapper container-xxl p-0">
+    <div class="content-body">
+        <!-- Responsive Datatable -->
+        <section id="ngx-datatable-Responsive">
+            <core-card-snippet>
+                <div class="row card-title" style="width: 100%">
+                    <div class="col-12 pr-0">
+                        <span class="card-title">Apartments</span>
+                        <span class="float-right">
+              <div class="d-flex align-items-center justify-content-end">
+                <label class="d-flex align-items-center"
+                  >Search<input
+                    type="search"
+                    placeholder="Search"
+                    class="form-control ml-25"
+                    (keyup)="filterUpdate($event)"
+                /></label>
+              </div>
+
+              <!-- <i data-feather="filter" class="text-primary cursor-pointer mr-50"></i> -->
+            </span>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12 mb-50 pl-0">
+                            <button (click)="AddNew()" class="btn btn-primary ml-1" rippleEffect>
+                <i data-feather="plus" class="mr-0 mr-sm-1"></i
+                ><span class="d-none d-sm-inline-block">Add New Record</span>
+              </button>
+
+                            <a csvLink [data]="exportCSVData" class="btn btn-outline-secondary float-right mr-1" rippleEffect>Export CSV</a
+              >
+            </div>
+
+            <div
+              class="col-md-12 col-12 d-flex justify-content-md-end mb-1 mt-1"
+            >
+              <div class="form-check form-check-inline">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  id="inlineCheckbox2"
+                  value="Owner"
+                  (change)="viewArchive($event)"
+                />
+                <label class="form-check-label" for="inlineCheckbox2"
+                  >View Owner Property</label
+                >
+              </div>
+
+              <div
+                class="form-check form-check-inline"
+                *ngFor="let status of appUtil.Status"
+              >
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  id="inlineCheckbox2"
+                  value="{{ status }}"
+                  (change)="AddFilter($event)"
+                />
+                <label class="form-check-label" for="inlineCheckbox2"
+                  >View {{ status }}</label
+                >
+              </div>
+              
+              
+            </div>
+          </div>
+
+          <!-- ngx-datatables responsive -->
+          <ngx-datatable
+            #table
+            class="bootstrap core-bootstrap"
+            [columnMode]="ColumnMode.force"
+            [headerHeight]="40"
+            [rowHeight]="58"
+            [footerHeight]="50"
+            rowHeight="auto"
+            [limit]="10"
+            [rows]="apt"
+            [scrollbarH]="true"
+          >
+            <ngx-datatable-column name="Name" prop="full_name">
+              <ng-template
+                let-row="row"
+                let-name="value"
+                ngx-datatable-cell-template
+              >
+                {{ row.name }}
+                <!-- <div class="d-flex align-items-center">
+
+                        <div *ngIf="row.avatar.length > 0; else customAvatar">
+                            <img class="rounded-circle mr-1" src="assets/images/portrait/small/{{ row.avatar }}" height="32" width="32" alt="datatable-avatar" />
+                        </div>
+                        <ng-template #customAvatar>
+                            <div class="avatar mr-1 ml-0" [ngClass]="{
+              'bg-light-primary': row.status == '1',
+              'bg-light-success': row.status == '2',
+              'bg-light-danger': row.status == '3',
+              'bg-light-warning': row.status == '4',
+              'bg-light-info': row.status == '5'
+            }">
+                                <div class="avatar-content">{{ name | initials }}</div>
+                            </div>
+                        </ng-template>
+                        <div class="cell-line-height">
+                            <p class="font-medium-1 line-height-1 mb-0">{{ name }}</p>
+                            <span class="text-muted font-small-2"> {{ row.post }}</span>
+                        </div>
+                    </div> -->
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column
+              name="Type"
+              prop="type"
+            ></ngx-datatable-column>
+            <ngx-datatable-column
+              name="Apartment Type"
+              [width]="250"
+              prop="apartmenttype"
+            ></ngx-datatable-column>
+            <ngx-datatable-column name="Floor No" prop="floorno">
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Gross Area Sqft" prop="grossarea">
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Rate">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                <span>{{ row.price | mycurrency }} </span>
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Discount">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                <span>{{row.discount != undefined  ? row.discount + "%" : "" }} </span>
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column name="Total Price">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                <span>{{ row.totalprice | mycurrency }} </span>
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column name="Status">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                <span
+                  class="badge badge-pill badge-light-{{
+                    row.status | status
+                  }} mr-1"
+                  >{{ row.status }}</span
+                >
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column
+              name="Action"
+              [width]="120"
+              [sortable]="false"
+            >
+              <ng-template ngx-datatable-cell-template let-row="row">
+                <div class="d-flex align-items-center">
+                  <div ngbDropdown container="body">
+                    <a
+                      ngbDropdownToggle
+                      href="javascript:void(0);"
+                      class="hide-arrow"
+                      id="dropdownBrowserState"
+                      data-toggle="dropdown"
+                      aria-haspopup="true"
+                      aria-expanded="false"
+                    >
+                      <i
+                        data-feather="more-vertical"
+                        class="text-primary cursor-pointer mr-50"
+                      ></i>
+                    </a>
+                            <div ngbDropdownMenu class="dropdown-menu-right" aria-labelledby="dropdownBrowserState">
+                                <a routerLink="/{{row.docid}}/plan" ngbDropdownItem class="d-flex align-items-center"><i data-feather="file-text" class="mr-50"></i>
+                        Generate Plan</a
+                      >
+                      <a
+                        (click)="Archive(row,row.isarchive)"
+                        href="javascript:void(0)"
+                        ngbDropdownItem
+                        class="d-flex align-items-center"
+                        ><i data-feather="archive" class="mr-50"></i>
+                        {{ this.archive }}
+                      </a>
+                                <a (click)="OnDelete(row)" href="javascript:void(0)" ngbDropdownItem class="d-flex align-items-center"><i data-feather="trash-2" class="mr-50"></i> Delete</a
+                      >
+                    </div>
+                  </div>
+
+                  <span (click)="edit(row)">
+                    <i
+                      data-feather="edit"
+                      class="text-primary cursor-pointer"
+                    ></i>
+                  </span>
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
+          </ngx-datatable>
+        </div>
+        <!--/ ngx-datatables responsive -->
+      </core-card-snippet>
+    </section>
+    <!--/ Responsive Datatable -->
+  </div>
+</div>

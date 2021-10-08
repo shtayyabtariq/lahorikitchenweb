@@ -1,0 +1,94 @@
+<div class="content-wrapper container-xxl p-0">
+    <div class="content-body">
+        <!-- Responsive Datatable -->
+        <section id="ngx-datatable-Responsive">
+            <core-card-snippet>
+                <div class="row card-title" style="width: 100%">
+                    <div class="col-12 pr-0">
+                        <span class="card-title">Apartment Types</span>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12 mb-50 pl-0">
+                            <button (click)="AddNew()" class="btn btn-primary ml-1" rippleEffect>
+                <i data-feather="plus" class="mr-0 mr-sm-1"></i
+                ><span class="d-none d-sm-inline-block">Add </span>
+              </button>
+                        </div>
+                    </div>
+
+                    <!-- ngx-datatables responsive -->
+                    <ngx-datatable #table class="bootstrap core-bootstrap" [columnMode]="ColumnMode.force" [headerHeight]="40" [rowHeight]="58" [footerHeight]="50" rowHeight="auto" [limit]="10" [rows]="apt" [scrollbarH]="true">
+                        <ngx-datatable-column name="Name" prop="name">
+                            <ng-template let-row="row" let-name="value" ngx-datatable-cell-template>
+                                {{ row.name }}
+                                <!-- <div class="d-flex align-items-center">
+
+                      <div *ngIf="row.avatar.length > 0; else customAvatar">
+                          <img class="rounded-circle mr-1" src="assets/images/portrait/small/{{ row.avatar }}" height="32" width="32" alt="datatable-avatar" />
+                      </div>
+                      <ng-template #customAvatar>
+                          <div class="avatar mr-1 ml-0" [ngClass]="{
+            'bg-light-primary': row.status == '1',
+            'bg-light-success': row.status == '2',
+            'bg-light-danger': row.status == '3',
+            'bg-light-warning': row.status == '4',
+            'bg-light-info': row.status == '5'
+          }">
+                              <div class="avatar-content">{{ name | initials }}</div>
+                          </div>
+                      </ng-template>
+                      <div class="cell-line-height">
+                          <p class="font-medium-1 line-height-1 mb-0">{{ name }}</p>
+                          <span class="text-muted font-small-2"> {{ row.post }}</span>
+                      </div>
+                  </div> -->
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="Order No" prop="orderno">
+                            <ng-template let-row="row" let-name="value" ngx-datatable-cell-template>
+                                {{ row.orderno }}
+
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="Name Format" prop="nameformat">
+                            <ng-template let-row="row" let-name="value" ngx-datatable-cell-template>
+                                {{ row.nameformat }}
+
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="Floors Occupied" prop="floorcount">
+                            <ng-template let-row="row" let-name="value" ngx-datatable-cell-template>
+                                {{ row.floorcount }}
+
+                            </ng-template>
+                        </ngx-datatable-column>
+
+
+
+                        <ngx-datatable-column name="Action" [width]="120" [sortable]="false">
+                            <ng-template ngx-datatable-cell-template let-row="row">
+                                <div class="d-flex align-items-center">
+
+
+                                    <span (click)="deleteType(row.id)">
+                    <i
+                      data-feather="trash-2"
+                      class="text-primary cursor-pointer"
+                    ></i>
+                  </span>
+                                </div>
+                            </ng-template>
+                        </ngx-datatable-column>
+                    </ngx-datatable>
+                </div>
+                <!--/ ngx-datatables responsive -->
+            </core-card-snippet>
+        </section>
+        <!--/ Responsive Datatable -->
+    </div>
+</div>

@@ -1,0 +1,320 @@
+<div class="content-wrapper container-xxl p-0">
+    <div class="content-body">
+        <h1 class="text-center print-show hide">
+            {{apartment?.name}}
+        </h1>
+        <button type="submit" class="btn btn-success print-hide mb-5" (click)="onSave()" rippleEffect>
+            Save Plan
+          </button>
+        <div class="row" *ngIf="viewform">
+            <div class="col-12 col-md-6" *ngIf="show">
+                <core-card-snippet>
+                    <div class="card-title">
+                        Plan Information
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-bordered">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        Client name
+                                    </td>
+                                    <td>
+                                        {{this.PlanInfo?.client}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Contact#
+                                    </td>
+                                    <td>
+                                        {{this.PlanInfo?.contact}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Rate Sqft.
+                                    </td>
+                                    <td>
+                                        {{this.PlanInfo?.apartmentrate | currency}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Gross Area
+                                    </td>
+                                    <td>
+                                        {{this.PlanInfo.apartmentarea}} Sqft
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Total Price
+                                    </td>
+                                    <td>
+                                        {{this.PlanInfo.apartmenttotalprice | currency}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Apartment
+                                    </td>
+                                    <td>
+                                        {{this.PlanInfo.apartmenttype}}-{{this.PlanInfo.type}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Apartment Name
+                                    </td>
+                                    <td>
+                                        {{this.PlanInfo.apartmentname}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Booking
+                                    </td>
+                                    <td>
+                                        {{PlanInfo?.bookingamount | currency}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Agreement
+                                    </td>
+                                    <td>
+                                        {{PlanInfo?.agreementamount | currency}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Confirmation
+                                    </td>
+                                    <td>
+                                        {{PlanInfo?.confirmationamount | currency}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Possession
+                                    </td>
+                                    <td>
+                                        {{PlanInfo?.possessionamount | currency}}
+                                    </td>
+                                </tr>
+                                <tr *ngIf="this.PlanInfo.updatedat != null">
+                                    <td>
+                                        Last Updated
+                                    </td>
+                                    <td>
+                                        {{this.PlanInfo?.updatedat.seconds * 1000 | date }}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </core-card-snippet>
+            </div>
+            <div class="col-12 col-md-6 print-hide">
+                <core-card-snippet>
+                    <div class="card-title">
+                        Generate Your Plan
+                    </div>
+                    <div class="card-body">
+                        <form [formGroup]="form">
+                            <div class="row">
+                                <div class="col-12">
+                                    <!-- select size large -->
+                                    <ng-select class="ng-select-size-lg" #SelectSizeLarge [ngModelOptions]="{standalone: true}" (change)="onApartmentSelect($event)" [items]="apartmentlist" [(ngModel)]="this.apartment.docid" [searchable]="true" bindLabel="name" bindValue="docid">
+                                        <ng-template ng-header-tmp>
+                                            <input class="form-control w-100" type="text" (input)="SelectSizeLarge.filter($event.target.value)" />
+                                        </ng-template>
+                                        <!--/ select size large -->
+                                    </ng-select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 col-12">
+                                    <div class="form-group">
+                                        <label for="client">Client Name</label>
+                                        <input type="text" [class.error]="
+                    isSubmit && form.controls.client.errors
+                  " class="form-control" id="client" formControlName="client" required />
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 col-12">
+                                    <div class="form-group">
+                                        <label for="contact">Contact#</label>
+                                        <input type="text" [class.error]="
+                  isSubmit && form.controls.contact.errors
+                " class="form-control" id="contact" formControlName="contact" required />
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 col-sm-4 col-12">
+                                    <div class="form-group">
+                                        <label for="booking">On Booking </label>
+                                        <input type="number" [class.error]="
+                isSubmit && form.controls.booking.errors
+              " class="form-control" id="booking" max="100" formControlName="booking" required />
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3 col-sm-4 col-12">
+                                    <div class="form-group">
+                                        <label for="confirmation">On Confirmation</label>
+                                        <input type="number" maxlength="2" [class.error]="
+                isSubmit && form.controls.confirmation.errors
+              " class="form-control" id="confirmation" max="100" formControlName="confirmation" required />
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3  col-sm-4 col-12">
+                                    <div class="form-group">
+                                        <label for="agreement">On Agreement</label>
+                                        <input maxlength="2" type="number" [class.error]="
+                isSubmit && form.controls.agreement.errors
+              " class="form-control" id="agreement" max="100" formControlName="agreement" required />
+                                    </div>
+                                </div>
+
+
+                                <div class="col-md-3 col-sm-4 col-12">
+                                    <div class="form-group">
+                                        <label for="possession">On Possession</label>
+                                        <input maxlength="2" max="100" type="number" [class.error]="
+                isSubmit && form.controls.possession.errors
+              " class="form-control" id="possession" formControlName="possession" required />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 col-12">
+                                    <div class="form-group">
+                                        <label for="installments">Installment Plan</label>
+                                        <select id="installments" formControlName="installments" [ngModel]="this.installmentSelected" [(value)]="this.ApputilsService.InstallmentPlan" class="form-control" required>
+                              <option
+                              [ngValue]="installment"
+                                *ngFor="let installment of ApputilsService.InstallmentPlan"
+                                >
+                                {{ installment.text }}
+                              </option>
+                            </select>
+
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 col-12">
+                                    <div class="form-group">
+                                        <label for="plan">No. Of Years</label>
+                                        <select id="plan" formControlName="plan" [ngModel]="this.plan" [(value)]="this.ApputilsService.Years[0]" class="form-control" required>
+                              <option
+                                value="{{ installment}}"
+                                *ngFor="let installment of ApputilsService.Years"
+                                >
+                                {{ installment }}
+                              </option>
+                            </select>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- <div class="row">
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="discount">Discount</label>
+                                        <input maxlength="3" max="100" type="number" [class.error]="
+                isSubmit && form.controls.discount.errors
+              " class="form-control" id="discount" formControlName="discount" />
+                                    </div>
+                                </div>
+                            </div> -->
+
+
+                            <div class="row">
+                                <div class="col-12">
+                                    <button type="submit" class="btn btn-primary" (click)="onSubmit()" rippleEffect>
+                                        Generate Plan
+                                      </button>
+
+
+                                </div>
+                            </div>
+
+
+                        </form>
+                    </div>
+                </core-card-snippet>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <core-card-snippet>
+                    <div class="card-title">
+                        Installment Plan
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            Month
+                                        </th>
+                                        <th>
+                                            Amount (PKR)
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let p of PlanSchedule">
+                                        <td>
+                                            {{ (p.invoicedueon.seconds != undefined ? p.invoicedueon.seconds * 1000 : p.invoicedueon) | date:"dd/MM/yyyy" }}
+                                        </td>
+                                        <td>
+                                            {{p.amount | number}}
+                                        </td>
+
+                                    </tr>
+                                    <tr *ngIf="show">
+                                        <td>
+                                            <h5>
+
+                                                Total
+                                            </h5>
+                                        </td>
+                                        <td>
+                                            <h5>
+                                                {{this?.PlanInfo?.installmentamount | currency}}
+                                            </h5>
+
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+
+
+
+
+
+
+
+                    </div>
+                </core-card-snippet>
+
+                <button type="submit" class="btn btn-danger print-hide" (click)="onPrint()" rippleEffect>
+                    print
+                  </button>
+
+            </div>
+        </div>
+
+    </div>
+</div>
