@@ -3,135 +3,40 @@
         <h1 class="text-center print-show hide">
             {{apartment?.name}}
         </h1>
-        <button type="submit" class="btn btn-success print-hide mb-5" (click)="onSave()" rippleEffect>
-            Save Plan
-          </button>
+
+
+
         <div class="row" *ngIf="viewform">
-            <div class="col-12 col-md-6" *ngIf="show">
-                <core-card-snippet>
-                    <div class="card-title">
-                        Plan Information
-                    </div>
-                    <div class="card-body">
-                        <table class="table table-bordered">
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        Client name
-                                    </td>
-                                    <td>
-                                        {{this.PlanInfo?.client}}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        Contact#
-                                    </td>
-                                    <td>
-                                        {{this.PlanInfo?.contact}}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        Rate Sqft.
-                                    </td>
-                                    <td>
-                                        {{this.PlanInfo?.apartmentrate | currency}}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        Gross Area
-                                    </td>
-                                    <td>
-                                        {{this.PlanInfo.apartmentarea}} Sqft
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        Total Price
-                                    </td>
-                                    <td>
-                                        {{this.PlanInfo.apartmenttotalprice | currency}}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        Apartment
-                                    </td>
-                                    <td>
-                                        {{this.PlanInfo.apartmenttype}}-{{this.PlanInfo.type}}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        Apartment Name
-                                    </td>
-                                    <td>
-                                        {{this.PlanInfo.apartmentname}}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        Booking
-                                    </td>
-                                    <td>
-                                        {{PlanInfo?.bookingamount | currency}}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        Agreement
-                                    </td>
-                                    <td>
-                                        {{PlanInfo?.agreementamount | currency}}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        Confirmation
-                                    </td>
-                                    <td>
-                                        {{PlanInfo?.confirmationamount | currency}}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        Possession
-                                    </td>
-                                    <td>
-                                        {{PlanInfo?.possessionamount | currency}}
-                                    </td>
-                                </tr>
-                                <tr *ngIf="this.PlanInfo.updatedat != null">
-                                    <td>
-                                        Last Updated
-                                    </td>
-                                    <td>
-                                        {{this.PlanInfo?.updatedat.seconds * 1000 | date }}
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </core-card-snippet>
-            </div>
-            <div class="col-12 col-md-6 print-hide">
+
+            <div class="col-12 col-md-12 print-hide">
                 <core-card-snippet>
                     <div class="card-title">
                         Generate Your Plan
                     </div>
+
                     <div class="card-body">
+
                         <form [formGroup]="form">
                             <div class="row">
-                                <div class="col-12">
+                                <div class="col-12 col-md-6">
                                     <!-- select size large -->
-                                    <ng-select class="ng-select-size-lg" #SelectSizeLarge [ngModelOptions]="{standalone: true}" (change)="onApartmentSelect($event)" [items]="apartmentlist" [(ngModel)]="this.apartment.docid" [searchable]="true" bindLabel="name" bindValue="docid">
-                                        <ng-template ng-header-tmp>
-                                            <input class="form-control w-100" type="text" (input)="SelectSizeLarge.filter($event.target.value)" />
-                                        </ng-template>
-                                        <!--/ select size large -->
-                                    </ng-select>
+                                    <div class="form-group" *ngIf="!this.isupdate">
+                                        <ng-select class="ng-select-size-lg" #SelectSizeLarge [ngModelOptions]="{standalone: true}" (change)="onApartmentSelect($event)" [items]="apartmentlist" [(ngModel)]="this.apartment.docid" [searchable]="true" bindLabel="name" bindValue="docid">
+                                            <ng-template ng-header-tmp>
+                                                <input class="form-control w-100" type="text" (input)="SelectSizeLarge.filter($event.target.value)" />
+                                            </ng-template>
+                                            <!--/ select size large -->
+                                        </ng-select>
+                                    </div>
+
+                                </div>
+                                <div class=" col-md-6">
+                                    <div class="form-group">
+
+                                        <input [(ngModel)]="rate" type="number" [class.error]="
+                    isSubmit && form.controls.rate.errors
+                  " class="form-control" id="rate" formControlName="rate" required />
+                                    </div>
                                 </div>
                             </div>
                             <div class="row">
@@ -253,6 +158,219 @@
             </div>
         </div>
         <div class="row">
+            <div class="col-12 col-md-12" *ngIf="show">
+                <core-card-snippet>
+                    <div class="row card-title" style="width: 100%">
+                        <div class="col-12 pr-0">
+                            <span class="card-title">Plan Information</span>
+                            <span class="float-right">
+                  <div class="d-flex align-items-center justify-content-end">
+                    <button type="submit" class="btn btn-success print-hide" (click)="onSave()" rippleEffect>
+                        Save Plan
+                      </button>
+                    <button type="submit" class="btn pull-right ml-2 btn-danger print-hide" (click)="onPrint()" rippleEffect>
+                        print
+                      </button>
+                  </div>
+    
+                  <!-- <i data-feather="filter" class="text-primary cursor-pointer mr-50"></i> -->
+                </span>
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+                        <table class="table table-bordered fw-800">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        Client name
+                                    </td>
+                                    <td>
+                                        {{this.PlanInfo?.client}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Contact#
+                                    </td>
+                                    <td>
+                                        {{this.PlanInfo?.contact}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Rate Sqft.
+                                    </td>
+                                    <td>
+                                        {{this.PlanInfo?.apartmentrate | number}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Gross Area Sqft.
+                                    </td>
+                                    <td>
+                                        {{this.PlanInfo.apartmentarea | number}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Total Price in PKR
+                                    </td>
+                                    <td>
+                                        {{this.PlanInfo.apartmenttotalprice | number}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Apartment
+                                    </td>
+                                    <td>
+                                        {{this.PlanInfo.apartmenttype}}-{{this.PlanInfo.type}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Apartment Name
+                                    </td>
+                                    <td>
+                                        {{this.PlanInfo.apartmentname}}
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                        <table class="table table-bordered fw-800">
+                            <thead class="fw-1200">
+                                <th>
+                                    Payment Terms
+                                </th>
+                                <th>
+                                    Percentage
+                                </th>
+                                <th>
+                                    Amount (PKR)
+                                </th>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        Booking
+                                    </td>
+                                    <td>
+                                        {{PlanInfo?.booking}}%
+                                    </td>
+                                    <td>
+                                        {{PlanInfo?.bookingamount | number}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Confirmation
+                                    </td>
+                                    <td>
+                                        {{PlanInfo?.confirmation}}%
+                                    </td>
+                                    <td>
+                                        {{PlanInfo?.confirmationamount | number}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Agreement
+                                    </td>
+                                    <td>
+                                        {{PlanInfo?.agreement}}%
+                                    </td>
+                                    <td>
+                                        {{PlanInfo?.agreementamount | number}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Total
+                                    </td>
+                                    <td>
+
+                                    </td>
+                                    <td>
+                                        {{PlanInfo.agreementamount+PlanInfo.bookingamount+PlanInfo.confirmationamount | number}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Balance in Installments
+                                    </td>
+                                    <td>
+                                        {{100- (PlanInfo.agreement+PlanInfo.booking+PlanInfo.confirmation+PlanInfo.possession)}}%
+                                    </td>
+                                    <td>
+                                        {{PlanInfo?.installmentamount | number}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        {{PlanInfo.installment.text}} Amount
+                                    </td>
+                                    <td>
+
+                                    </td>
+                                    <td>
+                                        {{this.PlanInfo.perinstallmentamount | number:'1.0-0'}}
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        Tenure For Installment
+                                    </td>
+                                    <td>
+
+                                    </td>
+                                    <td>
+                                        {{PlanInfo.plan}} years
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        No. of Installments
+                                    </td>
+                                    <td>
+
+                                    </td>
+                                    <td>
+                                        {{PlanInfo.planscehdule.length}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Possession
+                                    </td>
+                                    <td>
+                                        {{PlanInfo?.possession}}%
+                                    </td>
+                                    <td>
+                                        {{PlanInfo?.possessionamount | number}}
+                                    </td>
+                                </tr>
+                                <tr *ngIf="this.PlanInfo.updatedat != null">
+                                    <td>
+                                        Plan Date
+                                    </td>
+                                    <td>
+
+                                    </td>
+                                    <td>
+                                        {{this.PlanInfo?.updatedat.seconds * 1000 | date }}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </core-card-snippet>
+            </div>
+        </div>
+        <!-- <div class="row">
             <div class="col-12">
                 <core-card-snippet>
                     <div class="card-title">
@@ -309,12 +427,9 @@
                     </div>
                 </core-card-snippet>
 
-                <button type="submit" class="btn btn-danger print-hide" (click)="onPrint()" rippleEffect>
-                    print
-                  </button>
-
+              
             </div>
-        </div>
+        </div> -->
 
     </div>
 </div>

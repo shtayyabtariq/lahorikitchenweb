@@ -1,6 +1,7 @@
 import { Installments } from "../helpers/apputils.service";
 
 export interface PlanDto {
+    perinstallmentamount: number;
 
     id:string;
     client:string;
@@ -27,6 +28,7 @@ export interface PlanDto {
     type:string;
     createdat:any;
     updatedat:any;
+    totalamount:number;
 
 }
 export interface PlanScheduleDto{

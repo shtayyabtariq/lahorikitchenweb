@@ -32,6 +32,7 @@ export class firebaseStoreService {
   savePlan(PlanDto: PlanDto) {
     var doc = this.fs.collection<PlanDto>(this.planCollection).doc();
     PlanDto.id = doc.ref.id;
+    PlanDto.updatedat = this.appUtils.getServerTimestamp();
     return doc.set(PlanDto);
   }
   getPlans() {

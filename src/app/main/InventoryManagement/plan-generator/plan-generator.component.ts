@@ -10,7 +10,7 @@ import { RouterHelper } from "../../../auth/helpers/router-helper";
 import { firebaseStoreService } from "../../../auth/service/firebasestoreservice";
 import { Apartmentdto } from "../../../auth/models/apartmentdto";
 import { ActivatedRoute, Router } from '@angular/router';
-import { PlanDto, PlanScheduleDto } from "../../../auth/models/plandto";
+import { PlanDto, PlanScheduleDto } from '../../../auth/models/plandto';
 import { ColumnMode, DatatableComponent, id } from "@swimlane/ngx-datatable";
 import { NgbActiveModal, NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { ProgressdialogComponent } from "app/main/progressdialog/progressdialog.component";
@@ -32,6 +32,7 @@ export class PlanGeneratorComponent implements OnInit {
   show: boolean = false;
   isupdate = false;
   planId:string;
+  rate:number;
   viewform: boolean = false;
   PlanSchedule: PlanScheduleDto[] = [];
   apartmentlist: Apartmentdto[] = [];
@@ -61,6 +62,8 @@ export class PlanGeneratorComponent implements OnInit {
     updatedat: null,
     apartmenttype: "",
     type: "",
+    totalamount: 0,
+    perinstallmentamount: 0
   };
   @ViewChild(DatatableComponent) table: DatatableComponent;
   public ColumnMode = ColumnMode;
@@ -87,6 +90,7 @@ export class PlanGeneratorComponent implements OnInit {
       agreement: [null, [Validators.required]],
       installments: [null, [Validators.required]],
       plan: [null, [Validators.required]],
+      rate:[null,Validators.required]
       // discount: [null],
     });
     debugger;
@@ -109,8 +113,26 @@ export class PlanGeneratorComponent implements OnInit {
         this.apartment = this.apartmentlist.filter(
           (e) => e.docid == this.PlanInfo.apartmentid
         )[0];
+
+
+        this.form = this.FormBuilder.group({
+          contact: [this?.PlanInfo?.contact ?? "", [Validators.required]],
+          client: [this?.PlanInfo?.client ?? "", [Validators.required]],
+          booking: [this?.PlanInfo?.booking ?? "", [Validators.required]],
+          confirmation: [this?.PlanInfo?.confirmation ?? "", [Validators.required]],
+          possession: [this?.PlanInfo?.possession ?? "", [Validators.required]],
+          agreement: [this?.PlanInfo?.agreement ?? "", [Validators.required]],
+          installments: [this?.PlanInfo?.installment ?? "", [Validators.required]],
+          plan: [this?.PlanInfo?.plan ?? "", [Validators.required]],
+          rate:[null,Validators.required]
+          // discount: [null],
+        });  
+        this.installmentSelected = this.ApputilsService.InstallmentPlan.filter(e=>e.months == this.PlanInfo.installment.months)[0];
+        this.plan = this.PlanInfo.plan;
+        this.rate = this.PlanInfo.apartmentrate;
       } else {
         this.apartment = this.apartmentlist[0];
+        this.rate = this.apartment.price;
       }
     } else {
       var id = this.route.snapshot.paramMap.get("id");
@@ -123,7 +145,9 @@ export class PlanGeneratorComponent implements OnInit {
       } else {
         this.apartment = this.apartmentlist[0];
       }
+      this.rate = this.apartment.price;
     }
+    
 
     this.viewform = true;
   }
@@ -139,10 +163,8 @@ export class PlanGeneratorComponent implements OnInit {
         centered: true,
       });
 
-      var apt = (
-        await this.fs.getapartmentbyid(this.apartment.docid).get().toPromise()
-      )?.data();
-      debugger;
+      
+    
       var contact = this.form.controls["contact"].value;
       var client = this.form.controls["client"].value;
       var booking = this.form.controls["booking"].value;
@@ -153,18 +175,13 @@ export class PlanGeneratorComponent implements OnInit {
         .value as Installments;
       var plan = this.form.controls["plan"].value;
       var discount = 0;
-
+      this.PlanInfo.apartmentarea = this.apartment.grossarea;
       let totalPrice: number;
-      if (discount != null && discount != undefined) {
-        this.apartment.totalprice =
-          this.ApputilsService.getDiscountedTotalPrice(
-            apt.totalprice,
-            discount
-          );
-      } else {
-        this.apartment.totalprice = apt.totalprice;
-      }
-      totalPrice = this.apartment.totalprice;
+     
+        this.PlanInfo.apartmenttotalprice =
+        this.ApputilsService.getTotalPrice(this.PlanInfo.apartmentarea,this.rate,null);
+      
+      totalPrice = this.PlanInfo.apartmenttotalprice;
       var confirmationPrice = this.ApputilsService.getPercentPrice(
         totalPrice,
         confirmation
@@ -189,6 +206,7 @@ export class PlanGeneratorComponent implements OnInit {
 
       this.PlanInfo.client = client;
       this.PlanInfo.contact = contact;
+      this.PlanInfo.perinstallmentamount = perInstallmentAmount;
       this.PlanInfo.plan = plan;
       this.PlanInfo.installment = installments;
       this.PlanInfo.agreement = agreement;
@@ -204,11 +222,11 @@ export class PlanGeneratorComponent implements OnInit {
       this.PlanInfo.type = this.apartment.type;
       this.PlanInfo.apartmenttype = this.apartment.apartmenttype;
       this.PlanInfo.installmentamount = installmentAmount;
-      this.PlanInfo.apartmentarea = this.apartment.grossarea;
+      
       this.PlanInfo.apartmentid = this.apartment.docid;
       this.PlanInfo.apartmentname = this.apartment.name;
-      this.PlanInfo.apartmentrate = this.apartment.price;
-      this.PlanInfo.apartmenttotalprice = this.apartment.totalprice;
+      this.PlanInfo.apartmentrate = this.rate;
+      
 
       var incrementer = installments.months;
       var currentPlanTime = 0 + incrementer;
@@ -253,9 +271,7 @@ export class PlanGeneratorComponent implements OnInit {
       this.PlanInfo.createdat = this.ApputilsService.getServerTimestamp();
       this.fs.savePlan(this.PlanInfo).then(async (e) => {
         this.nts.showSuccess("Saved","Plan Saved");
-        this.PlanInfo = (
-          await this.fs.getPlanById(this.planId).get().toPromise()
-        ).data();
+        this.routerser.navigateByUrl("/plan");
       });
     }
   }
