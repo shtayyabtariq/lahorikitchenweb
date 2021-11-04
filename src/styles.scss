@@ -4,6 +4,7 @@
 @import '@core/scss/angular/libs/datatables.component.scss';
 @import '@core/scss/angular/libs/select.component.scss';
 @import '@core/scss/angular/libs/form-wizard.component.scss';
+@import '@core/scss/angular/libs/flatpickr.component.scss';
 .transparent .modal-content {
     background-color: transparent !important;
     box-shadow: none !important;
@@ -19,4 +20,23 @@
 
 .swal2-input {
     max-width: 100% !important;
+}
+
+.card .card {
+    box-shadow: 0 4px 24px 0 rgb(34 41 47 / 10%) !important;
+}
+
+@media print {
+    @page {
+        margin: 0;
+    }
+    .invoice-actions,
+    .main-menu,
+    .buy-now {
+        visibility: hidden;
+    }
+    .printRef {
+        max-width: 100% !important;
+        flex: 0 0 100%;
+    }
 }

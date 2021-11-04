@@ -2,7 +2,6 @@ import { Installments } from "../helpers/apputils.service";
 
 export interface PlanDto {
     perinstallmentamount: number;
-
     id:string;
     client:string;
     contact:string;
@@ -29,14 +28,71 @@ export interface PlanDto {
     createdat:any;
     updatedat:any;
     totalamount:number;
-
 }
 export interface PlanScheduleDto{
     installmentno:number;
     amount:number;
+    amountpaid:number;
+    amountleft:number;
     invoicedueon:Date;
     invoicepaid:boolean;
     invoicepaidon:any;
     approvedby:any;
     approvalpicture:string;
+    id:string;
+    planid:string;
+    type:string;
+    createdat:any;
+    updateat:any;
+}
+export interface Transaction{
+    amount:number;
+    id:string;
+    bank:string;
+    iban:string;
+    paymentmethod:string;
+    transactionid:string;
+    invoiceid:string;
+    createdat:any;
+    status:string;
+    updatedat:any;
+    notes:string;
+    transactiondate:any;
+}
+
+export interface SalesDto{
+    id:string;
+    customerid:string;
+    customername:string;
+    customercnic:string;
+    isallpaid:boolean;
+    accountcode:string;
+    applicationno:string;
+    perinstallmentamount: number;
+    plan:number;  
+    agreement:number;
+    agreementamount:number;
+    possessionamount:number;
+    possession:number;
+    confirmation:number;
+    confirmationamount:number;
+    booking:number;
+    bookingamount:number;
+    plancreation:any;
+    planscehdule:PlanScheduleDto[];
+    apartmentid:string;
+    apartmentname:string;
+    apartmentrate:number;
+    apartmenttotalprice:number;
+    apartmentarea:number;
+    apartmenttype:string;
+    type:string;
+    createdat:any;
+    updatedat:any;
+    totalamount:number;
+    totalamountpaid:number;
+    totalamountleft:number;
+    status:string;
+    installment:Installments;
+    installmentamount:number;
 }

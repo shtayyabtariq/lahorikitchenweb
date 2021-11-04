@@ -1,0 +1,406 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-12 col-12">
+            <core-card-snippet>
+                <div class="card-title">
+                    Customer Info
+                </div>
+
+                <div class="card-body">
+                    <div class="form-group" *ngIf="this.iscustomerfetch">
+                        <ng-select class="ng-select-size-lg" #SelectSizeLarge [ngModelOptions]="{standalone: true}" (change)="onCustomerSelect($event)" [items]="customers" [searchable]="true" bindLabel="cnic" bindValue="id">
+                            <ng-template ng-header-tmp>
+                                <input class="form-control w-100" placeholder="search customer by cnic" type="text" (input)="SelectSizeLarge.filter($event.target.value)" />
+                            </ng-template>
+                            <!--/ select size large -->
+                        </ng-select>
+                    </div>
+
+                    <span class="viewplan" (click)="addNewCustomer()"> Add New </span>
+                    <form [formGroup]="form" *ngIf="addNew">
+                        <div class="row">
+                            <div class="col-12 col-md-6">
+                                <!-- select size large -->
+                                <div class="form-group">
+                                    <label for="name">Name</label>
+                                    <input type="text" [class.error]="
+          isSubmit && form.controls.name.errors
+        " class="form-control" id="name" formControlName="name" required />
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <!-- select size large -->
+                                <div class="form-group">
+                                    <label for="name">Father Name</label>
+                                    <input type="text" [class.error]="
+        isSubmit && form.controls.fathername.errors
+      " class="form-control" id="fathername" formControlName="fathername" required />
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <!-- select size large -->
+                                <div class="form-group">
+                                    <label for="accountcode">Account Code</label>
+                                    <input type="text" [class.error]="
+        isSubmit && form.controls.accountcode.errors
+      " class="form-control" id="account" formControlName="accountcode" required />
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <!-- select size large -->
+                                <div class="form-group">
+                                    <label for="applicationno">Application No</label>
+                                    <input type="text" [class.error]="
+      isSubmit && form.controls.applicaitonno.errors
+    " class="form-control" id="applicationno" formControlName="applicaitonno" required />
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <!-- select size large -->
+                                <div class="form-group">
+                                    <label for="cnic">CNIC</label>
+                                    <input type="text" [class.error]="
+    isSubmit && form.controls.cnic.errors
+  " class="form-control" id="cnic" formControlName="cnic" required />
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <!-- select size large -->
+                                <div class="form-group">
+                                    <label for="cnic">Nationality</label>
+                                    <input type="text" [class.error]="
+  isSubmit && form.controls.nationality.errors
+" class="form-control" id="nationality" formControlName="nationality" required />
+                                </div>
+                            </div>
+
+
+                            <div class="col-12">
+                                <!-- select size large -->
+                                <div class="form-group">
+                                    <label for="cnic">Mail Address</label>
+                                    <input type="text" [class.error]="
+isSubmit && form.controls.mailaddress.errors
+" class="form-control" id="mailaddress" formControlName="mailaddress" required />
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <!-- select size large -->
+                                <div class="form-group">
+                                    <label for="permanentaddress">Permanent Address</label>
+                                    <input type="text" [class.error]="
+isSubmit && form.controls.permanentaddress.errors
+" class="form-control" id="permanentaddress" formControlName="permanentaddress" required />
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <!-- select size large -->
+                                <div class="form-group">
+                                    <label for="email">Email Address</label>
+                                    <input type="email" [class.error]="
+isSubmit && form.controls.email.errors
+" class="form-control" id="email" formControlName="email" required />
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <!-- select size large -->
+                                <div class="form-group">
+                                    <label for="phonenumber">Phone Number</label>
+                                    <input type="number" [class.error]="
+isSubmit && form.controls.number.errors
+" class="form-control" id="number" formControlName="number" required />
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <!-- select size large -->
+                                <div class="form-group">
+                                    <label for="office#">Office Number</label>
+                                    <input type="number" [class.error]="
+isSubmit && form.controls.officenumber.errors
+" class="form-control" id="office#" formControlName="officenumber" required />
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <!-- select size large -->
+                                <div class="form-group">
+                                    <label for="source">Source Of Income</label>
+                                    <input type="text" [class.error]="
+isSubmit && form.controls.source.errors
+" class="form-control" id="source" formControlName="source" required />
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <!-- select size large -->
+                                <div class="form-group">
+                                    <label for="bname">Business Name</label>
+                                    <input type="text" [class.error]="
+isSubmit && form.controls.bname.errors
+" class="form-control" id="bname" formControlName="bname" required />
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </form>
+                </div>
+            </core-card-snippet>
+
+        </div>
+        <div class="col-md-12 col-12">
+            <core-card-snippet>
+
+
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12 col-md-12" *ngIf="show">
+                            <core-card-snippet>
+
+
+                                <div class="card-body">
+                                    <table class="table table-bordered fw-800">
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    Rate Sqft.
+                                                </td>
+                                                <td>
+                                                    {{this.PlanInfo?.apartmentrate | number}}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Gross Area Sqft.
+                                                </td>
+                                                <td>
+                                                    {{this.PlanInfo.apartmentarea | number}}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Total Price in PKR
+                                                </td>
+                                                <td>
+                                                    {{this.PlanInfo.apartmenttotalprice | number}}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Apartment
+                                                </td>
+                                                <td>
+                                                    {{this.PlanInfo.apartmenttype}}-{{this.PlanInfo.type}}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Apartment Name
+                                                </td>
+                                                <td>
+                                                    {{this.PlanInfo.apartmentname}}
+                                                </td>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+                                    <table class="table table-bordered fw-800">
+                                        <thead class="fw-1200">
+                                            <th>
+                                                Payment Terms
+                                            </th>
+                                            <th>
+                                                Percentage
+                                            </th>
+                                            <th>
+                                                Amount (PKR)
+                                            </th>
+                                            <th>
+                                                Payable by
+                                            </th>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    Booking
+                                                </td>
+                                                <td>
+                                                    {{PlanInfo?.booking}}%
+                                                </td>
+                                                <td>
+                                                    {{PlanInfo?.bookingamount | number}}
+                                                </td>
+                                                <td>
+                                                    Immediate
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Confirmation
+                                                </td>
+                                                <td>
+                                                    {{PlanInfo?.confirmation}}%
+                                                </td>
+                                                <td>
+                                                    {{PlanInfo?.confirmationamount | number}}
+                                                </td>
+                                                <td>
+                                                    <ng2-flatpickr [(ngModel)]="confirmationDate" [config]="ConfirmationDate" name="ConfirmationDate"></ng2-flatpickr>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Agreement
+                                                </td>
+                                                <td>
+                                                    {{PlanInfo?.agreement}}%
+                                                </td>
+                                                <td>
+                                                    {{PlanInfo?.agreementamount | number}}
+                                                </td>
+                                                <td>
+                                                    <ng2-flatpickr [(ngModel)]="agreementDate" [config]="AgreementDate" name="AgreementDate"></ng2-flatpickr>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Total
+                                                </td>
+                                                <td>
+
+                                                </td>
+                                                <td>
+                                                    {{PlanInfo.agreementamount+PlanInfo.bookingamount+PlanInfo.confirmationamount | number}}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Balance in Installments
+                                                </td>
+                                                <td>
+                                                    {{100- (PlanInfo.agreement+PlanInfo.booking+PlanInfo.confirmation+PlanInfo.possession)}}%
+                                                </td>
+                                                <td>
+                                                    {{PlanInfo?.installmentamount | number}}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    {{PlanInfo.installment.text}} Amount
+                                                </td>
+                                                <td>
+
+                                                </td>
+                                                <td>
+                                                    {{this.PlanInfo.perinstallmentamount | number:'1.0-0'}}
+                                                </td>
+                                                <td>
+
+                                                    <span class="viewplan" (click)="modalOpenVC(modalVC)"> View Plan </span>
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td>
+                                                    Tenure For Installment
+                                                </td>
+                                                <td>
+
+                                                </td>
+                                                <td>
+                                                    {{PlanInfo.plan}} years
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    No. of Installments
+                                                </td>
+                                                <td>
+
+                                                </td>
+                                                <td>
+                                                    {{PlanInfo.planscehdule.length}}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Possession
+                                                </td>
+                                                <td>
+                                                    {{PlanInfo?.possession}}%
+                                                </td>
+                                                <td>
+                                                    {{PlanInfo?.possessionamount | number}}
+                                                </td>
+                                            </tr>
+                                            <tr *ngIf="this.PlanInfo.updatedat != null">
+                                                <td>
+                                                    Plan Date
+                                                </td>
+                                                <td>
+
+                                                </td>
+                                                <td>
+                                                    {{this.PlanInfo?.updatedat.seconds * 1000 | date }}
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </core-card-snippet>
+                            <button class="btn btn-primary pull-right" (click)="generateSales()"> Confirm Sales</button>
+                        </div>
+                    </div>
+
+                </div>
+            </core-card-snippet>
+
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<ng-template #modalVC let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalCenterTitle">Installment Plan</h5>
+        <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+<span aria-hidden="true">&times;</span>
+</button>
+    </div>
+    <div class="modal-body" tabindex="0" ngbAutofocus>
+        <table class="table table-bordered fw-800">
+            <thead>
+
+                <th>
+                    Amount
+                </th>
+                <th>
+                    Due Date
+                </th>
+            </thead>
+            <tbody>
+                <tr *ngFor="let p of PlanInfo.planscehdule">
+                    <td>
+                        {{p.amount | number:'1.0-0'}}
+                    </td>
+                    <td>
+                        {{p.invoicedueon | date}}
+                    </td>
+                </tr>
+            </tbody>
+
+        </table>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger" (click)="modal.close('Accept click')" rippleEffect>
+Close
+</button>
+    </div>
+</ng-template>

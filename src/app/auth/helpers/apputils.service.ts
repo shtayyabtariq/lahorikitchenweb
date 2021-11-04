@@ -30,6 +30,9 @@ AppName = "Management Information System";
 Apartment4BedDuplex = "4 Bed Duplex ";
 Apartment5BedDuplex = "5 Bed Duplex ";
 Penthouse = "Penthouse ";
+
+TransactionSuccessfull = "Successfull";
+TransactionInvalid = "Invalid";
 getServerTimestamp() { return firebase.firestore.FieldValue.serverTimestamp(); }
 
 getDateAfterMonths(dt:Date,month:number)
@@ -66,11 +69,20 @@ getPercentPrice(amount:number,percent ?:number)
     return ((percent/100)*amount);
   
 }
-
+PaymentMethod:string[]=[
+  "Pay Order",
+  "Cheque",
+  "Cash",
+  "IBFT",
+  "Deposit"
+];
 Years:number[]=[
   1,2,3,4,5,6,7,8,9,10
 ]
-
+TransactionStatus:String[]=[
+  this.TransactionSuccessfull,
+  this.TransactionInvalid
+];
 InstallmentPlan:Installments[]=[
    this.monthtly,
    this.quaterly,
@@ -113,4 +125,22 @@ export interface Installments{
   text:string;
   months:number;
   
+}
+export class InvoiceType{
+  static Posession:string = "Posession";
+  static Agreement:string = "Agreement";
+  static Installment:string = "Installment";
+  static Confirmation:string = "Confirmation";
+  static Booking:string = "Booking";
+}
+export class SaleStatus{
+  static InProgress:string = "InProgress";
+  static Completed:string="Completed";
+  static Closed:string = "Closed";
+
+}
+export class InvoiceStatus{
+  static UnPaid:string = "UnPaid";
+  static Paid:string="Paid";
+  static Pending:string = "Pending";
 }

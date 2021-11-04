@@ -370,6 +370,257 @@
                 </core-card-snippet>
             </div>
         </div>
+
+        <div class="row" style="    background-image: url(/assets/images/Bedroonm.jpg);
+        
+        position: relative;">
+            <div style="
+    position: absolute;
+    background: black;
+    width: 100%;
+    height: 100%;
+    opacity: 0.5;
+"> </div>
+            <div class="col-6" style="background-image: url('/assets/images/Dusk Masterplan-4.jpg');
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            text-align: center;">
+
+            </div>
+            <div class="col-6">
+                <div class="col-12" style="text-align: center;color: beige;padding-top: 20px;">
+                    <h3 style="color:blanchedalmond;">
+                        PRE LAUNCH PAYMENT PLAN
+                    </h3>
+                    <h4 style="color:blanchedalmond;">
+                        THE GALLERIA RESINDENCES
+                    </h4>
+                    <h5 style="color:blanchedalmond;">
+                        A PROJECT OF NIAZ ARBAZ PVT LTD.
+                    </h5>
+                    <p style="padding-top: 5px;">
+                        Pre-Launch promotion on Special Rate of Rs.25,000 per Sqft for 20 Apartments on 7th & 8th Floor for only Two Months
+                    </p>
+                    <h5 style="color:blanchedalmond;">
+                        On First Come First Serve Basis
+                    </h5>
+                </div>
+                <div class="col-12 col-md-12" *ngIf="show" style="padding-top: 40px; padding-bottom:40px;">
+
+
+                    <div class="tables" style="background-color: white;">
+                        <table class="table table-bordered fw-800">
+                            <tbody>
+                                <tr>
+                                    <td style="background-color:blanchedalmond;">
+                                        Client name
+                                    </td>
+                                    <td>
+                                        {{this.PlanInfo?.client}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Contact#
+                                    </td>
+                                    <td>
+                                        {{this.PlanInfo?.contact}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Rate Sqft.
+                                    </td>
+                                    <td>
+                                        {{this.PlanInfo?.apartmentrate | number}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Gross Area Sqft.
+                                    </td>
+                                    <td>
+                                        {{this.PlanInfo.apartmentarea | number}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Total Price in PKR
+                                    </td>
+                                    <td>
+                                        {{this.PlanInfo.apartmenttotalprice | number}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Apartment
+                                    </td>
+                                    <td>
+                                        {{this.PlanInfo.apartmenttype}}-{{this.PlanInfo.type}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Apartment Name
+                                    </td>
+                                    <td>
+                                        {{this.PlanInfo.apartmentname}}
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                        <table class="table table-bordered fw-800">
+                            <thead class="fw-1200">
+                                <th>
+                                    Payment Terms
+                                </th>
+                                <th>
+                                    Percentage
+                                </th>
+                                <th>
+                                    Amount (PKR)
+                                </th>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        Booking
+                                    </td>
+                                    <td>
+                                        {{PlanInfo?.booking}}%
+                                    </td>
+                                    <td>
+                                        {{PlanInfo?.bookingamount | number}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Confirmation
+                                    </td>
+                                    <td>
+                                        {{PlanInfo?.confirmation}}%
+                                    </td>
+                                    <td>
+                                        {{PlanInfo?.confirmationamount | number}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Agreement
+                                    </td>
+                                    <td>
+                                        {{PlanInfo?.agreement}}%
+                                    </td>
+                                    <td>
+                                        {{PlanInfo?.agreementamount | number}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Total
+                                    </td>
+                                    <td>
+
+                                    </td>
+                                    <td>
+                                        {{PlanInfo.agreementamount+PlanInfo.bookingamount+PlanInfo.confirmationamount | number}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Balance in Installments
+                                    </td>
+                                    <td>
+                                        {{100- (PlanInfo.agreement+PlanInfo.booking+PlanInfo.confirmation+PlanInfo.possession)}}%
+                                    </td>
+                                    <td>
+                                        {{PlanInfo?.installmentamount | number}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        {{PlanInfo.installment.text}} Amount
+                                    </td>
+                                    <td>
+
+                                    </td>
+                                    <td>
+                                        {{this.PlanInfo.perinstallmentamount | number:'1.0-0'}}
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        Tenure For Installment
+                                    </td>
+                                    <td>
+
+                                    </td>
+                                    <td>
+                                        {{PlanInfo.plan}} years
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        No. of Installments
+                                    </td>
+                                    <td>
+
+                                    </td>
+                                    <td>
+                                        {{PlanInfo.planscehdule.length}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Possession
+                                    </td>
+                                    <td>
+                                        {{PlanInfo?.possession}}%
+                                    </td>
+                                    <td>
+                                        {{PlanInfo?.possessionamount | number}}
+                                    </td>
+                                </tr>
+                                <tr *ngIf="this.PlanInfo.updatedat != null">
+                                    <td>
+                                        Plan Date
+                                    </td>
+                                    <td>
+
+                                    </td>
+                                    <td>
+                                        {{this.PlanInfo?.updatedat.seconds * 1000 | date }}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div>
+                        <h3 style="color:blanchedalmond;">
+                            Note
+                        </h3>
+                        <ul style="color:blanchedalmond;">
+                            <li>
+                                Prime Location Charges will be applied where applicable
+                            </li>
+                            <li>
+                                Prices are subjected to change without prior notics
+                            </li>
+                            <li>
+                                Actual measurements will be available after completion and prices will be adjusted accordingly
+                            </li>
+                            <li>
+                                Clients leasing money from the bank to pay monthly installment for our inventory
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
         <!-- <div class="row">
             <div class="col-12">
                 <core-card-snippet>

@@ -1,0 +1,154 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <a class="btn btn-primary mb-2" routerLink="/sales/{{this.planid}}">Back</a>
+            <a class="btn btn-secondary mb-2 float-right" routerLink="/sales/{{this.planid}}/invoicepreview/{{this.invoiceid}}">Send Invoice</a>
+            <core-card-snippet>
+                <div class="card-title">Invoice Detail</div>
+                <div class="card-body">
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <td>Apartment Name</td>
+                                <td>
+                                    {{ this?.sale?.apartmentname }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Invoice Type</td>
+                                <td>
+                                    {{ this.invoicedetail?.type }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Status</td>
+                                <td>
+                                    <span>
+                                    {{ this.invoicedetail?.invoicepaid ? "Paid":"UnPaid" }}
+                                   </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Total Amount</td>
+                                <td>
+                                    {{ this.invoicedetail?.amount | currency }}
+
+
+                                    <b> ( {{this.invoicedetail.amount | numberToWords}})</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Amount Paid</td>
+                                <td>
+                                    {{ this.invoicedetail?.amountpaid | currency}}
+                                    <b> ( {{this.invoicedetail.amountpaid | numberToWords}})</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Amount Left</td>
+                                <td>
+                                    {{ this.invoicedetail?.amountleft | currency}}
+                                    <b> ( {{this.invoicedetail.amountleft | numberToWords}})</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Due Date</td>
+                                <td>
+                                    {{ this.invoicedetail?.invoicedueon.seconds * 1000 | date: "dd/MM/yyyy" }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </core-card-snippet>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <core-card-snippet>
+                <div class="row card-title" style="width: 100%">
+                    <div class="col-12 pr-0">
+                        <span class="card-title">Transactions</span>
+                        <span class="float-right">
+              <div class="d-flex align-items-center justify-content-end">
+                <a
+                  (click)="AddTransaction()"
+                  class="btn btn-outline-secondary mr-1"
+                  rippleEffect
+                  >Add Transaction</a
+                >
+              </div>
+
+              <!-- <i data-feather="filter" class="text-primary cursor-pointer mr-50"></i> -->
+            </span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <ul class="timeline">
+                        <li class="timeline-item" *ngFor="let tr of transactions">
+                            <span class="timeline-point {{
+                  this.tr.status == this.ApputilsService.TransactionSuccessfull
+                    ? 'timeline-point-success'
+                    : 'timeline-point-danger'
+                }} timeline-point-indicator"></span>
+                            <div class="timeline-event">
+                                <div class="
+                    d-flex
+                    justify-content-between
+                    flex-sm-row flex-column
+                    mb-sm-0 mb-1
+                  ">
+                                    <h6>{{ tr.amount | currency }}</h6>
+                                    <span class="timeline-event-time">{{
+                    tr?.createdat?.seconds * 1000 | date: "dd/MM/yyyy"
+                  }}</span>
+                                </div>
+                                <p>
+                                    {{ tr.status }}
+                                    <bold> ({{ tr.paymentmethod }}).</bold>
+                                </p>
+                                <div class="media align-items-center">
+                                    <table class="table table-responsive table-borderless">
+                                        <tr>
+                                            <td>Bank</td>
+                                            <td>
+                                                {{ tr.bank }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>IBAN</td>
+                                            <td>
+                                                {{ tr.iban }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Transaction Id</td>
+                                            <td>
+                                                {{ tr.transactionid }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td>
+
+                                                <button (click)="ToggleTransaction(tr)" class="btn btn-danger" value="Mark as Void">
+                        
+                          {{
+                            tr.status ==
+                            this.ApputilsService.TransactionSuccessfull
+                              ? "Mark as Void"
+                              : "Mark as Received"
+                          }}
+                        </button>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </core-card-snippet>
+        </div>
+    </div>
+</div>

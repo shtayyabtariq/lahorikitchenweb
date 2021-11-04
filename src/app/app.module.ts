@@ -7,6 +7,7 @@ import { AngularFireModule } from "@angular/fire";
 import { AngularFireFunctionsModule } from "@angular/fire/functions";
 import { AngularFireStorageModule } from '@angular/fire/storage';
 import 'hammerjs';
+import { Ng2FlatpickrModule } from 'ng2-flatpickr';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { ToastrModule } from 'ngx-toastr'; // For auth after login toast
@@ -24,7 +25,7 @@ import { environment } from 'environments/environment';
 
 
 import { DatatablesModule } from './modules/datatables.module';
-import { CurrencyPipe } from './auth/helpers/currency.pipe';
+import { CurrencyPipe, NumberToWordsPipe } from './auth/helpers/currency.pipe';
 import { ApartmentComponent } from './main/InventoryManagement/createapartment/apartment/apartment.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SettingsComponent } from './main/settings/settings.component';
@@ -54,7 +55,7 @@ const appRoutes: Routes = [
     BrowserAnimationsModule,
     HttpClientModule,
  
-
+    Ng2FlatpickrModule,
     AngularFireModule.initializeApp(environment.firebase),
   
     AngularFireStorageModule,
@@ -80,7 +81,7 @@ const appRoutes: Routes = [
     LayoutModule,
     SampleModule,
     DatatablesModule,
-    
+
   ],
   providers: [
     

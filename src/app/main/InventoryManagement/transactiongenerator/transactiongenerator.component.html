@@ -1,0 +1,81 @@
+<form [formGroup]="form" *ngIf="this.start">
+    <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel1">Transaction</h4>
+        <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    </div>
+    <div class="modal-body" tabindex="0" ngbAutofocus>
+        <div class="row">
+            <div class="col-12">
+                <div class="form-group mt-2" *ngIf="this.showinvoice">
+                    <label> Choose the Bank for payment </label>
+
+                    <ng-select class="ng-select-size-lg" #SelectSizeLarge [ngModelOptions]="{ standalone: true }" (change)="onBankSelect($event)" [items]="this.metadata.banks" [searchable]="true" bindLabel="Name" bindValue="Iban">
+                        <ng-template ng-header-tmp>
+                            <input class="form-control w-100" placeholder="Search By Bank Name" type="text" (input)="SelectSizeLarge.filter($event.target.value)" />
+                        </ng-template>
+                        <!--/ select size large -->
+                    </ng-select>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="form-group">
+                    <label for="amount">Amount</label>
+                    <input type="number" [class.error]="isSubmit && form.controls.amount.errors" class="form-control" id="amount" formControlName="amount" required />
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="form-group">
+                    <label for="tid">Transaction Id</label>
+                    <input type="text" [class.error]="isSubmit && form.controls.tid.errors" class="form-control" id="amount" formControlName="tid" required />
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="form-group">
+                    <label for="status">Status</label>
+                    <select id="status" formControlName="status" [(value)]="this.ApputilsService.TransactionStatus[0]" [ngModel]="this.transactionstatus" class="form-control">
+            <option
+              value="{{ food }}"
+              *ngFor="let food of ApputilsService.TransactionStatus"
+            >
+              {{ food }}
+            </option>
+          </select>
+                </div>
+            </div>
+
+            <div class="col-12">
+                <div class="form-group">
+                    <label for="method">Payment Method</label>
+                    <select id="method" formControlName="method" [(value)]="this.ApputilsService.PaymentMethod[0]" [ngModel]="this.paymentmethod" class="form-control">
+          <option
+            value="{{ food }}"
+            *ngFor="let food of ApputilsService.PaymentMethod"
+          >
+            {{ food }}
+          </option>
+        </select>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="form-group">
+                    <label> Transaction Date</label>
+                    <ng2-flatpickr [(ngModel)]="invoiceDate" [config]="InvoiceDateDto" name="Invoice Date" formControlName="invoicedate"></ng2-flatpickr>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="form-group">
+                    <label for="notes">Notes</label>
+                    <input type="text" [class.error]="isSubmit && form.controls.notes.errors" class="form-control" id="notes" formControlName="notes" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary" (click)="onSubmit()" rippleEffect>
+      Save
+    </button>
+    </div>
+</form>

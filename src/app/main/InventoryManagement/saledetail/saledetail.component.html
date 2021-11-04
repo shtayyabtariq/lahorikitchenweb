@@ -1,0 +1,458 @@
+<div class="container">
+
+    <ul ngbNav #navFilled="ngbNav" [activeId]="'general'" class="nav nav-fill nav-pills">
+        <li [ngbNavItem]="'general'">
+            <a ngbNavLink>General</a>
+            <ng-template ngbNavContent>
+                <div class="row">
+                    <div class="col-12 col-lg-6">
+                        <core-card-snippet>
+                            <div class="card-body">
+                                <div class="card-title">
+                                    Customer
+                                </div>
+                                <div class="card-body">
+                                    <div class="table">
+                                        <table class="table table-responsive table-bordered fw-800" *ngIf="viewcustomer">
+                                            <tr>
+                                                <td>
+                                                    Name
+                                                </td>
+                                                <td>
+                                                    {{this.cust.name}}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    CNIC
+                                                </td>
+                                                <td>
+                                                    {{this.cust.cnic}}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Phone Number
+                                                </td>
+                                                <td>
+                                                    {{this.cust.phonenumber}}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Mail Address
+                                                </td>
+                                                <td>
+                                                    {{this.cust.mailaddress}}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Permanent Address
+                                                </td>
+                                                <td>
+                                                    {{this.cust.permanentaddress}}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Email Address
+                                                </td>
+                                                <td>
+                                                    {{this.cust.emailaddress}}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Office Number
+                                                </td>
+                                                <td>
+                                                    {{this.cust.office}}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Source Of Income
+                                                </td>
+                                                <td>
+                                                    {{this.cust.sourceofincome}}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Business Name
+                                                </td>
+                                                <td>
+                                                    {{this.cust.businessname}}
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </core-card-snippet>
+                    </div>
+                    <div class="col-12 col-lg-6">
+                        <core-card-snippet>
+                            <div class="card-body">
+                                <div class="card-title">
+                                    Sale Information
+                                </div>
+                                <div class="card-body">
+                                    <table class="table table-responsive table-bordered fw-800" *ngIf="viewsale && viewinvoices">
+                                        <thead class="fw-1200">
+                                            <th>
+                                                Payment Terms
+                                            </th>
+                                            <th>
+                                                Percentage
+                                            </th>
+                                            <th>
+                                                Amount (PKR)
+                                            </th>
+                                            <th>
+                                                Payable by
+                                            </th>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    Booking
+                                                </td>
+                                                <td>
+                                                    {{sale.booking}}%
+                                                </td>
+                                                <td>
+                                                    {{sale.bookingamount | number}}
+                                                </td>
+                                                <td>
+                                                    {{this.bookinginvoice.invoicepaid ? "Paid":"UnPaid"}}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Confirmation
+                                                </td>
+                                                <td>
+                                                    {{sale.confirmation}}%
+                                                </td>
+                                                <td>
+                                                    {{sale.confirmationamount | number}}
+                                                </td>
+                                                <td>
+                                                    {{this.confirmationinvoice.invoicepaid ? "Paid":"UnPaid"}}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Agreement
+                                                </td>
+                                                <td>
+                                                    {{PlanInfo?.agreement}}%
+                                                </td>
+                                                <td>
+                                                    {{PlanInfo?.agreementamount | number}}
+                                                </td>
+                                                <td>
+                                                    {{this.agreementinvoice.invoicepaid ? "Paid":"UnPaid"}}
+                                                </td>
+
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Total
+                                                </td>
+                                                <td>
+
+                                                </td>
+                                                <td>
+                                                    {{sale.agreementamount+sale.bookingamount+sale.confirmationamount | number}}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Balance in Installments
+                                                </td>
+                                                <td>
+                                                    {{100- (sale.agreement+sale.booking+sale.confirmation+sale.possession)}}%
+                                                </td>
+                                                <td>
+                                                    {{sale?.installmentamount | number}}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    {{sale.installment.text}} Amount
+                                                </td>
+                                                <td>
+
+                                                </td>
+                                                <td>
+                                                    {{this.sale.perinstallmentamount | number:'1.0-0'}}
+                                                </td>
+
+                                            </tr>
+
+                                            <tr>
+                                                <td>
+                                                    Tenure For Installment
+                                                </td>
+                                                <td>
+
+                                                </td>
+                                                <td>
+                                                    {{sale.plan}} years
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    No. of Installments
+                                                </td>
+                                                <td>
+
+                                                </td>
+                                                <td>
+                                                    {{this.installmentinvoice.length}}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Possession
+                                                </td>
+                                                <td>
+                                                    {{sale?.possession}}%
+                                                </td>
+                                                <td>
+                                                    {{sale.possessionamount | number}}
+                                                </td>
+                                                <td>
+                                                    {{this.possesioninvoice.invoicepaid ? "Paid":"UnPaid"}}
+                                                </td>
+                                            </tr>
+                                            <tr *ngIf="this.sale.updatedat != null">
+                                                <td>
+                                                    Plan Date
+                                                </td>
+                                                <td>
+
+                                                </td>
+                                                <td>
+                                                    {{this.sale?.updatedat.seconds * 1000 | date }}
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </core-card-snippet>
+                    </div>
+                </div>
+
+            </ng-template>
+        </li>
+        <li [ngbNavItem]="'service'">
+            <a ngbNavLink>Invoices</a>
+            <ng-template ngbNavContent>
+                <core-card-snippet>
+                    <div class="card-title">
+                        Invoices
+                    </div>
+                    <div class="card-body" *ngIf="viewinvoices">
+                        <div class="row">
+                            <div class="col-6">
+                                <core-card-snippet>
+                                    <div class="card-title">
+                                        Booking
+                                        <a class="mr-1" routerLink="/sales/{{this.sale.id}}/invoice/{{ this?.booking?.id }}" container="body" placement="top" ngbTooltip="Preview Invoice"><i size="18" data-feather="eye"></i
+                                          ></a>
+                                    </div>
+                                    <div class="card-body">
+                                        <table class="table table-responsive-md  table-bordered">
+                                            <thead>
+                                                <th>
+                                                    Amount Left
+                                                </th>
+                                                <th>
+                                                    Due on
+                                                </th>
+                                                <th>
+                                                    Status
+                                                </th>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        {{this.bookinginvoice?.amountleft}}
+                                                    </td>
+                                                    <td>
+                                                        {{this.bookinginvoice?.invoicedueon.seconds * 1000 | date:'dd/MM/yyyy'}}
+                                                    </td>
+                                                    <td>
+                                                        {{this.bookinginvoice?.invoicepaid ? "Paid":"UnPaid"}}
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </core-card-snippet>
+                            </div>
+                            <div class="col-6">
+                                <core-card-snippet>
+                                    <div class="card-title">
+                                        Agreement
+                                        <a class="mr-1" routerLink="/sales/{{this.sale.id}}/invoice/{{ this.agreementinvoice.id }}" container="body" placement="top" ngbTooltip="Preview Invoice"><i size="18" data-feather="eye"></i
+                                          ></a>
+                                    </div>
+                                    <div class="card-body">
+                                        <table class="table table-responsive-md  table-bordered">
+                                            <thead>
+                                                <th>
+                                                    Amount Left
+                                                </th>
+                                                <th>
+                                                    Due on
+                                                </th>
+                                                <th>
+                                                    Status
+                                                </th>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        {{this.agreementinvoice.amountleft}}
+                                                    </td>
+                                                    <td>
+                                                        {{this.agreementinvoice.invoicedueon.seconds * 1000 | date:'dd/MM/yyyy'}}
+                                                    </td>
+                                                    <td>
+                                                        {{this.agreementinvoice.invoicepaid ? "Paid":"UnPaid"}}
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </core-card-snippet>
+                            </div>
+                            <div class="col-6">
+                                <core-card-snippet>
+                                    <div class="card-title">
+                                        Confirmation
+                                        <a class="mr-1" routerLink="/sales/{{this.sale.id}}/invoice/{{ this?.confirmationinvoice.id }}" container="body" placement="top" ngbTooltip="Preview Invoice"><i size="18" data-feather="eye"></i
+                                          ></a>
+                                    </div>
+                                    <div class="card-body">
+                                        <table class="table table-responsive-md  table-bordered">
+                                            <thead>
+                                                <th>
+                                                    Amount Left
+                                                </th>
+                                                <th>
+                                                    Due on
+                                                </th>
+                                                <th>
+                                                    Status
+                                                </th>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        {{this.confirmationinvoice?.amountleft}}
+                                                    </td>
+                                                    <td>
+                                                        {{this.confirmationinvoice?.invoicedueon.seconds * 1000 | date:'dd/MM/yyyy'}}
+                                                    </td>
+                                                    <td>
+                                                        {{this.confirmationinvoice?.invoicepaid ? "Paid":"UnPaid"}}
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </core-card-snippet>
+                            </div>
+                            <div class="col-6">
+                                <core-card-snippet>
+                                    <div class="card-title">
+                                        Possession
+                                        <a class="mr-1" routerLink="/sales/{{this.sale.id}}/invoice/{{ this.possessioninvoice?.id }}" container="body" placement="top" ngbTooltip="Preview Invoice"><i size="18" data-feather="eye"></i
+                                          ></a>
+                                    </div>
+                                    <div class="card-body">
+                                        <table class="table table-responsive-md  table-bordered">
+                                            <thead>
+                                                <th>
+                                                    Amount Left
+                                                </th>
+                                                <th>
+                                                    Due on
+                                                </th>
+                                                <th>
+                                                    Status
+                                                </th>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        {{this.possesioninvoice?.amountleft}}
+                                                    </td>
+                                                    <td>
+                                                        {{this.possesioninvoice?.invoicedueon?.seconds * 1000 | date:'dd/MM/yyyy'}}
+                                                    </td>
+                                                    <td>
+                                                        {{this.possesioninvoice?.invoicepaid ? "Paid":"UnPaid"}}
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </core-card-snippet>
+                            </div>
+                        </div>
+                    </div>
+                </core-card-snippet>
+                <core-card-snippet>
+                    <div class="card-title">
+                        Installment Invoices
+                    </div>
+                    <div class="card-body">
+                        <table class="table  table-bordered">
+                            <thead>
+                                <th>
+                                    Installment#
+                                </th>
+                                <th>
+                                    Total Amount
+                                </th>
+                                <th>
+                                    Amount Paid
+                                </th>
+                                <th> Amount Left</th>
+                                <th>
+                                    Due On
+                                </th>
+                                <th>
+                                    Actions
+                                </th>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let inst of installmentinvoice">
+                                    <td> {{inst.installmentno}} </td>
+                                    <td> {{inst.amount}} </td>
+                                    <td> {{inst.amountpaid}} </td>
+                                    <td> {{inst.amountleft}} </td>
+                                    <td> {{inst.invoicedueon.seconds * 1000 | date:'dd/MM/yyyy' }} </td>
+                                    <td>
+                                        <a class="mr-1" routerLink="/sales/{{this.sale.id}}/invoice/{{ inst.id }}" container="body" placement="top" ngbTooltip="Preview Invoice"><i size="18" data-feather="eye"></i
+                ></a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </core-card-snippet>
+            </ng-template>
+        </li>
+
+    </ul>
+    <div [ngbNavOutlet]="navFilled" class="mt-1"></div>
+</div>

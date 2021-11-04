@@ -16,6 +16,8 @@ import { NgbActiveModal, NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { ProgressdialogComponent } from "app/main/progressdialog/progressdialog.component";
 import { NotificationService } from "app/auth/service/notification.service";
 import { THIS_EXPR } from "@angular/compiler/src/output/output_ast";
+import { InvoiceManagement } from '../invoicemanagement';
+import { InvoiceType } from '../../../auth/helpers/apputils.service';
 
 @Component({
   selector: "app-plan-generator",
@@ -226,7 +228,7 @@ export class PlanGeneratorComponent implements OnInit {
       this.PlanInfo.apartmentid = this.apartment.docid;
       this.PlanInfo.apartmentname = this.apartment.name;
       this.PlanInfo.apartmentrate = this.rate;
-      
+      this.PlanInfo.totalamount = totalPrice;
 
       var incrementer = installments.months;
       var currentPlanTime = 0 + incrementer;
@@ -245,6 +247,13 @@ export class PlanGeneratorComponent implements OnInit {
           invoicepaidon: null,
           approvedby: null,
           approvalpicture: "",
+          id: "",
+          planid: "",
+          amountpaid: 0,
+          amountleft: perInstallmentAmount,
+          type: InvoiceType.Installment,
+          createdat: this.ApputilsService.getServerTimestamp(),
+          updateat: this.ApputilsService.getServerTimestamp()
         };
 
         this.PlanSchedule.push(ps);

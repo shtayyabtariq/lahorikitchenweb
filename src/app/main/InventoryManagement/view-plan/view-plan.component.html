@@ -129,8 +129,19 @@
 
                                 <a (click)="OnDelete(row)" href="javascript:void(0)" ngbDropdownItem class="d-flex align-items-center"><i data-feather="trash-2" class="mr-50"></i> Delete</a
                     >
+
+
+                    <a routerLink="/sale/{{row.id}}" ngbDropdownItem class="d-flex align-items-center"> Create Sale</a
+                      >
                   </div>
                 </div>
+
+                <span routerLink="/sale/{{row.id}}"  >
+                  <i
+                    data-feather="add"
+                    class="text-primary cursor-pointer"
+                  ></i>
+                </span>
 
                 <span routerLink="/generateplan" [queryParams]="{id:row.id}" >
                   <i
