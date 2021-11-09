@@ -46,8 +46,12 @@ export interface PlanScheduleDto{
     updateat:any;
 }
 export interface Transaction{
+    totalamount:number;
     amount:number;
     id:string;
+    apartmentname:string;
+    customername:string;
+    invoicename:string; 
     bank:string;
     iban:string;
     paymentmethod:string;
@@ -58,6 +62,7 @@ export interface Transaction{
     updatedat:any;
     notes:string;
     transactiondate:any;
+    editable:boolean;
 }
 
 export interface SalesDto{

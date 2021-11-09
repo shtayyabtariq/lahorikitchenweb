@@ -81,6 +81,7 @@ const appRoutes: Routes = [
     LayoutModule,
     SampleModule,
     DatatablesModule,
+    FormsModule
 
   ],
   providers: [

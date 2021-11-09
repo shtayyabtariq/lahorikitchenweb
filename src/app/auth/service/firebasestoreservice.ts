@@ -15,15 +15,19 @@ import {
   Transaction,
 } from "../models/plandto";
 import { ApputilsService } from "../helpers/apputils.service";
-import { CustomerDto } from "../models/customerinfo";
+import { CustomerDto, creditamounts } from '../models/customerinfo';
 import { query } from "@angular/animations";
 import { metadata } from "../models/metadata";
 import { stat } from "fs";
+import { disconnect } from "process";
 
 @Injectable({
   providedIn: "root",
 })
 export class firebaseStoreService {
+  changeApartmentStatus(apartmentid: string, HoldStatus: string) {
+    return this.fs.collection(this.apartments).doc(apartmentid).update({"status":HoldStatus});
+  }
   constructor(public fs: AngularFirestore, public appUtils: ApputilsService) {}
   apartments = "apartments";
   apartmenttypesCollection = "apartmenttypes";
@@ -32,6 +36,8 @@ export class firebaseStoreService {
   customersCollection = "customers";
   planinvoicesCollection = "planinvoices";
   metadataCollection = "metadata";
+  transactionsCollection = "transactions";
+  creditCollection = "credits";
 
   async addCustomer(customer: CustomerDto) {
     var doc = this.fs.collection(this.customersCollection).doc();
@@ -49,6 +55,13 @@ export class firebaseStoreService {
   }
   getCustomer() {
     return this.fs.collection<CustomerDto>(this.customersCollection);
+  }
+  getCustomerCredits(id:string,tid:string){
+    return this.fs.collection(this.customersCollection).doc(id).collection<creditamounts>(this.creditCollection).doc(tid);
+  }
+  deleteCustomerCredit(id:string,tid:string)
+  {
+    return this.fs.collection(this.customersCollection).doc(id).collection<creditamounts>(this.creditCollection).doc(tid).delete();
   }
   async addSales(sale: SalesDto) {
     var doc = this.fs.collection(this.salesCollection).doc();
@@ -71,30 +84,105 @@ export class firebaseStoreService {
   getSales() {
     return this.fs.collection<SalesDto>(this.salesCollection);
   }
-  addtransaction(tr: Transaction, invoiceid: string) {
-    var doc = this.fs
-      .collection(this.planinvoicesCollection)
-      .doc(invoiceid)
-      .collection("transactions")
-      .doc();
+  async addtransaction(tr: Transaction, invoiceid: string) {
+    var doc = this.fs.collection(this.transactionsCollection).doc();
     tr.id = doc.ref.id;
-    return doc.set(tr);
+    var invoice = (await (this.getinvoicebyid(invoiceid).get().toPromise())).data();
+    await doc.set(tr).then();
+    
+    await this.runTransaction(tr);
   }
+  async toggletransactionupdate(tid:string,status:boolean)
+  {
+    return this.fs.collection(this.transactionsCollection).doc(tid).update({"editable":status});
+  }
+  gettransactionbyid(id: string) {
+    return this.fs.collection<Transaction>(this.transactionsCollection).doc(id);
+  }
+  async updatetransaction(tr: Transaction) {
+    var updateTr = await this.fs
+      .collection(this.transactionsCollection)
+      .doc(tr.id)
+      .update(tr);
+    await this.runTransaction(tr);
+  }
+  async creditAmountToCustomer(id:string,creditamounts:creditamounts){
+    return this.fs.collection(this.customersCollection).doc(id).collection(this.creditCollection).doc(creditamounts.id).set(creditamounts);
+  }
+  async runTransaction(tr: Transaction) {
+    await this.fs.firestore
+      .runTransaction(async (t) => {
+        var transc = await this.getvalidtransactions(tr.invoiceid)
+          .get()
+          .toPromise();
+        var totalSum = 0;
+        transc.docs.forEach((e) => {
+          totalSum += e.data().amount;
+        });
+        var invoice = (
+          await this.getinvoicebyid(tr.invoiceid).get().toPromise()
+        ).data();
+        await this.updateInvoiceTransaction(totalSum, invoice);
+      })
+      .then();
+  }
+  async updateInvoiceTransaction(
+    amount: number,
+    invoicedetail: PlanScheduleDto
+  ) {
+    var amountLeft = invoicedetail.amount - amount;
+    invoicedetail.amountpaid = amount;
+    invoicedetail.amountleft = amountLeft;
+
+    invoicedetail.invoicepaid =
+      invoicedetail.amount == invoicedetail.amountpaid;
+    invoicedetail.invoicepaidon = null;
+
+    if (invoicedetail.invoicepaid) {
+      invoicedetail.invoicepaidon = this.appUtils.getServerTimestamp();
+    }
+
+    await this.updateinvoice(invoicedetail).then();
+  }
+
+  getalltransactions() {
+    return this.fs.collection<Transaction>(this.transactionsCollection, (res) =>
+      res.orderBy("transactiondate", "desc")
+    );
+  }
+
+  
   gettransactions(invoiceid: string) {
-    return this.fs
-      .collection(this.planinvoicesCollection)
-      .doc(invoiceid)
-      .collection<Transaction>("transactions",res=>res.orderBy("transactiondate","desc"));
+    return this.fs.collection<Transaction>(this.transactionsCollection, (res) =>
+      res.where("invoiceid", "==", invoiceid).orderBy("transactiondate", "desc")
+    );
   }
-  toggletransaction(invoiceid: string, tid: string, status: string) {
-    return this.fs
-      .collection(this.planinvoicesCollection)
-      .doc(invoiceid)
-      .collection("transactions")
+
+  getvalidtransactions(invoiceid: string) {
+    return this.fs.collection<Transaction>(this.transactionsCollection, (res) =>
+      res
+        .where("invoiceid", "==", invoiceid)
+        .where("status", "==", this.appUtils.TransactionSuccessfull)
+        .orderBy("transactiondate", "desc")
+    );
+  }
+  async toggletransaction(invoiceid: string, tid: string, status: string) {
+    await this.fs
+      .collection(this.transactionsCollection)
       .doc(tid)
+
       .update({
         status: status,
-      });
+      })
+      .then();
+    var tr = (
+      await this.fs
+        .collection<Transaction>(this.transactionsCollection)
+        .doc(tid)
+        .get()
+        .toPromise()
+    ).data();
+    return this.runTransaction(tr);
   }
   updateinvoice(invoice: PlanScheduleDto) {
     return this.fs
@@ -109,11 +197,23 @@ export class firebaseStoreService {
   getCustomerbyId(id: string) {
     return this.fs.collection<CustomerDto>(this.customersCollection).doc(id);
   }
-  getSaleInvoices(id: string) {
-    return this.fs.collection<PlanScheduleDto>(
-      this.planinvoicesCollection,
-      (res) => res.where("planid", "==", id)
-    );
+  getSaleInvoices(id: string, fetchtype: number = 0) {
+    if (fetchtype == 0) {
+      return this.fs.collection<PlanScheduleDto>(
+        this.planinvoicesCollection,
+        (res) => res.where("planid", "==", id)
+      );
+    } else if (fetchtype == 1) {
+      return this.fs.collection<PlanScheduleDto>(
+        this.planinvoicesCollection,
+        (res) => res.where("planid", "==", id).where("invoicepaid", "==", true)
+      );
+    } else {
+      return this.fs.collection<PlanScheduleDto>(
+        this.planinvoicesCollection,
+        (res) => res.where("planid", "==", id).where("invoicepaid", "==", false)
+      );
+    }
   }
   getCustomerSales(id: string) {
     return this.fs.collection<SalesDto>(this.salesCollection, (res) =>
@@ -173,6 +273,11 @@ export class firebaseStoreService {
   getapartments(isarchive: boolean) {
     return this.fs.collection(this.apartments, (res) =>
       res.where("isarchive", "==", isarchive)
+    );
+  }
+  getSALEapartments() {
+    return this.fs.collection(this.apartments, (res) =>
+      res.where("isarchive", "==", false).where("status","==","Open")
     );
   }
   async getApartments(arr: String[], isarchive: boolean = false) {

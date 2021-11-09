@@ -9,9 +9,37 @@
         <div class="row">
             <div class="col-12">
                 <div class="form-group mt-2" *ngIf="this.showinvoice">
+                    <label> Choose the Apartment for Payment </label>
+
+                    <ng-select class="ng-select-size-lg" [(ngModel)]="apartmentid" #SelectSizeLarge [ngModelOptions]="{ standalone: true }" (change)="fetchinvoicesofsale($event)" [items]="this.sales" [searchable]="true" bindLabel="apartmentname" bindValue="apartmentname">
+                        <ng-template ng-header-tmp>
+                            <input class="form-control w-100" placeholder="Search By Apartment Name" type="text" (input)="SelectSizeLarge.filter($event.target.value)" />
+                        </ng-template>
+                        <!--/ select size large -->
+                    </ng-select>
+                </div>
+            </div>
+
+            <div class="col-12">
+                <div class="form-group mt-2" *ngIf="this.showinvoice">
+                    <label for="invoices">Choose Invoice</label>
+                    <select id="invoices" formControlName="invoice" (change)="invoiceselect($event.target.value)" [ngModel]="this.invoiceid" class="form-control">
+            <option
+              value="{{ food.id }}"
+              *ngFor="let food of invoices"
+            >
+              {{ food.type }}  {{ food.type == "Installment" ? food?.installmentno:""}} ({{food.amountleft | number}})
+            </option>
+          </select>
+                </div>
+            </div>
+
+
+            <div class="col-12">
+                <div class="form-group mt-2" *ngIf="this.showinvoice">
                     <label> Choose the Bank for payment </label>
 
-                    <ng-select class="ng-select-size-lg" #SelectSizeLarge [ngModelOptions]="{ standalone: true }" (change)="onBankSelect($event)" [items]="this.metadata.banks" [searchable]="true" bindLabel="Name" bindValue="Iban">
+                    <ng-select class="ng-select-size-lg" #SelectSizeLarge [ngModelOptions]="{ standalone: true }" (change)="onBankSelect($event)" [items]="this.metadata.banks" [searchable]="true" [(ngModel)]="bank" bindLabel="Name" bindValue="Iban">
                         <ng-template ng-header-tmp>
                             <input class="form-control w-100" placeholder="Search By Bank Name" type="text" (input)="SelectSizeLarge.filter($event.target.value)" />
                         </ng-template>
@@ -21,8 +49,10 @@
             </div>
             <div class="col-12">
                 <div class="form-group">
-                    <label for="amount">Amount</label>
-                    <input type="number" [class.error]="isSubmit && form.controls.amount.errors" class="form-control" id="amount" formControlName="amount" required />
+                    <label for="amount">Amount  
+                         </label>
+                    <input type="number" min="0" [class.error]="isSubmit && form.controls.amount.errors" class="form-control" id="amount" formControlName="amount" required />
+
                 </div>
             </div>
             <div class="col-12">
@@ -34,7 +64,7 @@
             <div class="col-12">
                 <div class="form-group">
                     <label for="status">Status</label>
-                    <select id="status" formControlName="status" [(value)]="this.ApputilsService.TransactionStatus[0]" [ngModel]="this.transactionstatus" class="form-control">
+                    <select id="status" formControlName="status" [(value)]="this.ApputilsService.TransactionStatus[0]" [(ngModel)]="this.transactionstatus" class="form-control">
             <option
               value="{{ food }}"
               *ngFor="let food of ApputilsService.TransactionStatus"

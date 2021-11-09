@@ -22,6 +22,7 @@ import {
   InvoiceType,
 } from "../../../auth/helpers/apputils.service";
 import * as invoicemanagement from "../invoicemanagement";
+import Swal from "sweetalert2";
 
 @Component({
   selector: "app-salesplan",
@@ -245,6 +246,21 @@ export class SalesplanComponent implements OnInit {
   }
   async generateSales() {
     if (this.form.valid) {
+      var apt = (await this.fs.getapartmentbyid(this.PlanInfo.apartmentid).get().toPromise()).data().status;
+    if(apt != "Open")
+    {
+      Swal.fire({
+        title:"Sale Can not be generated",
+        text:'Cannot Generate Sale, Apartment is not Open',
+        icon: 'warning',
+        showCancelButton:false,
+        confirmButtonText:"OK"
+      });
+      return;
+    }
+
+   
+
       var pDialog = this.modalservice.open(ProgressdialogComponent, {
         windowClass: "transparent",
         backdrop: false,
@@ -252,7 +268,7 @@ export class SalesplanComponent implements OnInit {
       });
 
       let cust: CustomerDto = {
-        id: this.isdisabled ? this.currentCustomer.id : "",
+        id: this.currentCustomer?.id ?? "",
         name: this.form.controls["name"].value,
         fathername: this.form.controls["fathername"].value,
         sex: false,
@@ -266,7 +282,7 @@ export class SalesplanComponent implements OnInit {
         sourceofincome: this.form.controls["source"].value,
         businessname: this.form.controls["bname"].value,
       };
-      if (cust.id.trim.length == 0) {
+      if (cust.id != undefined && cust.id.trim().length == 0) {
         cust.id = await this.fs.addCustomer(cust);
       }
       var agreementinvoice =
@@ -304,9 +320,10 @@ export class SalesplanComponent implements OnInit {
         id: "",
         customerid: cust.id,
         isallpaid: false,
+        
         accountcode: this.form.controls["accountcode"].value,
         applicationno: this.form.controls["applicaitonno"].value,
-        perinstallmentamount: this.PlanInfo.perinstallmentamount,
+        perinstallmentamount: this.PlanInfo.installmentamount,
         plan: this.PlanInfo.plan,
         installment: this.PlanInfo.installment,
         installmentamount: this.PlanInfo.installmentamount,
@@ -336,9 +353,11 @@ export class SalesplanComponent implements OnInit {
         customername: cust.name+" "+cust.fathername,
         customercnic: cust.cnic
       };
-      this.fs.addSales(sal).then((e) => {
+      this.fs.addSales(sal).then(async (e) => {
+        await this.fs.changeApartmentStatus(this.PlanInfo.apartmentid,this.ApputilsService.HoldStatus).then();
         pDialog.close();
         this.nts.showSuccess("Sales Generated", "Sales Info");
+        this.routerser.navigateByUrl("/sales");
       });
     }
   }

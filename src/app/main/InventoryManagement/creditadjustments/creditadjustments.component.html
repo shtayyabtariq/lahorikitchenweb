@@ -1,0 +1,72 @@
+<form>
+    <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel1">Transaction</h4>
+        <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+    </div>
+    <div class="modal-body" tabindex="0" ngbAutofocus>
+        <div class="row">
+            <div class="col-12">
+                <span>
+              {{this?.customer?.name}}
+            </span> | <span> {{this?.customer?.cnic}}</span>
+
+            </div>
+            <div class="col-12">
+                <div class="form-group" *ngIf="this.istransactionsfetched">
+                    <label> 
+                    Choose Transaction
+                  </label>
+                    <ng-select class="ng-select-size-lg" #SelectSizeLarge [ngModelOptions]="{standalone: true}" (change)="ontransactionselect($event)" [items]="transacitons" [searchable]="true" bindLabel="transactionid" bindValue="id">
+                        <ng-template ng-header-tmp>
+                            <input class="form-control w-100" placeholder="Search Transactions" type="text" (input)="SelectSizeLarge.filter($event.target.value)" />
+                        </ng-template>
+                        <!--/ select size large -->
+                    </ng-select>
+
+
+                    <label> 
+                      Choose Apartment
+                    </label>
+                    <ng-select [ngModelOptions]="{standalone: true}" class="ng-select-size-lg" #SelectSize (change)="oncustomselect($event)" [items]="customerSales" [searchable]="true" bindLabel="apartmentname" bindValue="id">
+                        <ng-template ng-header-tmp>
+                            <input class="form-control w-100" placeholder="Search Apartment" type="text" (input)="SelectSize.filter($event.target.value)" />
+                        </ng-template>
+                        <!--/ select size large -->
+                    </ng-select>
+                </div>
+
+
+                <div class="form-group mt-2">
+                    <label for="invoices">Choose Invoice</label>
+                    <select id="invoices" [ngModelOptions]="{standalone: true}" (change)="invoiceselect($event.target.value)" [ngModel]="this.invoiceid" class="form-control">
+              <option
+                value="{{ food.id }}"
+                *ngFor="let food of invoices"
+              >
+                {{ food.type }}  {{ food.type == "Installment" ? food?.installmentno:""}} ({{food.amountleft | number}})
+              </option>
+            </select>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="amount">Amount  
+                           </label>
+                    <input type="number" min="0" [value]="amount" class="form-control" id="amount" disabled required />
+
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary" (click)="onSubmit()" rippleEffect>
+    Save
+  </button>
+    </div>
+</form>

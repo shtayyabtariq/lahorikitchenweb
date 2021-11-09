@@ -104,15 +104,16 @@ export class ViewsalesComponent implements OnInit {
     debugger;
     const val = event.target.value.toLowerCase().trim().replace(/\s/g, "");
 
-    const count = this.table.bodyComponent._columns.length;
+    const count = Object.keys(this).length
 
     // get the key names of each column in the dataset
-    const keys = Object.keys(this.tempData[0]);
+    const keys = Object.keys(this.tempData[1]);
     // assign filtered matches to the active datatable
     this.apt = this.tempData.filter((item) => {
       // iterate through each row's column data
-      for (let i = 0; i < count; i++) {
+      for (let i = 0; i < keys.length; i++) {
         // check for a match
+        debugger;
         if (item[keys[i]]) {
           var it = item[keys[i]]
             .toString()

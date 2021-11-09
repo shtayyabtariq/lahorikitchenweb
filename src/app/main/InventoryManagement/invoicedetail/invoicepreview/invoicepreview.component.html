@@ -34,21 +34,21 @@
                                     {{ this.invoicedetail?.amount | currency }}
 
 
-                                    <b> ( {{this.invoicedetail.amount | numberToWords}})</b>
+                                    <b> ( {{this.invoicedetail?.amount | numberToWords}})</b>
                                 </td>
                             </tr>
                             <tr>
                                 <td>Amount Paid</td>
                                 <td>
                                     {{ this.invoicedetail?.amountpaid | currency}}
-                                    <b> ( {{this.invoicedetail.amountpaid | numberToWords}})</b>
+                                    <b> ( {{this.invoicedetail?.amountpaid | numberToWords}})</b>
                                 </td>
                             </tr>
                             <tr>
                                 <td>Amount Left</td>
                                 <td>
                                     {{ this.invoicedetail?.amountleft | currency}}
-                                    <b> ( {{this.invoicedetail.amountleft | numberToWords}})</b>
+                                    <b> ( {{this.invoicedetail?.amountleft | numberToWords}})</b>
                                 </td>
                             </tr>
                             <tr>
@@ -79,7 +79,7 @@
                 >
               </div>
 
-              <!-- <i data-feather="filter" class="text-primary cursor-pointer mr-50"></i> -->
+              <!-- <i data-feather="filter" class="text-primary  cursor-pointer mr-50"></i> -->
             </span>
                     </div>
                 </div>

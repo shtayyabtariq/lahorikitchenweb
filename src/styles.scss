@@ -32,6 +32,7 @@
     }
     .invoice-actions,
     .main-menu,
+    .print-hide,
     .buy-now {
         visibility: hidden;
     }
@@ -39,4 +40,8 @@
         max-width: 100% !important;
         flex: 0 0 100%;
     }
+}
+
+.brouchure td {
+    border: 1px solid black;
 }

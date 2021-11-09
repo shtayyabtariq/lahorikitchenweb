@@ -148,10 +148,10 @@
                                                     Agreement
                                                 </td>
                                                 <td>
-                                                    {{PlanInfo?.agreement}}%
+                                                    {{sale?.agreement}}%
                                                 </td>
                                                 <td>
-                                                    {{PlanInfo?.agreementamount | number}}
+                                                    {{sale?.agreementamount | number}}
                                                 </td>
                                                 <td>
                                                     {{this.agreementinvoice.invoicepaid ? "Paid":"UnPaid"}}
@@ -263,7 +263,7 @@
                                 <core-card-snippet>
                                     <div class="card-title">
                                         Booking
-                                        <a class="mr-1" routerLink="/sales/{{this.sale.id}}/invoice/{{ this?.booking?.id }}" container="body" placement="top" ngbTooltip="Preview Invoice"><i size="18" data-feather="eye"></i
+                                        <a class="mr-1" routerLink="/sales/{{this.sale.id}}/invoice/{{ this?.bookinginvoice?.id }}" container="body" placement="top" ngbTooltip="Preview Invoice"><i size="18" data-feather="eye"></i
                                           ></a>
                                     </div>
                                     <div class="card-body">
@@ -374,7 +374,7 @@
                                 <core-card-snippet>
                                     <div class="card-title">
                                         Possession
-                                        <a class="mr-1" routerLink="/sales/{{this.sale.id}}/invoice/{{ this.possessioninvoice?.id }}" container="body" placement="top" ngbTooltip="Preview Invoice"><i size="18" data-feather="eye"></i
+                                        <a class="mr-1" routerLink="/sales/{{this.sale.id}}/invoice/{{ this.possesioninvoice?.id }}" container="body" placement="top" ngbTooltip="Preview Invoice"><i size="18" data-feather="eye"></i
                                           ></a>
                                     </div>
                                     <div class="card-body">

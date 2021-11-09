@@ -55,6 +55,8 @@
     "firebase": "^7.0 || ^8.0",
     "flatpickr": "4.6.9",
     "hammerjs": "2.0.8",
+    "html2canvas": "^1.3.2",
+    "jspdf": "^2.4.0",
     "katex": "0.13.11",
     "lodash": "4.17.21",
     "ng-apexcharts": "1.5.8",

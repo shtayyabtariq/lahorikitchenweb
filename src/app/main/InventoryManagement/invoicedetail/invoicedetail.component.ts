@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { CoreSidebarService } from "@core/components/core-sidebar/core-sidebar.service";
 import { firebaseStoreService } from "../../../auth/service/firebasestoreservice";
-import { metadata, banksdto } from '../../../auth/models/metadata';
+import { metadata, banksdto } from "../../../auth/models/metadata";
 import { ActivatedRoute, Router } from "@angular/router";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { RouterHelper } from "app/auth/helpers/router-helper";
@@ -25,7 +25,7 @@ export class InvoicedetailComponent implements OnInit {
   planid: string;
   cust: CustomerDto;
   invoicedetail: PlanScheduleDto;
-  banksdto:banksdto;
+  banksdto: banksdto;
   invoiceDate = this.ApputilsService.getDateAfterMonths(new Date(), 2);
   dueDate = this.ApputilsService.getDateAfterMonths(new Date(), 1);
   public InvoiceDateDto: FlatpickrOptions = {
@@ -36,7 +36,6 @@ export class InvoicedetailComponent implements OnInit {
     defaultDate: this.dueDate,
     altInput: true,
   };
-
 
   constructor(
     public modalservice: NgbModal,
@@ -78,8 +77,7 @@ export class InvoicedetailComponent implements OnInit {
         this.cust = e;
       });
   }
-  onBankSelect($event)
-  {
+  onBankSelect($event) {
     this.banksdto = $event;
   }
   getinvoice() {

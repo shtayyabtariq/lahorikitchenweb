@@ -1,6 +1,10 @@
 import { ThrowStmt } from "@angular/compiler";
 import { Route } from "@angular/compiler/src/core";
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { DOCUMENT } from '@angular/common';
+
+import html2canvas from 'html2canvas';
+import { jsPDF } from 'jspdf';
+import { Component, ElementRef, Inject, OnInit, ViewChild } from "@angular/core";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import {
   ApputilsService,
@@ -18,6 +22,7 @@ import { NotificationService } from "app/auth/service/notification.service";
 import { THIS_EXPR } from "@angular/compiler/src/output/output_ast";
 import { InvoiceManagement } from '../invoicemanagement';
 import { InvoiceType } from '../../../auth/helpers/apputils.service';
+import Swal from "sweetalert2";
 
 @Component({
   selector: "app-plan-generator",
@@ -70,6 +75,7 @@ export class PlanGeneratorComponent implements OnInit {
   @ViewChild(DatatableComponent) table: DatatableComponent;
   public ColumnMode = ColumnMode;
   constructor(
+    @Inject(DOCUMENT) private document: Document,
     public modalservice: NgbModal,
     public route: ActivatedRoute,
     public routerser:Router,
@@ -96,7 +102,7 @@ export class PlanGeneratorComponent implements OnInit {
       // discount: [null],
     });
     debugger;
-    var docs = await this.fs.getapartments(false).get().toPromise();
+    var docs = await this.fs.getSALEapartments().get().toPromise();
     docs.docs.forEach((e) => {
       this.apartmentlist.push(e.data() as Apartmentdto);
     });
@@ -153,8 +159,48 @@ export class PlanGeneratorComponent implements OnInit {
 
     this.viewform = true;
   }
+  @ViewChild('pdfTable', { static: false }) pdfTable!: ElementRef;
 
+  htmltoPDF() {
+    
+    debugger;
+    if (window.screen.width < 1024) {
+      this.document
+        .getElementById('viewport')
+        ?.setAttribute('content', 'width=1200px');
+    }
+
+    setTimeout(() => {
+      html2canvas(this.pdfTable.nativeElement,{scrollY: -window.scrollY})
+        .then((canvas) => {
+          debugger;
+          var pdf = new jsPDF('l', 'pt', [
+            canvas.width + 100,
+            canvas.height + 100,
+          ]);
+
+          var imgData = canvas.toDataURL('image/jpeg', 1.0);
+          window.open(imgData);
+          pdf.addImage(imgData, 0, 0, canvas.width, canvas.height);
+          pdf.save('converteddoc.pdf');
+       
+
+          if (window.screen.width < 1024) {
+            document
+              .getElementById('viewport')
+              ?.setAttribute('content', 'width=device-width, initial-scale=1');
+          }
+        })
+        .catch((e) => {
+          debugger;
+        });
+    }, 1500);
+
+    // parentdiv is the html element which has to be converted to PDF
+  }
   async onSubmit() {
+
+    
     this.PlanSchedule = [];
 
     this.isSubmit = true;
@@ -252,8 +298,8 @@ export class PlanGeneratorComponent implements OnInit {
           amountpaid: 0,
           amountleft: perInstallmentAmount,
           type: InvoiceType.Installment,
-          createdat: this.ApputilsService.getServerTimestamp(),
-          updateat: this.ApputilsService.getServerTimestamp()
+          createdat: new Date(),
+          updateat: new Date()
         };
 
         this.PlanSchedule.push(ps);

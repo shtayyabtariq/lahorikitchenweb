@@ -184,7 +184,7 @@ export class InventoryManagementComponent implements OnInit {
     // assign filtered matches to the active datatable
     this.apt = this.tempData.filter((item) => {
       // iterate through each row's column data
-      for (let i = 0; i < count; i++) {
+      for (let i = 0; i < keys.length; i++) {
         // check for a match
         if (item[keys[i]]) {
           var it = item[keys[i]]

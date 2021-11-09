@@ -1,4 +1,4 @@
-<div class="content-wrapper container-xxl p-0">
+<div class="content-wrapper container-xxl p-0 printRef">
     <div class="content-body">
         <h1 class="text-center print-show hide">
             {{apartment?.name}}
@@ -370,8 +370,8 @@
                 </core-card-snippet>
             </div>
         </div>
-
-        <div class="row" style="    background-image: url(/assets/images/Bedroonm.jpg);
+        <button (click)="htmltoPDF()" class="print-hide btn btn-danger mb-3"> Download PDF</button>
+        <div #pdfTable class="row print-hide" style="    background-image: url(/assets/images/Bedroonm.jpg);
         
         position: relative;">
             <div style="
@@ -381,14 +381,14 @@
     height: 100%;
     opacity: 0.5;
 "> </div>
-            <div class="col-6" style="background-image: url('/assets/images/Dusk Masterplan-4.jpg');
+            <!-- <div class="col-6" style="background-image: url('/assets/images/Dusk Masterplan-4.jpg');
             background-size: cover;
             background-position: center center;
             background-repeat: no-repeat;
             text-align: center;">
 
-            </div>
-            <div class="col-6">
+            </div> -->
+            <div class="col-12">
                 <div class="col-12" style="text-align: center;color: beige;padding-top: 20px;">
                     <h3 style="color:blanchedalmond;">
                         PRE LAUNCH PAYMENT PLAN
@@ -406,11 +406,11 @@
                         On First Come First Serve Basis
                     </h5>
                 </div>
-                <div class="col-12 col-md-12" *ngIf="show" style="padding-top: 40px; padding-bottom:40px;">
+                <div class="col-12 col-md-12 brouchure" *ngIf="show" style="padding-top: 40px; padding-bottom:40px;">
 
 
                     <div class="tables" style="background-color: white;">
-                        <table class="table table-bordered fw-800">
+                        <table class="table table-bordered fw-800" style="margin-bottom: 0px;">
                             <tbody>
                                 <tr>
                                     <td style="background-color:blanchedalmond;">

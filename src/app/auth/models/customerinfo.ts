@@ -13,6 +13,11 @@ export interface CustomerDto{
     sourceofincome:string;
     businessname:string;
 }
+export interface creditamounts{
+    id:string;
+    amount:number;
+    tid:string;
+}
 export interface Nominee{
     id:string;
     name:string;

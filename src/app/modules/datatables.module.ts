@@ -5,7 +5,7 @@ import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { CsvModule } from "@ctrl/ngx-csv";
 import { TranslateModule } from "@ngx-translate/core";
 import { NgxDatatableModule } from "@swimlane/ngx-datatable";
-
+import { FormsModule } from '@angular/forms';
 import { CoreCommonModule } from "@core/common.module";
 import { CardSnippetModule } from "@core/components/card-snippet/card-snippet.module";
 import { ContentHeaderModule } from "app/layout/components/content-header/content-header.module";
@@ -27,6 +27,8 @@ import { InvoicedetailComponent } from '../main/InventoryManagement/invoicedetai
 import { TransactiongeneratorComponent } from "../main/InventoryManagement/transactiongenerator/transactiongenerator.component";
 import { SendInvoiceSidebarComponent } from "app/main/InventoryManagement/invoicedetail/send-invoice-sidebar/send-invoice-sidebar.component";
 import { InvoicepreviewComponent } from '../main/InventoryManagement/invoicedetail/invoicepreview/invoicepreview.component';
+import { ViewtransactionsComponent } from '../main/InventoryManagement/viewtransactions/viewtransactions.component';
+import { CreditadjustmentsComponent } from '../main/InventoryManagement/creditadjustments/creditadjustments.component';
 
 const routes: Routes = [
   {
@@ -89,16 +91,30 @@ const routes: Routes = [
 
     data: { animation: "datatables" },
   },
+  {
+    path: "transactions",
+    component: ViewtransactionsComponent,
+
+    data: { animation: "datatables" },
+  },
+  {
+    path: "credits",
+    component: CreditadjustmentsComponent,
+
+    data: { animation: "datatables" },
+  },
 ];
 
 @NgModule({
   declarations: [
     SendInvoiceSidebarComponent,
     InvoicepreviewComponent,
+    CreditadjustmentsComponent,
     InvoicedetailComponent,
     TransactiongeneratorComponent,
     ViewsalesComponent,
     SaledetailComponent,
+    ViewtransactionsComponent,
     SalesplanComponent,
     PlanGeneratorComponent,
     ViewPlanComponent,
@@ -121,6 +137,7 @@ const routes: Routes = [
     Ng2FlatpickrModule,
     CorePipesModule,
     CoreSidebarModule,
+    FormsModule
   ],
   providers: [DatatablesService],
 })

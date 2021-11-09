@@ -84,25 +84,7 @@ export class InvoicepreviewComponent implements OnInit {
       )
       .then((e) => {
         this.nts.showSuccess("Transaction Status changed", "Transaction");
-        if (tr.status == this.ApputilsService.TransactionSuccessfull) {
-          this.invoicedetail.amountpaid =
-            this.invoicedetail.amountpaid - tr.amount;
-          this.invoicedetail.amountleft =
-            this.invoicedetail.amount - this.invoicedetail.amountpaid;
-          this.invoicedetail.invoicepaid =
-            this.invoicedetail.amount == this.invoicedetail.amountpaid;
-          this.invoicedetail.invoicepaidon = null;
-        } else {
-          this.invoicedetail.amountpaid =
-            this.invoicedetail.amountpaid + tr.amount;
-          this.invoicedetail.amountleft =
-            this.invoicedetail.amount + this.invoicedetail.amountpaid;
-          this.invoicedetail.invoicepaid =
-            this.invoicedetail.amount == this.invoicedetail.amountpaid;
-          this.invoicedetail.invoicepaidon =
-            this.ApputilsService.getServerTimestamp();
-        }
-        this.fs.updateinvoice(this.invoicedetail).then((e) => {});
+        
       });
   }
 }
