@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import firebase from 'firebase';
+import { daterangepickerdto } from '../models/daterangepickerdto';
 
 
 @Injectable({
@@ -25,6 +26,14 @@ export class ApputilsService {
     months: 12
   };
 
+  AdminRole = "Admin";
+  EmployeeRole = "Employee";
+  ManagerRole = "Manager";
+  Roles = [
+    this.AdminRole,
+    this.EmployeeRole,
+    this.ManagerRole
+  ]
 
 AppName = "Management Information System";
 Apartment4BedDuplex = "4 Bed Duplex ";
@@ -63,6 +72,45 @@ getDiscountedTotalPrice(price:number,discount ?:number)
   }
 }
 
+getMonthRange()
+{
+    let drp = new daterangepickerdto();
+    var date = new Date();
+    date.setDate(1);
+    drp.startdate = date;
+    date = new Date();
+    date.setMonth(date.getMonth()+1);
+    date.setDate(0);
+    drp.enddate = date;
+    drp.option = "Month";
+    return drp;
+}
+
+getYearRange()
+{
+  debugger;
+    let drp = new daterangepickerdto();
+    var date = new Date();
+    date.setDate(1);
+    date.setMonth(0);
+    drp.startdate = date;
+    date = new Date(date.getFullYear(),11,31);
+    drp.enddate = date;
+    return drp;
+}
+groupBy<T, K>(list: T[], getKey: (item: T) => K) {
+  const map = new Map<K, T[]>();
+  list.forEach((item) => {
+      const key = getKey(item);
+      const collection = map.get(key);
+      if (!collection) {
+          map.set(key, [item]);
+      } else {
+          collection.push(item);
+      }
+  });
+  return Array.from(map.values());
+}
 getPercentPrice(amount:number,percent ?:number)
 {
   
@@ -76,6 +124,17 @@ PaymentMethod:string[]=[
   "IBFT",
   "Deposit"
 ];
+ReportThisMonth = "This Month";
+ReportThisYear = "This Year";
+ReportCustom = "Custom";
+ReportAll ="All"
+ReportingTime:string[]=[
+  this.ReportAll,
+  this.ReportThisMonth,
+  this.ReportThisYear,
+  this.ReportCustom
+];
+
 Years:number[]=[
   1,2,3,4,5,6,7,8,9,10
 ]
@@ -99,11 +158,38 @@ ApartmentType:String[]=[
   this.Apartment5BedDuplex,
   this.Penthouse
 ];
+
+Aging30 = "1-30";
+Aging60 = "31-60";
+Aging90="61-90";
+
+AgingFilters:string[]=[
+this.Aging30,
+this.Aging60,
+this.Aging90
+];
+CustomerAgingReport = "Customer Aging Report";
+CustomerLedgerReport = "Customer Ledger Report";
+CustomerOutStandingInvoices = "Customer Outstanding Invoices";
+CustomerOverDueInvoices = "Customer OverDue Invoices";
+CustomerOpenBalanceReports = "Customer Open Balance Reports";
+CustomerAccountReceivableReports ="Customer Account Receivabel Reports";
+
+CustomerReports:String[]=[
+  this.CustomerAgingReport,
+  this.CustomerLedgerReport,
+  this.CustomerOpenBalanceReports,
+  this.CustomerOverDueInvoices,
+  this.CustomerOpenBalanceReports,
+  this.CustomerAccountReceivableReports
+];
 Type:String[]=["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20"];
-Status:String[] = ["Open","Booked", "Hold"];
+PossesionStatus="Completed";
+Status:String[] = ["Open","Booked", "Hold",this.PossesionStatus];
 HoldStatus = "Hold";
 BookedStatus = "Booked";
 OpenStatus = "Open";
+
 constructor() { }
 
 AppVersion = "1.0.0";

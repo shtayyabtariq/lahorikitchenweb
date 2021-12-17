@@ -29,84 +29,155 @@ import { SendInvoiceSidebarComponent } from "app/main/InventoryManagement/invoic
 import { InvoicepreviewComponent } from '../main/InventoryManagement/invoicedetail/invoicepreview/invoicepreview.component';
 import { ViewtransactionsComponent } from '../main/InventoryManagement/viewtransactions/viewtransactions.component';
 import { CreditadjustmentsComponent } from '../main/InventoryManagement/creditadjustments/creditadjustments.component';
+import { InvoicereportComponent } from '../main/reports/invoicereport/invoicereport.component';
+import { BankbalancereportComponent } from '../main/reports/bankbalancereport/bankbalancereport.component';
+import { FilteroptionselectComponent } from '../main/filteroptionselect/filteroptionselect.component';
+import { ViewinventorymodalComponent } from '../main/InventoryManagement/viewinventorymodal/viewinventorymodal.component';
+import { ChoosereportsComponent } from '../main/reports/choosereports/choosereports.component';
+import { CustomersComponent } from '../main/customers/customers.component';
+import { CustomerreportsComponent } from "app/main/reports/customerreports/customerreports.component";
+import { InventoryreportComponent } from '../main/reports/inventoryreport/inventoryreport.component';
+import { TrialbalancereportComponent } from '../main/reports/trialbalancereport/trialbalancereport.component';
+import { ViewusersComponent } from '../main/usermanagement/viewusers/viewusers.component';
+import { CreateuserComponent } from '../main/usermanagement/createuser/createuser.component';
+import { ManagerEmployeeRouteAuthGuard } from "app/auth/roleguards/manageremployeeguard";
+import { ManagerRouteAuthGuard } from '../auth/roleguards/managerguard';
+import { AdminRouteAuthGuard } from '../auth/roleguards/adminguard';
 
 const routes: Routes = [
   {
     path: "inventory",
     component: InventoryManagementComponent,
-
+    canActivate:[ManagerEmployeeRouteAuthGuard],
     data: { animation: "datatables" },
   },
   {
     path: "settings",
     component: SettingsComponent,
-
+    canActivate:[ManagerRouteAuthGuard],
     data: { animation: "datatables" },
   },
   {
     path: ":id/plan",
     component: PlanGeneratorComponent,
-
+    canActivate:[ManagerEmployeeRouteAuthGuard],
     data: { animation: "datatables" },
   },
   {
     path: "generateplan",
     component: PlanGeneratorComponent,
-
+    canActivate:[ManagerEmployeeRouteAuthGuard],
     data: { animation: "datatables" },
   },
   {
     path: "plan",
     component: ViewPlanComponent,
-
+    canActivate:[ManagerEmployeeRouteAuthGuard],
     data: { animation: "datatables" },
   },
   {
     path: "sale/:id",
     component: SalesplanComponent,
-
+    canActivate:[ManagerEmployeeRouteAuthGuard],
     data: { animation: "datatables" },
   },
   {
     path: "sales",
     component: ViewsalesComponent,
-
+    canActivate:[ManagerEmployeeRouteAuthGuard],
     data: { animation: "datatables" },
   },
   {
     path: "sales/:id",
     component: SaledetailComponent,
-
+    canActivate:[ManagerEmployeeRouteAuthGuard],
     data: { animation: "datatables" },
   },
   {
     path: "sales/:id/invoice/:invoiceid",
     component: InvoicepreviewComponent,
-
+    canActivate:[ManagerEmployeeRouteAuthGuard],
     data: { animation: "datatables" },
   },
   {
     path: "sales/:id/invoicepreview/:invoiceid",
     component: InvoicedetailComponent,
-
+    canActivate:[ManagerEmployeeRouteAuthGuard],
     data: { animation: "datatables" },
   },
   {
     path: "transactions",
     component: ViewtransactionsComponent,
-
+    canActivate:[ManagerEmployeeRouteAuthGuard],
     data: { animation: "datatables" },
   },
   {
     path: "credits",
     component: CreditadjustmentsComponent,
-
+    canActivate:[ManagerEmployeeRouteAuthGuard],
     data: { animation: "datatables" },
   },
+  {
+    path: "reports/invoices",
+    component: InvoicereportComponent,
+    canActivate:[ManagerEmployeeRouteAuthGuard],
+    data: { animation: "datatables" },
+  },
+  {
+    path: "reports/trialbalance",
+    component: TrialbalancereportComponent,
+    canActivate:[ManagerEmployeeRouteAuthGuard],
+    data: { animation: "datatables" },
+  },
+  {
+    path: "reports/balance/:iban",
+    component: BankbalancereportComponent,
+    canActivate:[ManagerEmployeeRouteAuthGuard],
+    data: { animation: "datatables" },
+  },
+  {
+    path: "reports",
+    component: ChoosereportsComponent,
+    canActivate:[ManagerEmployeeRouteAuthGuard],
+    data: { animation: "datatables" },
+  },
+  {
+    path: "reports/customers",
+    component: CustomerreportsComponent,
+    canActivate:[ManagerEmployeeRouteAuthGuard],
+    data: { animation: "datatables" },
+  },
+  {
+    path: "reports/inventory",
+    component: InventoryreportComponent,
+    canActivate:[ManagerEmployeeRouteAuthGuard],
+    data: { animation: "datatables" },
+  },
+  {
+    path: "customers",
+    component: CustomersComponent,
+    canActivate:[ManagerEmployeeRouteAuthGuard],
+    data: { animation: "datatables" },
+  },
+  {
+    path: "users",
+    component: ViewusersComponent,
+    canActivate:[AdminRouteAuthGuard],
+    data: { animation: "datatables" },
+  },
+  
 ];
 
 @NgModule({
   declarations: [
+    CreateuserComponent,
+    ViewusersComponent,
+    TrialbalancereportComponent,
+    InventoryreportComponent,
+    ChoosereportsComponent,
+    ViewinventorymodalComponent,
+    InvoicereportComponent,
+    FilteroptionselectComponent,
     SendInvoiceSidebarComponent,
     InvoicepreviewComponent,
     CreditadjustmentsComponent,
@@ -122,7 +193,11 @@ const routes: Routes = [
     SettingsComponent,
     CurrencyPipe,
     StatusPipe,
-    NumberToWordsPipe
+    NumberToWordsPipe,
+    InvoicereportComponent,
+    BankbalancereportComponent,
+    CustomersComponent,
+    CustomerreportsComponent
   ],
   imports: [
     RouterModule.forChild(routes),

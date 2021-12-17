@@ -18,6 +18,9 @@ import { locale as menuEnglish } from 'app/menu/i18n/en';
 import { locale as menuFrench } from 'app/menu/i18n/fr';
 import { locale as menuGerman } from 'app/menu/i18n/de';
 import { locale as menuPortuguese } from 'app/menu/i18n/pt';
+import { AuthService } from './auth/service/authservice';
+import { ApputilsService } from './auth/helpers/apputils.service';
+import { adminmenu, ownermenu } from './menu/menu';
 
 @Component({
   selector: 'app-root',
@@ -57,10 +60,32 @@ export class AppComponent implements OnInit, OnDestroy {
     private _coreLoadingScreenService: CoreLoadingScreenService,
     private _coreMenuService: CoreMenuService,
     private _coreTranslationService: CoreTranslationService,
-    private _translateService: TranslateService
+    private _translateService: TranslateService,
+    public authservice:AuthService,
+    public ApputilsService:ApputilsService,
+    
   ) {
     // Get the application main menu
-    this.menu = menu;
+
+    debugger;
+    var role = this.authservice.getRole();
+    if(role == this.ApputilsService.AdminRole)
+    {
+      this.menu = adminmenu;
+    }
+    else if(role == this.ApputilsService.ManagerRole)
+    {
+      this.menu = ownermenu
+    }
+    else
+    if(role == this.ApputilsService.EmployeeRole)
+    {
+      this.menu = menu;
+    }
+    else{
+      this.authservice.logout();
+    }
+    
 
     // Register the menu to the menu service
     this._coreMenuService.register('main', this.menu);

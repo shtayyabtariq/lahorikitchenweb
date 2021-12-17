@@ -247,7 +247,7 @@ export class SalesplanComponent implements OnInit {
   async generateSales() {
     if (this.form.valid) {
       var apt = (await this.fs.getapartmentbyid(this.PlanInfo.apartmentid).get().toPromise()).data().status;
-    if(apt != "Open")
+    if(apt == this.ApputilsService.BookedStatus )
     {
       Swal.fire({
         title:"Sale Can not be generated",
@@ -281,6 +281,7 @@ export class SalesplanComponent implements OnInit {
         office: this.form.controls["officenumber"].value,
         sourceofincome: this.form.controls["source"].value,
         businessname: this.form.controls["bname"].value,
+        status: true
       };
       if (cust.id != undefined && cust.id.trim().length == 0) {
         cust.id = await this.fs.addCustomer(cust);
@@ -290,27 +291,31 @@ export class SalesplanComponent implements OnInit {
           InvoiceType.Agreement,
           this.PlanInfo.agreementamount,
           this.agreementDate,
-          this.ApputilsService.getServerTimestamp()
+          this.ApputilsService.getServerTimestamp(),
+          2
         );
       var confirmationinvoice =
         invoicemanagement.InvoiceManagement.GenerateInvoice(
           InvoiceType.Confirmation,
           this.PlanInfo.confirmationamount,
           this.confirmationDate,
-          this.ApputilsService.getServerTimestamp()
+          this.ApputilsService.getServerTimestamp(),
+          1
         );
       var bookinginvoice = invoicemanagement.InvoiceManagement.GenerateInvoice(
         InvoiceType.Booking,
         this.PlanInfo.bookingamount,
         this.ApputilsService.getServerTimestamp(),
-        this.ApputilsService.getServerTimestamp()
+        this.ApputilsService.getServerTimestamp(),
+        -1
       );
       var possesioninvoice =
         invoicemanagement.InvoiceManagement.GenerateInvoice(
           InvoiceType.Posession,
           this.PlanInfo.possessionamount,
           null,
-          this.ApputilsService.getServerTimestamp()
+          this.ApputilsService.getServerTimestamp(),
+          1000000
         );
       this.PlanInfo.planscehdule.push(confirmationinvoice);
       this.PlanInfo.planscehdule.push(bookinginvoice);
@@ -354,7 +359,7 @@ export class SalesplanComponent implements OnInit {
         customercnic: cust.cnic
       };
       this.fs.addSales(sal).then(async (e) => {
-        await this.fs.changeApartmentStatus(this.PlanInfo.apartmentid,this.ApputilsService.HoldStatus).then();
+        await this.fs.changeApartmentStatus(this.PlanInfo.apartmentid,this.ApputilsService.BookedStatus).then();
         pDialog.close();
         this.nts.showSuccess("Sales Generated", "Sales Info");
         this.routerser.navigateByUrl("/sales");

@@ -299,7 +299,8 @@ export class PlanGeneratorComponent implements OnInit {
           amountleft: perInstallmentAmount,
           type: InvoiceType.Installment,
           createdat: new Date(),
-          updateat: new Date()
+          updateat: new Date(),
+          orderno: installmentNo+3
         };
 
         this.PlanSchedule.push(ps);

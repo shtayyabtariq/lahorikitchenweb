@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from "@angular/core";
+import { Component, Inject, OnInit, ViewEncapsulation } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { takeUntil } from "rxjs/operators";
@@ -6,6 +6,8 @@ import { Subject } from "rxjs";
 import { Router } from "@angular/router";
 import { CoreConfigService } from "@core/services/config.service";
 import { AuthService } from "../../../../auth/service/authservice";
+import { firebaseStoreService } from '../../../../auth/service/firebasestoreservice';
+import { DOCUMENT } from "@angular/common";
 
 @Component({
   selector: "app-auth-login-v2",
@@ -19,6 +21,7 @@ export class AuthLoginV2Component implements OnInit {
   public loginForm: FormGroup;
   public loading = false;
   public submitted = false;
+ 
   public returnUrl: string;
   public error = "";
   public passwordTextType: boolean;
@@ -35,7 +38,9 @@ export class AuthLoginV2Component implements OnInit {
     private _formBuilder: FormBuilder,
     private _route: ActivatedRoute,
     private _router: Router,
-    public AuthService: AuthService
+    public fs:firebaseStoreService,
+    public AuthService: AuthService,
+    @Inject(DOCUMENT) private document: Document
   ) {
     this._unsubscribeAll = new Subject();
 
@@ -80,14 +85,18 @@ export class AuthLoginV2Component implements OnInit {
     const password = this.loginForm.controls["password"].value;
     this.loading = true;
     this.AuthService.loginByEmailPassword(email, password)
-      .then((e) => {
+      .then(async (e) => {
         // Login
-        
-       
+        debugger;
+      //  var currentUser = (await this.fs.getcurrentEmployee(e.user.uid).get().toPromise()).data();
+        localStorage.setItem('currentUser', e.user.uid);
+      //   localStorage.setItem('role',currentUser.designation);
+      //   localStorage.setItem('name',currentUser.name);
+        this.document.location.href="/";
         setTimeout(() => {
-          this._router.navigate(["/"]);
+          
         // redirect to home page
-        }, 100);
+        }, 1000);
       })
       .catch((e) => {
         this.loading = false;

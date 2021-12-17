@@ -15,6 +15,7 @@ import { User } from 'app/auth/models';
 
 import { coreConfig } from 'app/app-config';
 import { Router } from '@angular/router';
+import { AuthService } from '../../../auth/service/authservice';
 
 @Component({
   selector: 'app-navbar',
@@ -81,9 +82,11 @@ export class NavbarComponent implements OnInit, OnDestroy {
     private _coreMediaService: CoreMediaService,
     private _coreSidebarService: CoreSidebarService,
     private _mediaObserver: MediaObserver,
-    public _translateService: TranslateService
+    public _translateService: TranslateService,
+    public AuthService:AuthService
+    
   ) {
-    this._authenticationService.currentUser.subscribe(x => (this.currentUser = x));
+    // this._authenticationService.currentUser.subscribe(x => (this.currentUser = x));
 
     this.languageOptions = {
       en: {
@@ -164,8 +167,9 @@ export class NavbarComponent implements OnInit, OnDestroy {
   /**
    * Logout method
    */
-  logout() {
-    this._authenticationService.logout();
+  async logout() {
+    debugger;
+    await this._authenticationService.logout();
     this._router.navigate(['/pages/authentication/login-v2']);
   }
 
@@ -177,7 +181,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     // get the currentUser details from localStorage
-    this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    // this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 
     // Subscribe to the config changes
     this._coreConfigService.config.pipe(takeUntil(this._unsubscribeAll)).subscribe(config => {

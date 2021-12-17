@@ -34,7 +34,7 @@ export interface PlanScheduleDto{
     amount:number;
     amountpaid:number;
     amountleft:number;
-    invoicedueon:Date;
+    invoicedueon:any;
     invoicepaid:boolean;
     invoicepaidon:any;
     approvedby:any;
@@ -44,6 +44,8 @@ export interface PlanScheduleDto{
     type:string;
     createdat:any;
     updateat:any;
+    orderno:number;
+    
 }
 export interface Transaction{
     totalamount:number;
@@ -65,6 +67,22 @@ export interface Transaction{
     editable:boolean;
 }
 
+export interface bankbalancedetaildto{
+    debit:number;
+    credit:number;
+    id:string;
+    apartmentname:string;
+    customername:string;
+    invoicename:string; 
+    bank:string;
+    iban:string;
+    paymentmethod:string;
+    transactionid:string;
+    invoiceid:string;
+    bankamount:number;
+    status:string;
+    transactiondate:any;
+}
 export interface SalesDto{
     id:string;
     customerid:string;

@@ -1,0 +1,42 @@
+<div class="modal-header">
+    <h4 class="modal-title" id="myModalLabel1">Invoices </h4>
+    <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+<span aria-hidden="true">&times;</span>
+</button>
+</div>
+<div class="modal-body" tabindex="0" ngbAutofocus>
+
+
+    <table class="table  table-bordered">
+        <thead>
+
+            <th>
+                Total Amount
+            </th>
+            <th>
+                Amount Paid
+            </th>
+            <th> Amount Left</th>
+            <th>
+                Due On
+            </th>
+            <th>
+                Actions
+            </th>
+        </thead>
+        <tbody>
+            <tr *ngFor="let inst of invoices">
+
+                <td> {{inst.amount}} </td>
+                <td> {{inst.amountpaid}} </td>
+                <td> {{inst.amountleft}} </td>
+                <td> {{inst.invoicedueon.seconds * 1000 | date:'dd/MM/yyyy' }} </td>
+                <td>
+                    <a class="mr-1" (click)="dismissdialog()" routerLink="/sales/{{this.inst.planid}}/invoice/{{ inst.id }}" container="body" placement="top" ngbTooltip="Preview Invoice"><i size="18" data-feather="eye"></i
+  ></a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>

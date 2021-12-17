@@ -28,3 +28,10 @@ export interface Invoicedto{
   agreementdate?:any;
   installmentplan?:number;
 }
+export interface groupApartments{
+  type:string;
+  availablecount:number;
+  soldcount:number;
+  soldaparments:Apartmentdto[];
+  availableapartments:Apartmentdto[]; 
+}

@@ -9,16 +9,20 @@ import { ContentHeaderModule } from 'app/layout/components/content-header/conten
 import { SampleComponent } from './sample.component';
 import { HomeComponent } from './home.component';
 import { InventoryManagementComponent } from '../InventoryManagement/InventoryManagement.component';
+import { AuthGuard } from 'app/auth/helpers';
 
 const routes = [
   {
     path: 'sample',
+    canActivate:[AuthGuard],
     component: SampleComponent,
     data: { animation: 'sample' }
   },
   {
     path: 'home',
+    canActivate:[AuthGuard],
     component: HomeComponent,
+  
     data: { animation: 'home' }
   },
   

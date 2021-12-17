@@ -1,5 +1,53 @@
 import { CoreMenu } from '@core/types'
 
+export const adminmenu:CoreMenu[]=[
+  {
+    id: 'users',
+    title: 'View Users',
+    translate: 'MENU.SAMPLE',
+    type: 'item',
+    icon: 'info',
+    url: 'users'
+  }
+];
+export const ownermenu:CoreMenu[]=[
+  {
+    id: 'home',
+    title: 'Home',
+    translate: 'MENU.HOME',
+    type: 'item',
+    icon: 'home',
+    url: 'home'
+  },
+  {
+    id: 'inventory',
+    title: 'Apartments',
+    translate: 'Apartments',
+    type: 'item',
+    icon: 'paperclip',
+    url: 'inventory'
+  },
+  
+  
+ 
+  {
+    id: 'transactions',
+    title: 'View Transactions',
+    translate: 'MENU.SAMPLE',
+    type: 'item',
+    icon: 'info',
+    url: 'transactions'
+  },
+  {
+    id: 'reports',
+    title: 'View Reports',
+    translate: 'MENU.SAMPLE',
+    type: 'item',
+    icon: 'info',
+    url: 'reports'
+  },
+  
+];
 export const menu: CoreMenu[] = [
   {
     id: 'home',
@@ -49,5 +97,14 @@ export const menu: CoreMenu[] = [
     type: 'item',
     icon: 'info',
     url: 'transactions'
-  }
+  },
+  {
+    id: 'reports',
+    title: 'View Reports',
+    translate: 'MENU.SAMPLE',
+    type: 'item',
+    icon: 'info',
+    url: 'reports'
+  },
+  
 ]

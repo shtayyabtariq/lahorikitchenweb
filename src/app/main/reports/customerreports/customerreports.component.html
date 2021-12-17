@@ -1,0 +1,300 @@
+<div class="content-wrapper container-xxl p-0">
+    <div class="content-body">
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label>
+                            Choose Customer
+                          </label>
+                            <ng-select class="ng-select-size-lg" #SelectSizeLarge (change)="onCustomerSelect($event)" [items]="cust" [searchable]="true" bindLabel="cnic" bindValue="id">
+                                <ng-template ng-header-tmp>
+                                    <input class="form-control w-100" placeholder="search customer by cnic" type="text" (input)="SelectSizeLarge.filter($event.target.value)" />
+                                </ng-template>
+                                <!--/ select size large -->
+                            </ng-select>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                            Choose Reports
+                          </label>
+                            <select class="form-control" (change)="onreportselect($event.target.value)">
+                              <option *ngFor="let report of this.ApputilsService.CustomerReports">
+                                {{report}}
+                              </option>
+                            </select>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+        <div class="row" *ngIf="this.report == 0">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            Customer Aging Report
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-2">
+                            <label>
+                        Choose Filter Option
+                      </label>
+                            <select class="form-control" (ngModel)="this.selectedagingfilter" (change)="agingfilter($event.target.value)">
+                              <option *ngFor="let opt of this.ApputilsService.AgingFilters" value="{{this.opt}}">
+                                {{this.opt}}
+                              </option>
+                            </select>
+                        </div>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <td>
+                                        TotalAmount
+                                    </td>
+                                    <td>
+                                        Amount Paid
+                                    </td>
+                                    <td>
+                                        Amount Left
+                                    </td>
+                                    <td>
+                                        Type
+                                    </td>
+                                    <td>
+                                        Date
+                                    </td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let invoice of this.aginginvoices">
+                                    <td>
+                                        {{invoice.amount | number}}
+                                    </td>
+                                    <td>
+                                        {{invoice.amountpaid | number}}
+                                    </td>
+                                    <td>
+                                        {{invoice.amountleft | number}}
+                                    </td>
+                                    <td>
+                                        {{invoice.type}}
+                                    </td>
+                                    <td>
+                                        {{invoice?.invoicedueon?.seconds * 1000 | date}}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="row" *ngIf="this.report == 1">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            Over Due Invoices
+                        </div>
+                        <label (click)="filter()">
+                            {{this.filtertext}}
+                          </label>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <td>
+                                        TotalAmount
+                                    </td>
+                                    <td>
+                                        Amount Paid
+                                    </td>
+                                    <td>
+                                        Amount Left
+                                    </td>
+                                    <td>
+                                        Type
+                                    </td>
+                                    <td>
+                                        Date
+                                    </td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let invoice of this.overdueinvoices">
+                                    <td>
+                                        {{invoice.amount | number}}
+                                    </td>
+                                    <td>
+                                        {{invoice.amountpaid | number}}
+                                    </td>
+                                    <td>
+                                        {{invoice.amountleft | number}}
+                                    </td>
+                                    <td>
+                                        {{invoice.type}}
+                                    </td>
+                                    <td>
+                                        {{invoice?.invoicedueon?.seconds * 1000 | date}}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" *ngIf="this.report == 2">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            Customer Ledger Report
+                        </div>
+                        <label (click)="filter()">
+                            {{this.filtertext}}
+                          </label>
+                    </div>
+                    <div class="card-body">
+                        <!-- <div class="mb-2">
+                            <label>
+                      Choose Filter Option
+                    </label>
+                            <select class="form-control" (change)="agingfilter($event.target.value)">
+                            <option *ngFor="let opt of this.ApputilsService.AgingFilters" value="{{this.opt}}">
+                              {{this.opt}}
+                            </option>
+                          </select>
+                        </div> -->
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <td>
+                                        Date
+                                    </td>
+                                    <td>
+                                        Bank
+                                    </td>
+                                    <td>
+                                        Apartment Name
+                                    </td>
+                                    <td>
+                                        Transaction Id
+                                    </td>
+                                    <td>
+                                        Debit
+                                    </td>
+                                    <td>
+                                        Credit
+                                    </td>
+                                    <td>
+                                        Balance
+                                    </td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let balance of this.bankbalancedetail">
+                                    <td>
+                                        {{balance.transactiondate?.seconds * 1000 | date }}
+                                    </td>
+                                    <td>
+                                        {{balance.bank }}
+                                    </td>
+                                    <td>
+                                        {{balance.apartmentname }}
+                                    </td>
+                                    <td>
+                                        {{balance.transactionid }}
+                                    </td>
+                                    <td>
+                                        {{balance.debit | number}}
+                                    </td>
+                                    <td>
+                                        {{balance.credit | number}}
+                                    </td>
+                                    <td>
+                                        {{balance.bankamount | number}}
+                                    </td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="row" *ngIf="this.report == 3">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            UpComing Invoices
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-2">
+                            <label (click)="filter()">
+                        Choose Filter Option
+                      </label>
+
+                        </div>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <td>
+                                        TotalAmount
+                                    </td>
+                                    <td>
+                                        Amount Paid
+                                    </td>
+                                    <td>
+                                        Amount Left
+                                    </td>
+                                    <td>
+                                        Type
+                                    </td>
+                                    <td>
+                                        Date
+                                    </td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let invoice of this.upcominginvoices">
+                                    <td>
+                                        {{invoice.amount | number}}
+                                    </td>
+                                    <td>
+                                        {{invoice.amountpaid | number}}
+                                    </td>
+                                    <td>
+                                        {{invoice.amountleft | number}}
+                                    </td>
+                                    <td>
+                                        {{invoice.type}}
+                                    </td>
+                                    <td>
+                                        {{invoice?.invoicedueon?.seconds * 1000 | date}}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -73,7 +73,7 @@ export class ViewtransactionsComponent implements OnInit {
   }
   edit(tr:Transaction)
   {
-    if(!tr.editable)
+    if(tr.editable != undefined && !tr.editable)
     {
       Swal.fire(
         {

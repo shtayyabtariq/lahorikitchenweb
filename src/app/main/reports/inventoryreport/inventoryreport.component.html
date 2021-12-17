@@ -1,0 +1,336 @@
+<div class="content-wrapper container-xxl p-0">
+    <div class="content-body">
+        <div class="row match-height">
+            <!-- Medal Card -->
+            <div class="col-xl-2 col-md-6 col-12">
+                <div class="card card-congratulation-medal">
+                    <div class="card-body">
+
+                        <p class="card-heading ">{{ 'Revenue' | translate }}</p>
+                        <h3 class="mb-75 mt-2 pt-50">
+                            <a href="javascript:void(0);">{{this.totalAmountReceived | number}}</a>
+                        </h3>
+                        <!-- <button type="button" class="btn btn-primary" rippleEffect>This Month Revenue</button>
+                      <img src="assets/images/illustration/badge.svg" class="congratulation-medal" alt="Medal Pic" /> -->
+                    </div>
+                </div>
+            </div>
+            <!--/ Medal Card -->
+
+            <!-- Statistics Card -->
+            <div class="col-xl-4 col-md-6 col-12">
+                <div class="card card-statistics">
+                    <div class="card-header">
+                        <h4 class="card-title">Statistics</h4>
+                        <div class="d-flex align-items-center">
+                            <p class="card-text font-small-2 mr-25 mb-0" (click)="filter()">{{this.drp?.option}}</p>
+                        </div>
+                    </div>
+                    <div class="card-body statistics-body">
+                        <div class="row">
+                            <div class="col-sm-6 col-xl-6 mb-2 mb-xl-0">
+                                <div class="media" (click)="viewinvoicedetail(0)">
+                                    <div class="avatar bg-light-primary mr-2">
+                                        <div class="avatar-content">
+                                            <i data-feather="trending-up" class="avatar-icon"></i>
+                                        </div>
+                                    </div>
+                                    <div class="media-body my-auto">
+                                        <h4 class="font-weight-bolder mb-0">{{this.totalupcominginvoices}}</h4>
+                                        <p class="card-text font-small-3 mb-0">UpComing Invoices</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-xl-6 mb-2 mb-xl-0">
+                                <div class="media" (click)="viewinvoicedetail(1)">
+                                    <div class="avatar bg-light-danger mr-2">
+                                        <div class="avatar-content">
+                                            <i data-feather="alert-circle" class="avatar-icon"></i>
+                                        </div>
+                                    </div>
+                                    <div class="media-body my-auto">
+                                        <h4 class="font-weight-bolder mb-0">{{this.totaldueinvoices}}</h4>
+                                        <p class="card-text font-small-3 mb-0">Due Invoices</p>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--/ Statistics Card -->
+
+            <!-- Statistics Card -->
+            <div class="col-xl-6 col-md-6 col-12">
+                <div class="card card-statistics">
+                    <div class="card-header">
+                        <h4 class="card-title">Apartments</h4>
+
+                    </div>
+                    <div class="card-body statistics-body">
+                        <div class="row">
+
+                            <div class="col-sm-6 col-xl-4 mb-2 mb-sm-0">
+                                <div class="media" (click)="viewapartment(this.soldapartments)">
+                                    <div class="avatar bg-light-danger mr-2">
+                                        <div class="avatar-content">
+                                            <i data-feather="home" class="avatar-icon"></i>
+                                        </div>
+                                    </div>
+                                    <div class="media-body my-auto">
+                                        <h4 class="font-weight-bolder mb-0">{{this.totalsoldapartments}}</h4>
+                                        <p class="card-text font-small-3 mb-0">Total Apartments Sold</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-xl-4 mb-2 mb-sm-0">
+                                <div class="media" (click)="viewapartment(this.unsoldapartments)">
+                                    <div class="avatar bg-light-success mr-2">
+                                        <div class="avatar-content">
+                                            <i data-feather="home" class="avatar-icon"></i>
+                                        </div>
+                                    </div>
+                                    <div class="media-body my-auto">
+                                        <h4 class="font-weight-bolder mb-0">{{this.totalavailableapartments}}</h4>
+                                        <p class="card-text font-small-3 mb-0">Total Apartments Available</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6 col-xl-4 mb-2 mb-sm-0">
+                                <div class="media" (click)="viewapartment(this.ownerapartments)">
+                                    <div class="avatar bg-light-primary mr-2">
+                                        <div class="avatar-content">
+                                            <i data-feather="home" class="avatar-icon"></i>
+                                        </div>
+                                    </div>
+                                    <div class="media-body my-auto">
+                                        <h4 class="font-weight-bolder mb-0">{{this.totalownerapartments}}</h4>
+                                        <p class="card-text font-small-3 mb-0">Owner Apartments </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--/ Statistics Card -->
+        </div>
+        <div class="row match-height">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            Recent Activity
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Apartment Name
+                                    </th>
+                                    <th>
+                                        Customer
+                                    </th>
+                                    <th>
+                                        Amount
+                                    </th>
+                                    <th>
+                                        Transaction Date
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let tr of transactions">
+                                    <td>
+                                        {{tr?.apartmentname}}
+                                    </td>
+                                    <td>
+                                        {{tr?.customername}}
+                                    </td>
+                                    <td>
+                                        {{tr?.amount | number}}
+                                    </td>
+                                    <td>
+                                        {{tr.transactiondate?.seconds * 1000 | date}}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            Apartment Types
+                        </div>
+
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Type
+                                    </th>
+                                    <th>
+                                        Sold
+                                    </th>
+                                    <th>
+                                        Available
+                                    </th>
+                                    <th>
+                                        Action
+                                    </th>
+                                </tr>
+                            </thead>
+
+
+                            <tbody>
+                                <tr *ngFor="let apt of apartmenttypes">
+                                    <td>
+                                        {{apt.type}}
+                                    </td>
+                                    <td>
+                                        {{apt.soldcount}}
+                                    </td>
+                                    <td>
+                                        {{apt.availablecount}}
+                                    </td>
+                                    <td>
+                                        <span style="color:blue;">
+                                          {{view}}
+                                      </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+
+
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            Apartment Bedding Types
+                        </div>
+
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Type
+                                    </th>
+                                    <th>
+                                        Sold
+                                    </th>
+                                    <th>
+                                        Available
+                                    </th>
+                                    <th>
+                                        Action
+                                    </th>
+                                </tr>
+                            </thead>
+
+
+                            <tbody>
+                                <tr *ngFor="let apt of typewiseapartments">
+                                    <td>
+                                        {{apt.type}}
+                                    </td>
+                                    <td>
+                                        {{apt.soldcount}}
+                                    </td>
+                                    <td>
+                                        {{apt.availablecount}}
+                                    </td>
+                                    <td>
+                                        <span style="color:blue;">
+                                          {{view}}
+                                      </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+
+
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            Apartment Floor Wise Stats
+                        </div>
+
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Type
+                                    </th>
+                                    <th>
+                                        Sold
+                                    </th>
+                                    <th>
+                                        Available
+                                    </th>
+                                    <th>
+                                        Action
+                                    </th>
+                                </tr>
+                            </thead>
+
+
+                            <tbody>
+                                <tr *ngFor="let apt of floorwiseapartments">
+                                    <td>
+                                        {{apt.type}}
+                                    </td>
+                                    <td>
+                                        {{apt.soldcount}}
+                                    </td>
+                                    <td>
+                                        {{apt.availablecount}}
+                                    </td>
+                                    <td>
+                                        <span style="color:blue;">
+                                          {{view}}
+                                      </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>

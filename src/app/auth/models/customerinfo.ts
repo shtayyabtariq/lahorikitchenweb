@@ -12,6 +12,7 @@ export interface CustomerDto{
     office:string;
     sourceofincome:string;
     businessname:string;
+    status:boolean;
 }
 export interface creditamounts{
     id:string;

@@ -30,20 +30,42 @@ import { ApartmentComponent } from './main/InventoryManagement/createapartment/a
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SettingsComponent } from './main/settings/settings.component';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { AuthGuard } from './auth/helpers';
+import { HomeComponent } from './main/sample/home.component';
+import { HomeRouteAuthGuard } from './auth/helpers/homerouteguard';
 
 
 const appRoutes: Routes = [
+  {
+    path:'home',
+    redirectTo:''
+  
+  },
   {
     path: 'pages',
     loadChildren: () => import('./main/pages/pages.module').then(m => m.PagesModule)
   },
   {
     path: '',
-    redirectTo: '/home',
-    pathMatch: 'full'
+    component:HomeComponent,
+    pathMatch: 'full',
+    canActivate:[AuthGuard,HomeRouteAuthGuard]
+    
+    
   },
+  
+  {
+    path: 'crm',
+    canActivate:[AuthGuard],
+    loadChildren: () => import('./modules/datatables.module').then(m => m.DatatablesModule)
+    
+    
+    
+  },
+
   {
     path: '**',
+    
     redirectTo: '/pages/miscellaneous/error' //Error 404 - Page not found
   }
 ];

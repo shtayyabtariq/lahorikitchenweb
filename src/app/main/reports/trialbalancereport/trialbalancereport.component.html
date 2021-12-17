@@ -1,0 +1,91 @@
+<div class="content-wrapper container-xxl p-0">
+    <div class="content-body">
+        <!-- Responsive Datatable -->
+        <section id="ngx-datatable-Responsive">
+            <core-card-snippet>
+                <div class="row card-title" style="width: 100%">
+                    <div class="col-12 pr-0">
+                        <span class="card-title">Choose Dates</span>
+                        <span class="float-right">
+                        
+                       
+          <!-- <i data-feather="filter" class="text-primary cursor-pointer mr-50"></i> -->
+        </span>
+
+                        <select class="form-control" (change)="rangeselect($event.target.value)">
+          <option *ngFor="let opt of this.ApputilsService.ReportingTime" value="{{this.opt}}">
+            {{this.opt}}
+          </option>
+         </select>
+                    </div>
+
+
+                    <div class="col-12" *ngIf="showdaterange">
+                        <label>
+                      Choose Date Range
+                    </label>
+                        <ng2-flatpickr [config]="DateRangeOptions" name="DateRange" (onchange)="oncustomdateselect($event.target.value)"></ng2-flatpickr>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="row"></div>
+
+                    <!-- ngx-datatables responsive -->
+                    <ngx-datatable *ngIf="show" #table class="bootstrap core-bootstrap" [columnMode]="ColumnMode.force" [headerHeight]="40" [rowHeight]="58" [footerHeight]="50" rowHeight="auto" [rows]="tempbankbalancedetail" [scrollbarH]="true">
+                        <ngx-datatable-column name="Date">
+                            <ng-template let-row="row" let-name="value" ngx-datatable-cell-template>
+                                {{ row.transactiondate?.seconds * 1000 | date }}
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="Name" prop="customername">
+                            <ng-template let-row="row" let-name="value" ngx-datatable-cell-template>
+                                {{ row.customername }}
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="Apartment Name" prop="apartmentname"></ngx-datatable-column>
+
+                        <ngx-datatable-column name="Invoice Name" prop="invoicename">
+                        </ngx-datatable-column>
+
+
+
+                        <ngx-datatable-column name="Transaction Id">
+                            <ng-template let-row="row" let-name="value" ngx-datatable-cell-template>
+                                {{ row.transactionid }}
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="Debit">
+                            <ng-template let-row="row" let-name="value" ngx-datatable-cell-template>
+                                {{ row.debit | number }}
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="Credit">
+                            <ng-template let-row="row" let-name="value" ngx-datatable-cell-template>
+                                {{ row.credit | number }}
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="Balance">
+                            <ng-template let-row="row" let-name="value" ngx-datatable-cell-template>
+                                {{ row.bankamount | number }}
+                            </ng-template>
+                        </ngx-datatable-column>
+
+
+
+
+
+
+
+
+                    </ngx-datatable>
+                </div>
+                <!--/ ngx-datatables responsive -->
+            </core-card-snippet>
+        </section>
+        <!--/ Responsive Datatable -->
+    </div>
+</div>

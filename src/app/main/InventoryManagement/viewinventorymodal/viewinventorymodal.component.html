@@ -1,0 +1,37 @@
+<div class="modal-header">
+    <h4 class="modal-title" id="myModalLabel1">Apartments </h4>
+    <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+<span aria-hidden="true">&times;</span>
+</button>
+</div>
+<div class="modal-body" tabindex="0" ngbAutofocus>
+
+
+    <table class="table  table-bordered">
+        <thead>
+
+            <th>
+                Type
+            </th>
+            <th>
+                ApartmentType
+            </th>
+            <th> Name</th>
+            <th>
+                Rate
+            </th>
+
+        </thead>
+        <tbody>
+            <tr *ngFor="let apt of ap">
+
+                <td> {{apt.name}} </td>
+                <td> {{apt.type}} </td>
+                <td> {{apt.apartmenttype}} </td>
+
+
+            </tr>
+        </tbody>
+    </table>
+
+</div>

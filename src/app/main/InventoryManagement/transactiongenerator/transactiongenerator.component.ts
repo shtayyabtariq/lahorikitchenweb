@@ -11,11 +11,11 @@ import { banksdto } from "app/auth/models/metadata";
 import { metadata } from "../../../auth/models/metadata";
 import { Transaction } from "app/auth/models/plandto";
 import { ProgressdialogComponent } from "app/main/progressdialog/progressdialog.component";
-import { FlatpickrOptions, } from "ng2-flatpickr";
-import { SalesDto, PlanScheduleDto } from '../../../auth/models/plandto';
+import { FlatpickrOptions } from "ng2-flatpickr";
+import { SalesDto, PlanScheduleDto } from "../../../auth/models/plandto";
 import { debug } from "console";
-import { Invoicedto } from '../../../auth/models/apartmentdto';
-import { creditamounts } from '../../../auth/models/customerinfo';
+import { Invoicedto } from "../../../auth/models/apartmentdto";
+import { creditamounts } from "../../../auth/models/customerinfo";
 import { threadId } from "worker_threads";
 
 @Component({
@@ -26,20 +26,20 @@ import { threadId } from "worker_threads";
 export class TransactiongeneratorComponent implements OnInit {
   form: FormGroup;
   start = false;
-  bank:string;
+  bank: string;
   isSubmit = false;
-  apartmentid:string;
+  apartmentid: string;
   banksdto: banksdto;
   metadata: metadata;
   sales: SalesDto[] = [];
-  saleinfo:SalesDto;
+  saleinfo: SalesDto;
   invoices: PlanScheduleDto[] = [];
   invoiceid: string;
   showinvoice = false;
-  maxamount:number = 0;
-  Transaction:Transaction;
+  maxamount: number = 0;
+  Transaction: Transaction;
   isupdate = false;
-  invoiceselected:PlanScheduleDto;
+  invoiceselected: PlanScheduleDto;
   transactionstatus: string = this.ApputilsService.TransactionSuccessfull;
   paymentmethod: string = this.ApputilsService.PaymentMethod[0];
   invoiceDate = this.ApputilsService.getDateAfterMonths(new Date(), 2);
@@ -47,6 +47,7 @@ export class TransactiongeneratorComponent implements OnInit {
   public InvoiceDateDto: FlatpickrOptions = {
     defaultDate: this.invoiceDate,
     altInput: true,
+    
   };
 
   constructor(
@@ -64,22 +65,23 @@ export class TransactiongeneratorComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    if(this.Transaction != undefined)
-    {
-      this.apartmentid = this.Transaction.apartmentname
+    if (this.Transaction != undefined) {
+      this.apartmentid = this.Transaction.apartmentname;
       this.invoiceid = this.Transaction.invoiceid;
       this.paymentmethod = this.Transaction.paymentmethod;
       this.transactionstatus = this.Transaction.status;
       this.bank = this.Transaction.iban;
-      this.invoiceDate = new Date(this.Transaction.transactiondate.seconds * 1000);
+      this.invoiceDate = new Date(
+        this.Transaction.transactiondate.seconds * 1000
+      );
       this.InvoiceDateDto = {
         defaultDate: this.invoiceDate,
         altInput: true,
       };
       this.banksdto = {
-          Name: this.Transaction.bank,
-          Iban:this.Transaction.iban
-      }
+        Name: this.Transaction.bank,
+        Iban: this.Transaction.iban,
+      };
       this.isupdate = true;
     }
     this.fs
@@ -87,9 +89,10 @@ export class TransactiongeneratorComponent implements OnInit {
       .valueChanges()
       .subscribe((e) => {
         this.sales = e;
-        if(this.Transaction != undefined)
-        {
-          this.fetchinvoicesofsale(this.sales.filter(e=>e.apartmentname==this.apartmentid)[0]);
+        if (this.Transaction != undefined) {
+          this.fetchinvoicesofsale(
+            this.sales.filter((e) => e.apartmentname == this.apartmentid)[0]
+          );
         }
         this.start = true;
       });
@@ -111,35 +114,38 @@ export class TransactiongeneratorComponent implements OnInit {
       tid: [this.Transaction?.transactionid],
       invoicedate: [this.Transaction?.transactiondate, Validators.required],
     });
-
-   
   }
-  invoiceselect(id:string)
-  {
+  invoiceselect(id: string) {
     debugger;
-   
+
     this.invoiceid = id;
-    this.maxamount =  this.invoices.length > 0 ? this.invoices.filter(e=>e.id == id)[0].amountleft:0;
+    this.maxamount =
+      this.invoices.length > 0
+        ? this.invoices.filter((e) => e.id == id)[0].amountleft
+        : 0;
   }
 
   async fetchinvoicesofsale(sale: SalesDto) {
     this.invoices = [];
     this.saleinfo = sale;
     if (sale != undefined) {
-      (
-        await this.fs.getSaleInvoices(sale.id, ).get().toPromise()
-      ).docs.forEach((e) => {
-        this.invoices.push(e.data());
-        this.invoices = this.invoices.sort((f1, f2) =>
-          f1.installmentno == null
-            ? 1
-            : f1.installmentno > f2.installmentno
-            ? 1
-            : -2
-        );
-        
-      });
-      this.invoiceid = !this.isupdate ? this.invoices[0].id:this.invoiceid;
+      (await this.fs.getSaleInvoices(sale.id).get().toPromise()).docs.forEach(
+        (e) => {
+          this.invoices.push(e.data());
+          this.invoices = this.invoices.sort((f1, f2) => {
+            if (f1.orderno != undefined) {
+              return f1.orderno > f2.orderno ? 1:-2;
+            } else {
+              return f1.installmentno == null
+                ? 1
+                : f1.installmentno > f2.installmentno
+                ? 1
+                : -2;
+            }
+          });
+        }
+      );
+      this.invoiceid = !this.isupdate ? this.invoices[0].id : this.invoiceid;
       debugger;
       this.maxamount = this.invoices[0].amountleft;
     }
@@ -158,9 +164,10 @@ export class TransactiongeneratorComponent implements OnInit {
       var notes = this.form.controls["notes"]?.value ?? "";
       var paymentmethod = this.form.controls["method"].value;
       var status = this.form.controls["status"].value;
-      var invoicedto = (await this.fs.getinvoicebyid(this.invoiceid).get().toPromise()).data();
-      
-      
+      var invoicedto = (
+        await this.fs.getinvoicebyid(this.invoiceid).get().toPromise()
+      ).data();
+
       let tr: Transaction = {
         amount: amount,
         id: "",
@@ -173,88 +180,82 @@ export class TransactiongeneratorComponent implements OnInit {
         status: status,
         updatedat: this.ApputilsService.getServerTimestamp(),
         notes: notes,
-        transactiondate: this.invoiceDate[0] == undefined ? this.invoiceDate : this.invoiceDate[0],
+        transactiondate:
+          this.invoiceDate[0] == undefined
+            ? this.invoiceDate
+            : this.invoiceDate[0],
         apartmentname: this.saleinfo.apartmentname,
         customername: this.saleinfo.customername,
         invoicename: invoicedto.type,
         totalamount: amount,
-        editable: true
+        editable: true,
       };
       debugger;
       var leftAmount = 0;
-      if(!this.isupdate &&  amount > invoicedto.amountleft)
-      {
-        leftAmount = amount-invoicedto.amountleft;
+      if (!this.isupdate && amount > invoicedto.amountleft) {
+        leftAmount = amount - invoicedto.amountleft;
         amount = invoicedto.amountleft;
         tr.amount = amount;
-      }
-      else
-      if(this.isupdate && tr.amount > this.Transaction.amount){
-         invoicedto.amountleft = invoicedto.amountleft+this.Transaction.amount;
-           
-         if(amount > invoicedto.amountleft)
-         {
-          leftAmount = amount-invoicedto.amountleft;
+      } else if (this.isupdate && tr.amount > this.Transaction.amount) {
+        invoicedto.amountleft = invoicedto.amountleft + this.Transaction.amount;
+
+        if (amount > invoicedto.amountleft) {
+          leftAmount = amount - invoicedto.amountleft;
           amount = leftAmount;
           tr.amount = invoicedto.amountleft;
-         } 
+        }
       }
-      if(invoicedto.type == "Installment")
-      {
-        tr.invoicename += invoicedto.installmentno.toString(); 
+      if (invoicedto.type == "Installment") {
+        tr.invoicename += invoicedto.installmentno.toString();
       }
       debugger;
-      if(this.Transaction != undefined)
-      {
+      if (this.Transaction != undefined) {
         tr.id = this.Transaction.id;
         this.fs
-        .updatetransaction(tr)
-        .then(async (e) => {
-          
-          if(leftAmount > 0)
-          {
-            let cr :creditamounts={
-              id:tr.id,
-              amount: leftAmount,
-              tid: tr.transactionid
-            };
-            await this.fs.creditAmountToCustomer(this.saleinfo.customerid,cr).then();
-      
-          }
-          this.nts.showSuccess("Transaction & Invoices Updated", "Success");
-          pDialog.close();
-          this.modal.close();
-        })
-        .catch((e) => {
-          console.log(e);
-          this.nts.showError("Some Error ", "Error occured");
-        });
-      }
-      else{
+          .updatetransaction(tr)
+          .then(async (e) => {
+            if (leftAmount > 0) {
+              let cr: creditamounts = {
+                id: tr.id,
+                amount: leftAmount,
+                tid: tr.transactionid,
+              };
+              await this.fs
+                .creditAmountToCustomer(this.saleinfo.customerid, cr)
+                .then();
+            }
+            this.nts.showSuccess("Transaction & Invoices Updated", "Success");
+            pDialog.close();
+            this.modal.close();
+          })
+          .catch((e) => {
+            console.log(e);
+            this.nts.showError("Some Error ", "Error occured");
+          });
+      } else {
         this.fs
-        .addtransaction(tr, this.invoiceid)
-        .then(async (e) => {
-          debugger;
-          if(leftAmount > 0)
-          {
-            let cr :creditamounts={
-              id:tr.id,
-              amount: leftAmount,
-              tid: tr.transactionid
-            };
-            await this.fs.creditAmountToCustomer(this.saleinfo.customerid,cr).then();
-      
-          }
-          this.nts.showSuccess("Transaction & Invoices Updated", "Success");
-          pDialog.close();
-          this.modal.close();
-        })
-        .catch((e) => {
-          console.log(e);
-          this.nts.showError("Some Error ", "Error occured");
-        });
+          .addtransaction(tr, this.invoiceid)
+          .then(async (e) => {
+            debugger;
+            if (leftAmount > 0) {
+              let cr: creditamounts = {
+                id: tr.id,
+                amount: leftAmount,
+                tid: tr.transactionid,
+              };
+              await this.fs
+                .creditAmountToCustomer(this.saleinfo.customerid, cr)
+                .then();
+            }
+            this.nts.showSuccess("Transaction & Invoices Updated", "Success");
+            pDialog.close();
+            this.modal.close();
+          })
+          .catch((e) => {
+            console.log(e);
+            this.nts.showError("Some Error ", "Error occured");
+          });
       }
-      
     }
   }
   onBankSelect($event) {

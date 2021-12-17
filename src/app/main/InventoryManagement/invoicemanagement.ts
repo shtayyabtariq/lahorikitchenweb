@@ -6,23 +6,25 @@ import { InvoiceType, ApputilsService } from '../../auth/helpers/apputils.servic
     amount: number,
     dueon: any,
     currentime:any,
+    orderno:number
     
   ): PlanScheduleDto {
     let inv: PlanScheduleDto = {
-        installmentno: 0,
-        amount: amount,
-        amountpaid: 0,
-        amountleft: amount,
-        invoicedueon: dueon,
-        invoicepaid: false,
-        invoicepaidon: null,
-        approvedby: null,
-        approvalpicture: "",
-        id: "",
-        planid: "",
-        type: invoiceType,
-        createdat: currentime ,
-        updateat: currentime
+      installmentno: 0,
+      amount: amount,
+      amountpaid: 0,
+      amountleft: amount,
+      invoicedueon: dueon,
+      invoicepaid: false,
+      invoicepaidon: null,
+      approvedby: null,
+      approvalpicture: "",
+      id: "",
+      planid: "",
+      type: invoiceType,
+      createdat: currentime,
+      updateat: currentime,
+      orderno: orderno
     };
     return inv;
   }
