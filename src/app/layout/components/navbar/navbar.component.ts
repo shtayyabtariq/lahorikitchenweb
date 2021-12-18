@@ -88,6 +88,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   ) {
     // this._authenticationService.currentUser.subscribe(x => (this.currentUser = x));
 
+    
     this.languageOptions = {
       en: {
         title: 'English',

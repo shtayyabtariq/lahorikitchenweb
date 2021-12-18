@@ -34,6 +34,56 @@
 
         </div>
 
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        Customer Apartments
+                        <div class="float-right">
+                            
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-bordered">
+                            <thead>
+                                <th>
+                                    Apartment Name
+                                </th>
+                                <th>
+                                    Apartment Total Price
+                                </th>
+                                <th>
+                                    Purchased On
+                                </th>
+                                <th>
+                                    Status
+                                </th>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let apt of this.customersales">
+                                    <td>
+                                        {{this.apt.apartmentname}}
+                                    </td>
+                                    <td>
+                                        {{this.apt.apartmenttotalprice | number}}
+                                    </td>
+                                    <td>
+                                        {{this.apt.createdat.seconds * 1000 | date}}
+                                    </td>
+                                    <td>
+                                        {{this.apt.status}}
+                                    </td>
+                                    <td>
+                                        <a class="mr-1" (click)="dismissdialog()" routerLink="/sales/{{this.apt.id}}" container="body" placement="top" ngbTooltip="Preview Invoice"><i size="18" data-feather="eye"></i
+                                            ></a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="row" *ngIf="this.report == 0">
             <div class="col-12">
                 <div class="card">
@@ -53,46 +103,55 @@
                               </option>
                             </select>
                         </div>
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <td>
-                                        TotalAmount
-                                    </td>
-                                    <td>
-                                        Amount Paid
-                                    </td>
-                                    <td>
-                                        Amount Left
-                                    </td>
-                                    <td>
-                                        Type
-                                    </td>
-                                    <td>
-                                        Date
-                                    </td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr *ngFor="let invoice of this.aginginvoices">
-                                    <td>
-                                        {{invoice.amount | number}}
-                                    </td>
-                                    <td>
-                                        {{invoice.amountpaid | number}}
-                                    </td>
-                                    <td>
-                                        {{invoice.amountleft | number}}
-                                    </td>
-                                    <td>
-                                        {{invoice.type}}
-                                    </td>
-                                    <td>
-                                        {{invoice?.invoicedueon?.seconds * 1000 | date}}
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div class="row">
+                            <div class="col-12 mb-2">
+                                <a csvLink [data]="this.agingreport" class="btn btn-outline-secondary float-right mr-1" rippleEffect>Export CSV</a
+                                    >
+                            </div>
+                        </div>
+                        <div class="row">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <td>
+                                            TotalAmount
+                                        </td>
+                                        <td>
+                                            Amount Paid
+                                        </td>
+                                        <td>
+                                            Amount Left
+                                        </td>
+                                        <td>
+                                            Type
+                                        </td>
+                                        <td>
+                                            Date
+                                        </td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let invoice of this.aginginvoices">
+                                        <td>
+                                            {{invoice.amount | number}}
+                                        </td>
+                                        <td>
+                                            {{invoice.amountpaid | number}}
+                                        </td>
+                                        <td>
+                                            {{invoice.amountleft | number}}
+                                        </td>
+                                        <td>
+                                            {{invoice.type}}
+                                        </td>
+                                        <td>
+                                            {{invoice?.invoicedueon?.seconds * 1000 | date}}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                       
                     </div>
 
                 </div>
@@ -111,46 +170,59 @@
                           </label>
                     </div>
                     <div class="card-body">
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <td>
-                                        TotalAmount
-                                    </td>
-                                    <td>
-                                        Amount Paid
-                                    </td>
-                                    <td>
-                                        Amount Left
-                                    </td>
-                                    <td>
-                                        Type
-                                    </td>
-                                    <td>
-                                        Date
-                                    </td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr *ngFor="let invoice of this.overdueinvoices">
-                                    <td>
-                                        {{invoice.amount | number}}
-                                    </td>
-                                    <td>
-                                        {{invoice.amountpaid | number}}
-                                    </td>
-                                    <td>
-                                        {{invoice.amountleft | number}}
-                                    </td>
-                                    <td>
-                                        {{invoice.type}}
-                                    </td>
-                                    <td>
-                                        {{invoice?.invoicedueon?.seconds * 1000 | date}}
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div class="row">
+                            <div class="col-12 mb-2">
+                                <div class="mb-2">
+                                    <a csvLink [data]="this.overdueinvoices" class="btn btn-outline-secondary float-right mr-1" rippleEffect>Export CSV</a
+                                        >
+                                </div>
+                            </div>
+                        </div>
+                       <div class="row">
+                           <div class="col-12">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <td>
+                                            TotalAmount
+                                        </td>
+                                        <td>
+                                            Amount Paid
+                                        </td>
+                                        <td>
+                                            Amount Left
+                                        </td>
+                                        <td>
+                                            Type
+                                        </td>
+                                        <td>
+                                            Date
+                                        </td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let invoice of this.overdueinvoices">
+                                        <td>
+                                            {{invoice.amount | number}}
+                                        </td>
+                                        <td>
+                                            {{invoice.amountpaid | number}}
+                                        </td>
+                                        <td>
+                                            {{invoice.amountleft | number}}
+                                        </td>
+                                        <td>
+                                            {{invoice.type}}
+                                        </td>
+                                        <td>
+                                            {{invoice?.invoicedueon?.seconds * 1000 | date}}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                           </div>
+                       </div>
+                     
                     </div>
                 </div>
             </div>
@@ -168,16 +240,17 @@
                           </label>
                     </div>
                     <div class="card-body">
-                        <!-- <div class="mb-2">
-                            <label>
-                      Choose Filter Option
-                    </label>
-                            <select class="form-control" (change)="agingfilter($event.target.value)">
-                            <option *ngFor="let opt of this.ApputilsService.AgingFilters" value="{{this.opt}}">
-                              {{this.opt}}
-                            </option>
-                          </select>
-                        </div> -->
+                        <div class="row">
+                            <div class="col-12 mb-2">
+                                <div class="mb-2">
+                                    <a csvLink [data]="this.bankbalancedetail" class="btn btn-outline-secondary float-right mr-1" rippleEffect>Export CSV</a
+                                        >
+                                </div>
+                            </div>
+                        </div>
+                        
+
+                        
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
@@ -251,6 +324,10 @@
                         Choose Filter Option
                       </label>
 
+                        </div>
+                        <div class="mb-2">
+                            <a csvLink [data]="this.upcominginvoices" class="btn btn-outline-secondary float-right mr-1" rippleEffect>Export CSV</a
+                                >
                         </div>
                         <table class="table table-bordered">
                             <thead>

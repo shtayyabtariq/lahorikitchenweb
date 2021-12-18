@@ -90,11 +90,12 @@ export class AuthLoginV2Component implements OnInit {
         debugger;
       //  var currentUser = (await this.fs.getcurrentEmployee(e.user.uid).get().toPromise()).data();
         localStorage.setItem('currentUser', e.user.uid);
-      //   localStorage.setItem('role',currentUser.designation);
-      //   localStorage.setItem('name',currentUser.name);
-        this.document.location.href="/";
+      var currentUser = await (await this.fs.getUserById(e.user.uid).get().toPromise()).data();
+        localStorage.setItem('role',currentUser.role);
+         localStorage.setItem('name',currentUser.name);
+        
         setTimeout(() => {
-          
+          this.document.location.href="/";
         // redirect to home page
         }, 1000);
       })

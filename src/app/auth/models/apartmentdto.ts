@@ -35,3 +35,11 @@ export interface groupApartments{
   soldaparments:Apartmentdto[];
   availableapartments:Apartmentdto[]; 
 }
+export interface AdvanceInventorySearch{
+
+  type:string;
+  apartmenttype:string;
+  budget:number;
+  floorno:number;
+
+}

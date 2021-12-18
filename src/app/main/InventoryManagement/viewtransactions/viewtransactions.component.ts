@@ -12,6 +12,7 @@ import { ApputilsService } from '../../../auth/helpers/apputils.service';
 import { TransactiongeneratorComponent } from '../transactiongenerator/transactiongenerator.component';
 import { CreditadjustmentsComponent } from '../creditadjustments/creditadjustments.component';
 import Swal from 'sweetalert2';
+import { AuthService } from '../../../auth/service/authservice';
 
 @Component({
   selector: 'app-viewtransactions',
@@ -35,7 +36,7 @@ export class ViewtransactionsComponent implements OnInit {
     public routerser: Router,
     public ApputilsService: ApputilsService,
     public router: RouterHelper,
-   
+   public AuthService:AuthService,
     public nts: NotificationService,
     private _coreSidebarService: CoreSidebarService,
     public fs: firebaseStoreService) { }

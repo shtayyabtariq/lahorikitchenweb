@@ -1,0 +1,94 @@
+<form [formGroup]="form" *ngIf="this.start">
+    <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel1">Apartments</h4>
+        <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+    </div>
+    <div class="modal-body" tabindex="0" ngbAutofocus>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="form-group">
+                    <label for="floorno">Floor No</label>
+                    <input type="text" [class.error]="
+  isSubmit && form.controls.floorno.errors
+" class="form-control" id="floorno" formControlName="floorno" />
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="form-group">
+                    <label for="apartmenttype">Apartment</label>
+                    <select id="apartmenttype" formControlName="apartmenttype" [(value)]="this.ApputilsService.ApartmentType[0]" [ngModel]="this.apartmenttype" (change)="onApartmentTypeSelect($event.target.value)" class="form-control">
+                      <option
+                      value="All"
+                      
+                      >
+                      All
+                    </option>
+        
+                      <option
+            value="{{ food }}"
+            *ngFor="let food of ApputilsService.ApartmentType"
+            >
+            {{ food }}
+          </option>
+        </select>
+
+                </div>
+            </div>
+            <div class="col-12" *ngIf="this.showType">
+                <div class="form-group">
+                    <label for="type">Type</label>
+                    <select id="type" formControlName="type" [(value)]="this.ApputilsService.Type[0]" [ngModel]="this.type" class="form-control">
+                      <option
+                      value="All"
+                      
+                      >
+                      All
+                    </option>
+                      <option
+                  value="{{ food }}"
+                  *ngFor="let food of ApputilsService.Type"
+                  selected
+                >
+                  {{ food }}
+                </option>
+              </select>
+                </div>
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+            <div class="col-12">
+                <div class="form-group">
+                    <label for="price">Maximum Budget</label>
+                    <input type="number" [class.error]="
+    isSubmit && form.controls.price.errors
+  " class="form-control" id="price" formControlName="price" />
+                </div>
+            </div>
+
+
+
+
+
+
+
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary" (click)="onSubmit()" rippleEffect>
+    Search
+  </button>
+    </div>
+</form>

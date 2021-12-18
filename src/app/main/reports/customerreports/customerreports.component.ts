@@ -8,6 +8,7 @@ import { CustomerDto } from "app/auth/models/customerinfo";
 import { firebaseStoreService } from "app/auth/service/firebasestoreservice";
 import { NotificationService } from "app/auth/service/notification.service";
 import { ApputilsService } from "../../../auth/helpers/apputils.service";
+
 import {
   SalesDto,
   PlanScheduleDto,
@@ -20,6 +21,7 @@ import { stat } from "fs";
 import { daterangepickerdto } from "app/auth/models/daterangepickerdto";
 import { FilteroptionselectComponent } from "app/main/filteroptionselect/filteroptionselect.component";
 import { doesNotReject } from "assert";
+import saveAs from "file-saver";
 
 @Component({
   selector: "app-customerreports",
@@ -200,6 +202,16 @@ export class CustomerreportsComponent implements OnInit {
       this.agingreport(61);
     }
   }
+  downloadFile(data: any) {
+    const replacer = (key, value) => value === null ? '' : value; // specify how you want to handle null values here
+    const header = Object.keys(data[0]);
+    let csv = data.map(row => header.map(fieldName => JSON.stringify(row[fieldName], replacer)).join(','));
+    csv.unshift(header.join(','));
+    let csvArray = csv.join('rn');
+
+    var blob = new Blob([csvArray], {type: 'text/csv' })
+    saveAs(blob, "myFile.csv");
+}
   customledgerreport() {
     this.bankbalancedetail=[];
     this.filterCustomerSales();

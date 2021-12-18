@@ -23,6 +23,7 @@ export class HomeRouteAuthGuard implements CanActivate {
     const currentUser = this._authenticationService.currentUserValue;
     debugger;
     if (currentUser) {
+        await this.auth.auth.authState.pipe(first()).toPromise();
       // // check if route is restricted by role
       // if (route.data.roles && route.data.roles.indexOf(currentUser.role) === -1) {
       //   // role not authorised so redirect to not-authorized page
@@ -31,9 +32,9 @@ export class HomeRouteAuthGuard implements CanActivate {
       // }
 
       // authorised so return true
-    var authstate =  await this.auth.auth.authState.pipe(first()).toPromise();
+    var authstate =  await this.auth.auth.currentUser;
     debugger;
-    if(authstate.uid != undefined)
+    if(authstate != undefined && authstate.uid != undefined)
     {
         debugger;
       var role = this.auth.getRole();

@@ -8,7 +8,16 @@ export const adminmenu:CoreMenu[]=[
     type: 'item',
     icon: 'info',
     url: 'users'
-  }
+  },
+  {
+    id: 'changepassword',
+    title: 'Change Password',
+    translate: 'MENU.SAMPLE',
+    type: 'item',
+    icon: 'info',
+    url: 'changepassword'
+  },
+  
 ];
 export const ownermenu:CoreMenu[]=[
   {
@@ -28,7 +37,14 @@ export const ownermenu:CoreMenu[]=[
     url: 'inventory'
   },
   
-  
+  {
+    id: 'sample',
+    title: 'Settings',
+    translate: 'MENU.SAMPLE',
+    type: 'item',
+    icon: 'settings',
+    url: 'settings'
+  },
  
   {
     id: 'transactions',
@@ -37,6 +53,13 @@ export const ownermenu:CoreMenu[]=[
     type: 'item',
     icon: 'info',
     url: 'transactions'
+  },{
+    id: 'invoices',
+    title: 'View Invoices',
+    translate: 'MENU.SAMPLE',
+    type: 'item',
+    icon: 'info',
+    url: 'invoices'
   },
   {
     id: 'reports',
@@ -46,7 +69,14 @@ export const ownermenu:CoreMenu[]=[
     icon: 'info',
     url: 'reports'
   },
-  
+  {
+    id: 'changepassword',
+    title: 'Change Password',
+    translate: 'MENU.SAMPLE',
+    type: 'item',
+    icon: 'info',
+    url: 'changepassword'
+  },
 ];
 export const menu: CoreMenu[] = [
   {
@@ -65,14 +95,7 @@ export const menu: CoreMenu[] = [
     icon: 'paperclip',
     url: 'inventory'
   },
-  {
-    id: 'sample',
-    title: 'Settings',
-    translate: 'MENU.SAMPLE',
-    type: 'item',
-    icon: 'settings',
-    url: 'settings'
-  },
+  
   {
     id: 'viewplan',
     title: 'Plan',
@@ -89,7 +112,14 @@ export const menu: CoreMenu[] = [
     icon: 'info',
     url: 'sales'
   }
-  ,
+  ,{
+    id: 'invoices',
+    title: 'View Invoices',
+    translate: 'MENU.SAMPLE',
+    type: 'item',
+    icon: 'info',
+    url: 'invoices'
+  },
   {
     id: 'transactions',
     title: 'View Transactions',
@@ -106,5 +136,20 @@ export const menu: CoreMenu[] = [
     icon: 'info',
     url: 'reports'
   },
-  
+  {
+    id: 'sample',
+    title: 'Settings',
+    translate: 'MENU.SAMPLE',
+    type: 'item',
+    icon: 'settings',
+    url: 'settings'
+  },  
+  {
+    id: 'changepassword',
+    title: 'Change Password',
+    translate: 'MENU.SAMPLE',
+    type: 'item',
+    icon: 'info',
+    url: 'changepassword'
+  },
 ]

@@ -4,7 +4,7 @@ import { DatatablesService } from "app/modules/datatables.service";
 import { Subject, Subscription } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { firebaseStoreService } from "../../auth/service/firebasestoreservice";
-import { Apartmentdto } from '../../auth/models/apartmentdto';
+import { AdvanceInventorySearch, Apartmentdto } from '../../auth/models/apartmentdto';
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { ApartmentComponent } from "./createapartment/apartment/apartment.component";
 import { GeneralconfirmationdialogComponent } from "../generalconfirmationdialog/generalconfirmationdialog.component";
@@ -18,6 +18,8 @@ import Swal from "sweetalert2";
 import { ToastService } from '../../auth/service/toasts.service';
 import { NotificationService } from '../../auth/service/notification.service';
 import { PlanScheduleDto } from '../../auth/models/plandto';
+import { AdvanceinventorysearchComponent } from "./advanceinventorysearch/advanceinventorysearch.component";
+import { AuthService } from '../../auth/service/authservice';
 
 @Component({
   selector: "app-InventoryManagement",
@@ -35,13 +37,15 @@ export class InventoryManagementComponent implements OnInit {
   @ViewChild(DatatableComponent) table: DatatableComponent;
   private _unsubscribeAll: Subject<any>;
   exportCSVData: Object[] = [];
+  showsearch: boolean;
   constructor(
     public modal: NgbModal,
     public toast:ToastService,
     public nts:NotificationService,
     private _datatablesService: DatatablesService,
     public fs: firebaseStoreService,
-    public appUtil:ApputilsService
+    public appUtil:ApputilsService,
+    public AuthService:AuthService
   ) {
     this._unsubscribeAll = new Subject();
   }
@@ -204,4 +208,34 @@ export class InventoryManagementComponent implements OnInit {
     // Whenever the filter changes, always go back to the first page
     this.table.offset = 0;
   }
+  advancesearch() {
+    this.modal
+      .open(AdvanceinventorysearchComponent, {
+        backdrop: false,
+      })
+      .closed.subscribe((e) => {
+        var modal = e as AdvanceInventorySearch;
+        console.log(modal);
+        this.searchapartment(modal);
+        this.showsearch = true;
+      });
+  }
+  searchapartment(searchdto: AdvanceInventorySearch) {
+    let arr = this.tempData;
+    debugger;
+    this.apt = arr.filter(
+      (e) =>
+        (searchdto.budget == 0 || searchdto.budget >= e.totalprice) &&
+        (searchdto.apartmenttype == "" ||
+          searchdto.apartmenttype == "All" ||
+          searchdto.apartmenttype == e.apartmenttype) &&
+        (searchdto.type == "" || searchdto.type == "All" || searchdto.type == e.type) &&
+        (searchdto.floorno == 0 || searchdto.floorno.toString() == e.floorno)
+    );
+    this.table.offset = 0;
+  }
+  clearsearch() {
+    this.apt = this.tempData;
+  }
+
 }

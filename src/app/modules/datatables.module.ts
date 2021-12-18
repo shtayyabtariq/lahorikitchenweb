@@ -43,6 +43,13 @@ import { CreateuserComponent } from '../main/usermanagement/createuser/createuse
 import { ManagerEmployeeRouteAuthGuard } from "app/auth/roleguards/manageremployeeguard";
 import { ManagerRouteAuthGuard } from '../auth/roleguards/managerguard';
 import { AdminRouteAuthGuard } from '../auth/roleguards/adminguard';
+import FileSaver from "file-saver";
+import { AdvanceInventorySearch } from '../auth/models/apartmentdto';
+import { AdvanceinventorysearchComponent } from '../main/InventoryManagement/advanceinventorysearch/advanceinventorysearch.component';
+import { ChangepasswordComponent } from '../main/usermanagement/changepassword/changepassword.component';
+import { AuthGuard } from '../auth/helpers/auth.guards';
+import { ViewInvoicesComponent } from '../main/InventoryManagement/ViewInvoices/ViewInvoices.component';
+import { EmployeeRouteAuthGuard } from '../auth/roleguards/employeeguard';
 
 const routes: Routes = [
   {
@@ -54,7 +61,6 @@ const routes: Routes = [
   {
     path: "settings",
     component: SettingsComponent,
-    canActivate:[ManagerRouteAuthGuard],
     data: { animation: "datatables" },
   },
   {
@@ -165,11 +171,26 @@ const routes: Routes = [
     canActivate:[AdminRouteAuthGuard],
     data: { animation: "datatables" },
   },
+  {
+    path: "changepassword",
+    component: ChangepasswordComponent,
+    canActivate:[AuthGuard],
+    data: { animation: "datatables" },
+  },
+  {
+    path: "invoices",
+    component: ViewInvoicesComponent,
+    canActivate:[AuthGuard],
+    data: { animation: "datatables" },
+  },
   
 ];
 
 @NgModule({
   declarations: [
+    ViewInvoicesComponent,
+    ChangepasswordComponent,
+    AdvanceinventorysearchComponent,
     CreateuserComponent,
     ViewusersComponent,
     TrialbalancereportComponent,
@@ -206,13 +227,15 @@ const routes: Routes = [
     CoreCommonModule,
     ContentHeaderModule,
     CardSnippetModule,
+    
     NgxDatatableModule,
     CsvModule,
     NgSelectModule,
     Ng2FlatpickrModule,
     CorePipesModule,
     CoreSidebarModule,
-    FormsModule
+    FormsModule,
+   
   ],
   providers: [DatatablesService],
 })

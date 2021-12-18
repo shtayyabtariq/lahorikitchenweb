@@ -28,7 +28,8 @@ export class ManagerRouteAuthGuard implements CanActivate {
   async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
     const currentUser = this._authenticationService.currentUserValue;
     if (currentUser) {
-      var authstate = await this.auth.auth.authState.pipe(first()).toPromise();
+    await this.auth.auth.authState.pipe(first()).toPromise();
+      var authstate = await this.auth.auth.currentUser;
       if (authstate.uid != undefined) {
         var role = this.auth.getRole();
         if (
