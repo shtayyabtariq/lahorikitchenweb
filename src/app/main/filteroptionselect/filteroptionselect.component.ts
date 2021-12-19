@@ -37,7 +37,9 @@ export class FilteroptionselectComponent implements OnInit {
     public ApputilsService: ApputilsService) { }
 
   ngOnInit() {
-    this.drp = this.ApputilsService.getMonthRange();
+    this.drp = new daterangepickerdto();
+    this.drp.startdate = new Date();
+    this.drp.option = "All";
   }
   rangeselect(range: string) {
     debugger;

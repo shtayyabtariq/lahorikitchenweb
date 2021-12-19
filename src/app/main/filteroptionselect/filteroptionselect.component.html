@@ -10,7 +10,7 @@
         <div class="col-12">
 
             <select class="form-control" (change)="rangeselect($event.target.value)">
-            <option *ngFor="let opt of this.ApputilsService.ReportingTime" value="{{this.opt}}">
+            <option *ngFor="let opt of this.ApputilsService.ReportingTime" value="{{this.opt}}" >
               {{this.opt}}
             </option>
            </select>

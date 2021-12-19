@@ -68,6 +68,10 @@ export class firebaseStoreService {
   {
     return this.fs.collection<Transaction>(this.transactionsCollection,(res)=>res.where("transactiondate",">=",startdate).where("transactiondate","<=",enddate).where("status","==","Successfull"));
   }
+  async getAllTotalAmountReceivedThisMonth()
+  {
+    return this.fs.collection<Transaction>(this.transactionsCollection,(res)=>res.where("status","==","Successfull"));
+  }
   // async getTotalSoldApartment()
   // {
   //   return  (await this.fs.collection<SalesDto>(this).get().toPromise()).docs.length;
@@ -80,6 +84,23 @@ export class firebaseStoreService {
           .where("invoicepaid", "==", false)
           .where("invoicedueon", ">=", currentdate)
           .where("invoicedueon", "<=", lastdate)
+      )
+      .get()
+      .toPromise();
+    let invoicelist: PlanScheduleDto[] = [];
+    invoices.forEach((e) => {
+      invoicelist.push(e.data());
+    });
+    return invoicelist;
+  }
+  async GetAllUpComingInvoices(currentdate: Date, ) {
+    debugger;
+    var invoices = await this.fs
+      .collection<PlanScheduleDto>(this.planinvoicesCollection, (res) =>
+        res
+          .where("invoicepaid", "==", false)
+          .where("invoicedueon", ">=", currentdate)
+         
       )
       .get()
       .toPromise();

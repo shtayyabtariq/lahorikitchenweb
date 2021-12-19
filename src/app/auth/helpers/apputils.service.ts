@@ -85,7 +85,19 @@ getMonthRange()
     drp.option = "Month";
     return drp;
 }
-
+getAllRange()
+{
+    let drp = new daterangepickerdto();
+    var date = new Date(2017,1,1);
+    date.setDate(1);
+    drp.startdate = date;
+    date = new Date();
+    date.setMonth(date.getMonth()+500);
+    date.setDate(0);
+    drp.enddate = date;
+    drp.option = "All";
+    return drp;
+}
 getYearRange()
 {
   debugger;
@@ -114,7 +126,7 @@ groupBy<T, K>(list: T[], getKey: (item: T) => K) {
 getPercentPrice(amount:number,percent ?:number)
 {
   
-    return ((percent/100)*amount);
+    return Math.round( ((percent/100)*amount));
   
 }
 PaymentMethod:string[]=[
@@ -180,7 +192,7 @@ CustomerReports:String[]=[
   this.CustomerLedgerReport,
   this.CustomerOpenBalanceReports,
   this.CustomerOverDueInvoices,
-  this.CustomerOpenBalanceReports,
+  this.CustomerOutStandingInvoices,
   this.CustomerAccountReceivableReports
 ];
 Type:String[]=["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20"];

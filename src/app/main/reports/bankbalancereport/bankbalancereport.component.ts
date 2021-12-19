@@ -9,6 +9,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { ApputilsService } from "../../../auth/helpers/apputils.service";
 import { daterangepickerdto } from "../../../auth/models/daterangepickerdto";
 import { FlatpickrOptions } from "ng2-flatpickr";
+import { metadata } from '../../../auth/models/metadata';
 
 
 @Component({
@@ -45,8 +46,18 @@ export class BankbalancereportComponent implements OnInit {
   bankbalancedetail: bankbalancedetaildto[] = [];
   tempbankbalancedetail: bankbalancedetaildto[] = [];
   transactions: Transaction[] = [];
+  metadata:metadata;
   async ngOnInit() {
-    var iban = this.route.snapshot.paramMap.get("iban");
+    this.fs.getmetadata().valueChanges().subscribe(e=>{
+
+      this.metadata = e;
+      this.filterbanks(this.metadata.banks[0].Iban);
+    });
+   
+    
+  }
+  async filterbanks(iban:string)
+  {
     var bankamount = 0;
     let bb: bankbalancedetaildto = {
       debit: 0,
@@ -99,7 +110,7 @@ export class BankbalancereportComponent implements OnInit {
       
       this.bankbalancedetail.push(bb);
     });
-    var drp = this.ApputilsService.getMonthRange();
+    var drp = this.ApputilsService.getAllRange();
     this.filterreport(drp);
   }
   oncustomdateselect(val:any)
@@ -121,6 +132,10 @@ debugger;
     } else {
       this.tempbankbalancedetail = this.bankbalancedetail;
     }
+  }
+  bankSelect(iban:string)
+  {
+    this.filterbanks(iban);
   }
   filterreport(drp: daterangepickerdto) {
     debugger;

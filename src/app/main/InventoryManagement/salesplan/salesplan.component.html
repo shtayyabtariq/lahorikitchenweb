@@ -44,14 +44,14 @@
                                     <label for="accountcode">Account Code</label>
                                     <input type="text" [class.error]="
         isSubmit && form.controls.accountcode.errors
-      " class="form-control" id="account" formControlName="accountcode" required />
+      " class="form-control" id="account" formControlName="accountcode" required enabled />
                                 </div>
                             </div>
                             <div class="col-12 col-md-6">
                                 <!-- select size large -->
                                 <div class="form-group">
                                     <label for="applicationno">Application No</label>
-                                    <input type="text" [class.error]="
+                                    <input enabled type="text" [class.error]="
       isSubmit && form.controls.applicaitonno.errors
     " class="form-control" id="applicationno" formControlName="applicaitonno" required />
                                 </div>
@@ -238,7 +238,7 @@ isSubmit && form.controls.bname.errors
                                                     {{PlanInfo?.bookingamount | number}}
                                                 </td>
                                                 <td>
-                                                    Immediate
+                                                    <ng2-flatpickr [(ngModel)]="bookingDate" [config]="BookingDate" name="BookingDate"></ng2-flatpickr>
                                                 </td>
                                             </tr>
                                             <tr>

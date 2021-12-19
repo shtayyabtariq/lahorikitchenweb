@@ -117,7 +117,7 @@ export class CustomerreportsComponent implements OnInit {
         this.customledgerreport();
         break;
       case 3:
-        this.upcominginvoicesreport(this.drp.startdate, this.drp.enddate);
+        this.upcominginvoicesreport(this.drp);
         break;
       case 4:
         break;
@@ -151,7 +151,7 @@ export class CustomerreportsComponent implements OnInit {
     this.agingreport(0);
     this.customledgerreport();
     this.overdueinvoicesreport(this.drp);
-    this.upcominginvoicesreport(monthRange.startdate, monthRange.enddate);
+    this.upcominginvoicesreport(this.drp);
   }
   filterCustomerSales() {
     this.customersales = this.sales.filter(
@@ -170,6 +170,7 @@ export class CustomerreportsComponent implements OnInit {
     d30.setDate(d30.getDate() - (startdate + 31));
     this.aginginvoices = this.customerinvoices.filter(
       (e) =>
+      (!e.invoicepaid)&&
         new Date(e.invoicedueon?.seconds * 1000) < dt &&
         new Date(e.invoicedueon?.seconds * 1000) >= d30
     );
@@ -189,9 +190,23 @@ export class CustomerreportsComponent implements OnInit {
     var dt = new Date();
     drp.enddate = dt;
     this.overdueinvoices = this.customerinvoices.filter(
-      (e) => +new Date(e.invoicedueon?.seconds * 1000) >= +drp.startdate
+      (e) =>
+      (!e.invoicepaid) &&
+      (drp.option == "All" || drp.startdate == undefined || +new Date(e.invoicedueon?.seconds * 1000) >= +drp.startdate)
       && ( drp.enddate == undefined || +new Date(e.invoicedueon?.seconds * 1000) <= +drp.enddate)
     );
+  }
+  upcominginvoicesreport(drp:daterangepickerdto)
+  {
+    var dt = new Date();
+    drp.startdate = dt;
+    this.upcominginvoices = this.customerinvoices.filter(
+      (e) =>
+      (!e.invoicepaid) &&
+      (+new Date(e.invoicedueon?.seconds * 1000) > +drp.startdate)
+      && ( drp.option == "All" || drp.enddate == undefined || +new Date(e.invoicedueon?.seconds * 1000) <= +drp.enddate)
+    );
+    this.upcominginvoices = this.upcominginvoices.sort((e,b)=>{return e.invoicedueon > b.invoicedueon ? 1:-1})
   }
   agingfilter(filter: string) {
     if (filter == this.ApputilsService.Aging30) {
@@ -259,13 +274,13 @@ export class CustomerreportsComponent implements OnInit {
     }
     //this.bankbalancedetail = this.bankbalancedetail.sort((a,b)=>{ return a > b ? 1 : -1 });
   }
-  upcominginvoicesreport(st: Date, et: Date) {
-    var dt = new Date();
-    this.upcominginvoices = this.invoices.filter(
-      (e) =>
-        e.invoicepaid == false &&
-        new Date(e?.invoicedueon?.seconds * 1000) > st &&
-        new Date(e?.invoicedueon?.seconds * 1000) <= et
-    );
-  }
+  // upcominginvoicesreport(st: Date, et: Date) {
+  //   var dt = new Date();
+  //   this.upcominginvoices = this.invoices.filter(
+  //     (e) =>
+  //       e.invoicepaid == false &&
+  //       new Date(e?.invoicedueon?.seconds * 1000) > st &&
+  //       new Date(e?.invoicedueon?.seconds * 1000) <= et
+  //   );
+  // }
 }

@@ -246,6 +246,7 @@ export class PlanGeneratorComponent implements OnInit {
         totalPrice,
         booking
       );
+      
       var installmentAmount =
         totalPrice -
         (confirmationPrice + bookingPrice + agreementPrice + possessionPrice);
@@ -280,6 +281,7 @@ export class PlanGeneratorComponent implements OnInit {
       var currentPlanTime = 0 + incrementer;
       var installmentNo = 1;
       this.PlanSchedule = [];
+      perInstallmentAmount = Math.round(perInstallmentAmount);
       while (installmentNo <= totalInstallments) {
         var getDateAfterthreeMonths = this.ApputilsService.getDateAfterMonths(
           new Date(),

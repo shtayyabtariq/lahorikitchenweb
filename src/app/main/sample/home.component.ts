@@ -161,25 +161,47 @@ export class HomeComponent implements OnInit {
 }
 async generatestats(drp:daterangepickerdto)
 {
-  
-   var resp = await this.fs.GetUpComingInvoices(new Date(),drp.enddate);
-   console.log(resp); 
-   this.upcominginvoices = resp;
-   this.totalupcominginvoices = resp.length;
+  debugger;
+
 
 
    var dueinvoices = await this.fs.GetDueInvoices(new Date());
    this.dueinvoices = dueinvoices;
    this.totaldueinvoices = dueinvoices.length;
    console.log(dueinvoices);
+   if(drp.option != "All")
+   {
+    var resp = await this.fs.GetUpComingInvoices(new Date(),drp.enddate);
+    console.log(resp); 
+    this.upcominginvoices = resp;
+    this.totalupcominginvoices = resp.length;
+
+     this.dueinvoices = this.dueinvoices.filter(e=> new Date(e.invoicedueon.seconds * 1000) >= drp.startdate);
+     this.totaldueinvoices = this.dueinvoices.length;
+     
+    (await this.fs.getTotalAmountReceivedThisMonth(drp.startdate,drp.enddate)).valueChanges().subscribe(e=>{
+      this.transactions = e;
+      this.generateStatsByTransactions();
+    });
+   }
+   else{
+    var resp = await this.fs.GetAllUpComingInvoices(new Date());
+    console.log(resp); 
+    this.upcominginvoices = resp;
+    this.totalupcominginvoices = resp.length;
+
+    (await this.fs.getAllTotalAmountReceivedThisMonth()).valueChanges().subscribe(e=>{
+     debugger;
+      this.transactions = e;
+      this.generateStatsByTransactions();
+    });
+   }
   //  var customerinvoice = await this.fs.GetCustomerUpComingInvoices("fqHbVfHDgvQz0GmNfJGD",new Date(),newdate);
   //  console.log(customerinvoice);
 
  
-  (await this.fs.getTotalAmountReceivedThisMonth(drp.startdate,drp.enddate)).valueChanges().subscribe(e=>{
-    this.transactions = e;
-    this.generateStatsByTransactions();
-  });
+ 
+  
    this.totalsoldapartments = this.soldapartments.length;
   
 

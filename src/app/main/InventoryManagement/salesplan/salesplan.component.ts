@@ -37,15 +37,30 @@ export class SalesplanComponent implements OnInit {
   currentCustomer: CustomerDto;
   customers: CustomerDto[] = [];
   isSubmit = false;
+  bookingDate = new Date();
+  public BookingDate:FlatpickrOptions={
+    defaultDate: this.bookingDate,
+    altInput: true,
+    onChange:(newdate:any)=>{
+      this.bookingDate = newdate[0];
+    }
+  }
   agreementDate = this.ApputilsService.getDateAfterMonths(new Date(), 2);
   confirmationDate = this.ApputilsService.getDateAfterMonths(new Date(), 1);
   public AgreementDate: FlatpickrOptions = {
     defaultDate: this.agreementDate,
     altInput: true,
+    onChange:(newdate:any)=>{
+      this.agreementDate = newdate[0];
+      this.syncplanschedule();
+    }
   };
   public ConfirmationDate: FlatpickrOptions = {
     defaultDate: this.confirmationDate,
     altInput: true,
+    onChange:(newdate:any)=>{
+      this.confirmationDate = newdate[0];
+    }
   };
   show: boolean = false;
   planId: string;
@@ -189,7 +204,11 @@ export class SalesplanComponent implements OnInit {
       ],
     });
     for (const field in form.controls) { // 'field' is a string
-      this.form.get(field).disable();
+      if(field != "accountcode" && field != "applicationno")
+      {
+        this.form.get(field).disable();
+      }
+     
     }
     this.form = form;
     this.addNew = true;
@@ -305,7 +324,7 @@ export class SalesplanComponent implements OnInit {
       var bookinginvoice = invoicemanagement.InvoiceManagement.GenerateInvoice(
         InvoiceType.Booking,
         this.PlanInfo.bookingamount,
-        this.ApputilsService.getServerTimestamp(),
+        this.bookingDate,
         this.ApputilsService.getServerTimestamp(),
         -1
       );
