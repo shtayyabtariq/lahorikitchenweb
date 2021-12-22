@@ -5,7 +5,7 @@ import { NgbActiveModal, NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { RouterHelper } from "app/auth/helpers/router-helper";
 import { firebaseStoreService } from "app/auth/service/firebasestoreservice";
 import { NotificationService } from "app/auth/service/notification.service";
-import { ApputilsService } from "../../../auth/helpers/apputils.service";
+import { ApputilsService, SaleStatus } from '../../../auth/helpers/apputils.service';
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { banksdto } from "app/auth/models/metadata";
 import { metadata } from "../../../auth/models/metadata";
@@ -224,6 +224,17 @@ export class TransactiongeneratorComponent implements OnInit {
                 .creditAmountToCustomer(this.saleinfo.customerid, cr)
                 .then();
             }
+            let allpaid = true;
+            (await this.fs.getSaleInvoices(this.saleinfo.id).get().toPromise()).docs.forEach(e=>{
+                if(!(e.data().invoicepaid && allpaid))
+                {
+                  allpaid = false;
+                }
+            });
+            if(allpaid)
+            {
+              await this.fs.updateSaleStatus(this.saleinfo.id,SaleStatus.Completed).then();
+            }
             this.nts.showSuccess("Transaction & Invoices Updated", "Success");
             pDialog.close();
             this.modal.close();
@@ -247,6 +258,7 @@ export class TransactiongeneratorComponent implements OnInit {
                 .creditAmountToCustomer(this.saleinfo.customerid, cr)
                 .then();
             }
+            this.fs.getallinvoices()
             this.nts.showSuccess("Transaction & Invoices Updated", "Success");
             pDialog.close();
             this.modal.close();

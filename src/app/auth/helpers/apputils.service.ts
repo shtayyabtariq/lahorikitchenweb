@@ -9,6 +9,15 @@ import { daterangepickerdto } from '../models/daterangepickerdto';
 })
 export class ApputilsService {
 
+  All="All";
+  ThisMonth = "This Month";
+  ThisYear = "This Year";
+  ThisMonthDue = "This Month Due";
+  ThisMonthUpComing = "This Month UpComing";
+  Due = "Due";
+  Paid = "Paid";
+  ThisMonthPaid = "This Month Paid";
+
    monthtly : Installments={
     text: 'Monthly',
     months: 1
@@ -243,4 +252,7 @@ export class InvoiceStatus{
   static UnPaid:string = "UnPaid";
   static Paid:string="Paid";
   static Pending:string = "Pending";
+}
+export class FilterStatus{
+  
 }

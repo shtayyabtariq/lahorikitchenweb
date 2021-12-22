@@ -9,7 +9,38 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <div class="row"></div>
+                    <div class="row">
+                        <div class="col-12 mb-2">
+                            <label>
+                            Choose Filter Option
+                        </label>
+                            <select class="form form-control mt-2" (change)="filterselect($event.target.value)">
+                                <option>
+                                    {{this.ApputilsService.ThisMonth}}
+                                </option>
+                                <option>
+                                    {{this.ApputilsService.ThisYear}}
+                                </option>
+                                <option>
+                                    {{this.ApputilsService.ThisMonthDue}}
+                                </option>
+                                <option>
+                                    {{this.ApputilsService.ThisMonthPaid}}
+                                </option>
+                               
+                                <option>
+                                    {{this.ApputilsService.ThisMonthUpComing}}
+                                </option>
+                                <option>
+                                    {{this.ApputilsService.Due}}
+                                </option>
+                                <option>
+                                    {{this.ApputilsService.All}}
+                                </option>
+                                
+                            </select>
+                        </div>
+                    </div>
 
                     <!-- ngx-datatables responsive -->
                     <ngx-datatable #table class="bootstrap core-bootstrap" [columnMode]="ColumnMode.force" [headerHeight]="40" [rowHeight]="58" [footerHeight]="50" rowHeight="auto" [limit]="10" [rows]="invoices" [scrollbarH]="true">

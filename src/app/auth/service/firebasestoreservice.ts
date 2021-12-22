@@ -26,6 +26,9 @@ import { User } from "../models";
   providedIn: "root",
 })
 export class firebaseStoreService {
+  updateSaleStatus(id:string, Completed: string) {
+    return this.fs.collection(this.salesCollection).doc(id).update({"status":Completed});
+  }
   changeApartmentStatus(apartmentid: string, HoldStatus: string) {
     return this.fs
       .collection(this.apartments)
