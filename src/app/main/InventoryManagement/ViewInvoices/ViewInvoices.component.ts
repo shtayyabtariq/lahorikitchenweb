@@ -50,6 +50,9 @@ export class ViewInvoicesComponent implements OnInit {
   filterselect(val: string) {
     debugger;
     switch (val) {
+      case this.ApputilsService.All:
+        this.invoices = this.tempinvoice;
+        break;
       case this.ApputilsService.ThisMonth:
         var drp = this.ApputilsService.getMonthRange();
         this.invoices = this.tempinvoice.filter(

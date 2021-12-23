@@ -66,10 +66,9 @@
                         <ngx-datatable-column name="Status" prop="invoicepaid">
                             <ng-template let-row="row" ngx-datatable-cell-template>
                                 <span class="badge badge-pill badge-light-danger" *ngIf="!row.invoicepaid">Pending</span>
+                                <span class="badge badge-pill badge-light-success" *ngIf="row.invoicepaid">Paid</span>
                             </ng-template>
-                            <ng-template let-row="row" ngx-datatable-cell-template>
-                                <span class="badge badge-pill badge-light-danger" *ngIf="row.invoicepaid">Paid</span>
-                            </ng-template>
+
                         </ngx-datatable-column>
 
                         <ngx-datatable-column name="Action">
