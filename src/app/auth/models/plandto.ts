@@ -47,6 +47,23 @@ export interface PlanScheduleDto{
     orderno:number;
     
 }
+export class customersalesDto{
+    sales:SalesDto[];
+    invoices:PlanScheduleDto[];
+}
+export class AginReportDto{
+    customername:string;
+    amount30:number;
+    amount60:number;
+    amount90:number;
+    amount100:number;
+    total:number;
+}
+export class TrialBalanceReportDto{
+    customername:string;
+    debit:number;
+    credit:number;
+}
 export interface Transaction{
     totalamount:number;
     amount:number;

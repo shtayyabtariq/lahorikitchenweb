@@ -45,6 +45,7 @@ export class SalesplanComponent implements OnInit {
       this.bookingDate = newdate[0];
     }
   }
+  possessionDate = this.ApputilsService.getDateAfterMonths(new Date(),12*4);
   agreementDate = this.ApputilsService.getDateAfterMonths(new Date(), 2);
   confirmationDate = this.ApputilsService.getDateAfterMonths(new Date(), 1);
   public AgreementDate: FlatpickrOptions = {
@@ -53,6 +54,14 @@ export class SalesplanComponent implements OnInit {
     onChange:(newdate:any)=>{
       this.agreementDate = newdate[0];
       this.syncplanschedule();
+    }
+  };
+  public PossessionDate: FlatpickrOptions = {
+    defaultDate: this.possessionDate,
+    altInput: true,
+    onChange:(newdate:any)=>{
+      this.possessionDate = newdate[0];
+      
     }
   };
   public ConfirmationDate: FlatpickrOptions = {
@@ -204,12 +213,14 @@ export class SalesplanComponent implements OnInit {
       ],
     });
     for (const field in form.controls) { // 'field' is a string
-      if(field != "accountcode" && field != "applicationno")
+      if(field != "accountcode" && field != "applicaitonno")
       {
         this.form.get(field).disable();
       }
      
     }
+    debugger;
+   
     this.form = form;
     this.addNew = true;
   }
@@ -266,7 +277,8 @@ export class SalesplanComponent implements OnInit {
   async generateSales() {
     if (this.form.valid) {
       var apt = (await this.fs.getapartmentbyid(this.PlanInfo.apartmentid).get().toPromise()).data().status;
-    if(apt == this.ApputilsService.BookedStatus )
+     var len = (await( this.fs.getSalebyApartment(this.PlanInfo.apartmentname)).get().toPromise()).docs.length;
+    if(apt == this.ApputilsService.BookedStatus || len > 0 )
     {
       Swal.fire({
         title:"Sale Can not be generated",
@@ -332,7 +344,7 @@ export class SalesplanComponent implements OnInit {
         invoicemanagement.InvoiceManagement.GenerateInvoice(
           InvoiceType.Posession,
           this.PlanInfo.possessionamount,
-          null,
+          this.possessionDate,
           this.ApputilsService.getServerTimestamp(),
           1000000
         );

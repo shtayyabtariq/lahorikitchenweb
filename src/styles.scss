@@ -53,3 +53,21 @@
     text-align: center !important;
     vertical-align: middle !important;
 }
+
+.ngx-datatable.bootstrap {
+    box-shadow: none;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.table th,
+.table td {
+    padding: 0.5rem 1rem;
+    vertical-align: middle;
+}
+
+body {
+    font-weight: bold;
+    line-height: 1;
+    color: #1e1e1e;
+}

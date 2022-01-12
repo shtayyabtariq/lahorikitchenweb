@@ -2,10 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ColumnMode } from '@swimlane/ngx-datatable';
 import { daterangepickerdto } from 'app/auth/models/daterangepickerdto';
-import { bankbalancedetaildto, Transaction } from 'app/auth/models/plandto';
+import { bankbalancedetaildto, customersalesDto, PlanScheduleDto, SalesDto, Transaction } from 'app/auth/models/plandto';
 import { firebaseStoreService } from 'app/auth/service/firebasestoreservice';
 import { FlatpickrOptions } from 'ng2-flatpickr';
 import { ApputilsService } from '../../../auth/helpers/apputils.service';
+import { CustomerDto } from '../../../auth/models/customerinfo';
+import { TrialBalanceReportDto } from '../../../auth/models/plandto';
 
 @Component({
   selector: 'app-trialbalancereport',
@@ -17,6 +19,10 @@ export class TrialbalancereportComponent implements OnInit {
   public rows: any;
   public ColumnMode = ColumnMode;
   show = false;
+  cust:CustomerDto[]=[];
+  sales: SalesDto[] = [];
+  tbrlist:TrialBalanceReportDto[]=[];
+  invoices: PlanScheduleDto[] = [];
   public DateRangeOptions: FlatpickrOptions = {
     altInput: true,
     mode: 'range',
@@ -44,66 +50,45 @@ export class TrialbalancereportComponent implements OnInit {
   transactions: Transaction[] = [];
   async ngOnInit() {
   
-    var bankamount = 0;
-    let bb: bankbalancedetaildto = {
-      debit: 0,
-      id: "",
-      apartmentname: "",
-      customername: "",
-      invoicename: "",
-      bank: "",
-      iban: "",
-      paymentmethod: "",
-      transactionid: "",
-      invoiceid: "",
-      bankamount: bankamount,
-      status: "",
-      transactiondate: new Date(),
-      credit: 0
-    };
-    this.bankbalancedetail.push(bb);
-    (await this.fs.gettrialbalance()).docs.forEach((e) => {
-      console.log(e.data());
-      var debit = 0;
-      var credit = 0;
-      if(e.data().status == this.ApputilsService.TransactionSuccessfull)
-      {
-        bankamount += e.data().amount;
-        debit = e.data().amount;
-       
-      }
-      else{
-        credit = e.data().amount;
-      }      
-
-      this.transactions.push(e.data());
-      let bb: bankbalancedetaildto = {
-        id: e.data().id,
-        apartmentname: e.data().apartmentname,
-        customername: e.data().customername,
-        invoicename: e.data().invoicename,
-        bank: e.data().bank,
-        iban: e.data().iban,
-        paymentmethod: e.data().paymentmethod,
-        transactionid: e.data().transactionid,
-        invoiceid: e.data().invoiceid,
-        bankamount: bankamount,
-        status: e.data().status,
-        transactiondate: e.data().transactiondate,
-        debit: debit,
-        credit: credit
-      };
-      
-      this.bankbalancedetail.push(bb);
+    this.fs
+      .getSales()
+      .valueChanges()
+      .subscribe((e) => {
+        this.sales = e;
+      });
+    this.fs
+      .getallinvoices()
+      .valueChanges()
+      .subscribe((e) => {
+        this.invoices = e;
+      });
+    (await this.fs.getCustomer().get().toPromise()).forEach(e=>{
+      this.cust.push(e.data());
     });
-    var drp = this.ApputilsService.getMonthRange();
-    this.filterreport(drp);
-    this.rangeselect(this.ApputilsService.ReportAll);
+   
+    this.rangeselect("All");
   }
   oncustomdateselect(val:any)
   {
-debugger;
+    debugger;
   }
+  getCustomerSales(id:string) {
+    
+    debugger;
+    let customersales = this.sales.filter(
+      (e) => e.customerid == id
+    );
+    let customerinvoices = this.invoices.filter(
+      (e) => customersales.filter((r) => r.id == e.planid).length > 0
+    );
+  
+    let cst:customersalesDto={
+      sales: customersales,
+      invoices: customerinvoices
+    };
+    return cst;
+  
+}
   rangeselect(range: string) {
     debugger;
     this.showdaterange = false;
@@ -117,82 +102,43 @@ debugger;
     } else if (range == this.ApputilsService.ReportCustom) {
       this.showdaterange = true;
     } else {
-      this.tempbankbalancedetail = this.bankbalancedetail;
+      this.tbrlist = [];
+    this.cust.forEach(e=>{
+
+      var cs = this.getCustomerSales(e.id);
+
+      let tbr:TrialBalanceReportDto={
+
+        customername:e.name,
+        debit:cs.invoices.reduce((sum, current) => sum + current.amountpaid, 0),
+        credit:cs.invoices.reduce((sum, current) => sum + current.amountleft, 0),
+      };
+      this.tbrlist.push(tbr);
+
+    });
     }
   }
   filterreport(drp: daterangepickerdto) {
+   
+    this.show = false;
     debugger;
-    var firsttime = false;
-    var previousbankamount = 0;
-    this.tempbankbalancedetail = [];
-    let previous:bankbalancedetaildto;
-    for (var i = 0; i < this.bankbalancedetail.length; i++) {
-      var e = this.bankbalancedetail[i];
-      var tdate = new Date(e.transactiondate.seconds * 1000);
-      
-      if(tdate < drp.startdate)
-      {
-        previous = this.bankbalancedetail[i];
-      }
-      else
-      if(+tdate >= +drp.startdate &&  +tdate <= +drp.enddate && !firsttime)
-      {
-        firsttime = true;
-        previousbankamount = e.bankamount;
-        if (i == 0) {
-          previousbankamount = 0;
-        } else {
-          previousbankamount = this.bankbalancedetail[i - 1].bankamount;
-        }
-        let bb: bankbalancedetaildto = {
-          debit: 0,
-          id: "",
-          apartmentname: "",
-          customername: "",
-          invoicename: "",
-          bank: "",
-          iban: "",
-          paymentmethod: "",
-          transactionid: "",
-          invoiceid: "",
-          bankamount: previousbankamount,
-          status: "",
-          transactiondate: tdate,
-          credit: 0
-        };
-        this.tempbankbalancedetail.push(bb);
-        this.tempbankbalancedetail.push(e);
-      }
-       else {
-        var td = new Date(e.transactiondate.seconds * 1000);
-        if (+td >= +drp.startdate && +td <= +drp.enddate) {
-          debugger;
-          this.tempbankbalancedetail.push(e);
-        }
-      }
-    }
-    if(!firsttime)
-    {
-      let bb: bankbalancedetaildto = {
-        debit: 0,
-        id: "",
-        apartmentname: "",
-        customername: "",
-        invoicename: "",
-        bank: "",
-        iban: "",
-        paymentmethod: "",
-        transactionid: "",
-        invoiceid: "",
-        bankamount: previous.bankamount,
-        status: "",
-        transactiondate:previous.transactiondate,
-        credit: 0
+    this.tbrlist = [];
+    this.cust.forEach(e=>{
+
+      var cs = this.getCustomerSales(e.id);
+
+      let tbr:TrialBalanceReportDto={
+
+        customername:e.name,
+        debit:cs.invoices.filter(e=> new Date(e.invoicedueon?.seconds * 1000) >= drp.startdate && new Date(e.invoicedueon?.seconds * 1000) <= drp.enddate).reduce((sum, current) => sum + current.amountpaid, 0),
+        credit:cs.invoices.filter(e=> new Date(e.invoicedueon?.seconds * 1000) >= drp.startdate && new Date(e.invoicedueon?.seconds * 1000) <= drp.enddate).reduce((sum, current) => sum + current.amountleft, 0),
       };
-      this.tempbankbalancedetail.push(bb);
-    }
-  
-    this.show = true;
+      this.tbrlist.push(tbr);
+
+    });
+    console.log(this.tbrlist);
+      this.show = true;
+   
   }
 
 }

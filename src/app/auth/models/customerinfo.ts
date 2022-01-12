@@ -18,6 +18,7 @@ export interface creditamounts{
     id:string;
     amount:number;
     tid:string;
+    uid:string;
 }
 export interface Nominee{
     id:string;

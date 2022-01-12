@@ -26,6 +26,7 @@ import { threadId } from "worker_threads";
 export class TransactiongeneratorComponent implements OnInit {
   form: FormGroup;
   start = false;
+  showtransactionerror = false;
   bank: string;
   isSubmit = false;
   apartmentid: string;
@@ -152,13 +153,16 @@ export class TransactiongeneratorComponent implements OnInit {
   }
   async onSubmit() {
     this.isSubmit = true;
-    if (this.form.valid) {
+    if (this.form.valid && !this.showtransactionerror) {
+
       var pDialog = this.modalservice.open(ProgressdialogComponent, {
         windowClass: "transparent",
         backdrop: false,
         centered: true,
       });
+
       debugger;
+
       var amount = this.form.controls["amount"].value;
       var transactionid = this.form.controls["tid"].value;
       var notes = this.form.controls["notes"]?.value ?? "";
@@ -190,6 +194,7 @@ export class TransactiongeneratorComponent implements OnInit {
         totalamount: amount,
         editable: true,
       };
+      
       debugger;
       var leftAmount = 0;
       if (!this.isupdate && amount > invoicedto.amountleft) {
@@ -219,6 +224,7 @@ export class TransactiongeneratorComponent implements OnInit {
                 id: tr.id,
                 amount: leftAmount,
                 tid: tr.transactionid,
+                uid: ""
               };
               await this.fs
                 .creditAmountToCustomer(this.saleinfo.customerid, cr)
@@ -253,6 +259,7 @@ export class TransactiongeneratorComponent implements OnInit {
                 id: tr.id,
                 amount: leftAmount,
                 tid: tr.transactionid,
+                uid: this.saleinfo.customerid
               };
               await this.fs
                 .creditAmountToCustomer(this.saleinfo.customerid, cr)
@@ -272,5 +279,12 @@ export class TransactiongeneratorComponent implements OnInit {
   }
   onBankSelect($event) {
     this.banksdto = $event;
+  }
+  async ontransactionid(val:string)
+  {
+    debugger;
+    var len = (await this.fs.getransactionbytransactionid(val).get().toPromise()).docs.length;
+    this.showtransactionerror = len > 0;
+    debugger;
   }
 }

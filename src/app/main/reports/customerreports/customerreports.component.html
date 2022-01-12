@@ -3,8 +3,11 @@
 
         <div class="row">
             <div class="col-12">
+
                 <div class="card">
                     <div class="card-body">
+                        <a (click)="generatePdf()" class="btn btn-outline-secondary float-right mr-1" rippleEffect>Download PDF</a
+                            >
                         <div class="form-group">
                             <label>
                             Choose Customer
@@ -40,7 +43,7 @@
                     <div class="card-header">
                         Customer Apartments
                         <div class="float-right">
-                            
+
                         </div>
                     </div>
                     <div class="card-body">
@@ -76,9 +79,9 @@
                                     <td>
                                         <a class="mr-1" (click)="dismissdialog()" routerLink="/sales/{{this.apt.id}}" container="body" placement="top" ngbTooltip="Preview Invoice"><i size="18" data-feather="eye"></i
                                             ></a>
-                                    </td>
-                                </tr>
-                            </tbody>
+                        </td>
+                        </tr>
+                        </tbody>
                         </table>
                     </div>
                 </div>
@@ -105,12 +108,59 @@
                         </div>
                         <div class="row">
                             <div class="col-12 mb-2">
-                                <a csvLink [data]="this.agingreport" class="btn btn-outline-secondary float-right mr-1" rippleEffect>Export CSV</a
-                                    >
+                                <!-- <a csvLink [data]="this.agingreport" class="btn btn-outline-secondary float-right mr-1" rippleEffect>Export CSV</a
+                                    > -->
+
                             </div>
                         </div>
                         <div class="row">
-                            <table class="table table-bordered">
+                            <table *ngIf="viewall" id="table" class="pdftable table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <td>
+                                            Name
+                                        </td>
+                                        <td>
+                                            0-30
+                                        </td>
+                                        <td>
+                                            31-60
+                                        </td>
+                                        <td>
+                                            60-90
+                                        </td>
+                                        <td>
+                                            > 90
+                                        </td>
+                                        <td>
+                                            Total
+                                        </td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let in of this.allaging">
+                                        <td>
+                                            {{this.in.customername }}
+                                        </td>
+                                        <td>
+                                            {{this.in.amount30 | number}}
+                                        </td>
+                                        <td>
+                                            {{this.in.amount60 | number}}
+                                        </td>
+                                        <td>
+                                            {{this.in.amount90 | number}}
+                                        </td>
+                                        <td>
+                                            {{this.in.amount100 | number}}
+                                        </td>
+                                        <td>
+                                            {{this.in.total | number}}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <table *ngIf="!viewall" id="table" class="pdftable table table-bordered">
                                 <thead>
                                     <tr>
                                         <td>
@@ -151,7 +201,7 @@
                                 </tbody>
                             </table>
                         </div>
-                       
+
                     </div>
 
                 </div>
@@ -180,7 +230,7 @@
                         </div>
                        <div class="row">
                            <div class="col-12">
-                            <table class="table table-bordered">
+                            <table class="pdftable table table-bordered">
                                 <thead>
                                     <tr>
                                         <td>
@@ -251,7 +301,7 @@
                         
 
                         
-                        <table class="table table-bordered">
+                        <table class=" pdftable table table-bordered">
                             <thead>
                                 <tr>
                                     <td>
@@ -329,7 +379,7 @@
                             <a csvLink [data]="this.upcominginvoices" class="btn btn-outline-secondary float-right mr-1" rippleEffect>Export CSV</a
                                 >
                         </div>
-                        <table class="table table-bordered">
+                        <table class="pdftable table table-bordered">
                             <thead>
                                 <tr>
                                     <td>

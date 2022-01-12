@@ -20,7 +20,7 @@ import { coreConfig } from 'app/app-config';
 
 import { AppComponent } from 'app/app.component';
 import { LayoutModule } from 'app/layout/layout.module';
-import { SampleModule } from 'app/main/sample/sample.module';
+
 import { environment } from 'environments/environment';
 
 
@@ -33,6 +33,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { AuthGuard } from './auth/helpers';
 import { HomeComponent } from './main/sample/home.component';
 import { HomeRouteAuthGuard } from './auth/helpers/homerouteguard';
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 
 
 const appRoutes: Routes = [
@@ -45,14 +46,7 @@ const appRoutes: Routes = [
     path: 'pages',
     loadChildren: () => import('./main/pages/pages.module').then(m => m.PagesModule)
   },
-  {
-    path: '',
-    component:HomeComponent,
-    pathMatch: 'full',
-    canActivate:[AuthGuard,HomeRouteAuthGuard]
-    
-    
-  },
+  
   
   {
     path: 'crm',
@@ -87,11 +81,11 @@ const appRoutes: Routes = [
       relativeLinkResolution: 'legacy'
     }),
     TranslateModule.forRoot(),
-
+   
     //NgBootstrap
     NgbModule,
     ToastrModule.forRoot(),
-
+    
     SweetAlert2Module.forRoot(),    // Core modules
     CoreModule.forRoot(coreConfig),
     CoreCommonModule,
@@ -101,7 +95,7 @@ const appRoutes: Routes = [
     ReactiveFormsModule,
     // App modules
     LayoutModule,
-    SampleModule,
+   
     DatatablesModule,
     FormsModule
 

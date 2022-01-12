@@ -211,7 +211,7 @@ export class PlanGeneratorComponent implements OnInit {
         centered: true,
       });
 
-      
+      debugger;
     
       var contact = this.form.controls["contact"].value;
       var client = this.form.controls["client"].value;
@@ -246,12 +246,12 @@ export class PlanGeneratorComponent implements OnInit {
         totalPrice,
         booking
       );
-      
+      var noInstallments =  installments.text == this.ApputilsService.none.text;
       var installmentAmount =
-        totalPrice -
-        (confirmationPrice + bookingPrice + agreementPrice + possessionPrice);
-      var totalInstallments = (plan * 12) / installments.months;
-      var perInstallmentAmount = installmentAmount / totalInstallments;
+      installments.text != this.ApputilsService.none.text ?  totalPrice -
+        (confirmationPrice + bookingPrice + agreementPrice + possessionPrice):0;
+      var totalInstallments = noInstallments ? 0:  (plan * 12) / installments.months;
+      var perInstallmentAmount = noInstallments ? 0: installmentAmount / totalInstallments;
 
       this.PlanInfo.client = client;
       this.PlanInfo.contact = contact;

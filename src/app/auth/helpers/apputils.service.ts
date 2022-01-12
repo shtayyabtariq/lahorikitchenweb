@@ -18,6 +18,10 @@ export class ApputilsService {
   Paid = "Paid";
   ThisMonthPaid = "This Month Paid";
 
+  none:Installments={
+    text:"Immediate",
+    months:0
+  };
    monthtly : Installments={
     text: 'Monthly',
     months: 1
@@ -80,7 +84,19 @@ getDiscountedTotalPrice(price:number,discount ?:number)
     return price;
   }
 }
-
+getdatefilter(startdate:any)
+  {
+    var dt = new Date();
+    dt.setDate(dt.getDate() - startdate);
+    var d30 = new Date();
+    d30.setDate(d30.getDate() - (startdate + startdate == "All" ? 91:31));
+  
+    let drp:daterangepickerdto={
+      startdate: dt,
+      enddate: d30
+    }
+    return drp;
+  }
 getMonthRange()
 {
     let drp = new daterangepickerdto();
@@ -167,7 +183,8 @@ InstallmentPlan:Installments[]=[
    this.monthtly,
    this.quaterly,
    this.biannually,
-   this.anually
+   this.anually,
+   this.none
 ]
 
 ApartmentType:String[]=[
@@ -185,9 +202,11 @@ Aging60 = "31-60";
 Aging90="61-90";
 
 AgingFilters:string[]=[
+ 
 this.Aging30,
 this.Aging60,
-this.Aging90
+this.Aging90,
+"All", 
 ];
 CustomerAgingReport = "Customer Aging Report";
 CustomerLedgerReport = "Customer Ledger Report";

@@ -58,7 +58,8 @@
             <div class="col-12">
                 <div class="form-group">
                     <label for="tid">Transaction Id</label>
-                    <input type="text" [class.error]="isSubmit && form.controls.tid.errors" class="form-control" id="amount" formControlName="tid" required />
+                    <input (change)="ontransactionid($event.target.value)" type="text" [class.error]="isSubmit && form.controls.tid.errors" class="form-control" id="amount" formControlName="tid" required />
+                    <label class="error" *ngIf="this.showtransactionerror"> Transaction Id Already Exsist </label>
                 </div>
             </div>
             <div class="col-12">

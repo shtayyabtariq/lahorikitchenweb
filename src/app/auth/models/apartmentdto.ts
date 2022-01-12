@@ -33,7 +33,8 @@ export interface groupApartments{
   availablecount:number;
   soldcount:number;
   soldaparments:Apartmentdto[];
-  availableapartments:Apartmentdto[]; 
+  availableapartments:Apartmentdto[];
+  sort ?:number; 
 }
 export interface AdvanceInventorySearch{
 

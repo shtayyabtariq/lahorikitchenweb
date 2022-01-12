@@ -15,7 +15,7 @@ import {
   Transaction,
 } from "../models/plandto";
 import { ApputilsService } from "../helpers/apputils.service";
-import { CustomerDto, creditamounts } from "../models/customerinfo";
+import { CustomerDto, creditamounts } from '../models/customerinfo';
 import { query } from "@angular/animations";
 import { metadata } from "../models/metadata";
 import { User } from "../models";
@@ -26,6 +26,9 @@ import { User } from "../models";
   providedIn: "root",
 })
 export class firebaseStoreService {
+  getransactionbytransactionid(val: string) {
+    return this.fs.collection(this.transactionsCollection,res=>res.where("transactionid","==",val));
+  }
   updateSaleStatus(id:string, Completed: string) {
     return this.fs.collection(this.salesCollection).doc(id).update({"status":Completed});
   }
@@ -123,7 +126,13 @@ export class firebaseStoreService {
   }
   async gettrialbalance()
   {
-   return  await this.fs.collection<Transaction>(this.transactionsCollection).get().toPromise();
+    this.fs.collectionGroup<creditamounts>("credits").get().forEach(e=>{
+
+      e.forEach(d=>{
+        console.log(d.data());
+      })
+    });
+   return  await this.fs.collection<Transaction>(this.transactionsCollection,res=>res.where("status","==",this.appUtils.TransactionSuccessfull).orderBy("transactiondate")).get().toPromise();
   }
   async GetCustomerUpComingInvoices(
     id: string,
@@ -409,6 +418,10 @@ export class firebaseStoreService {
     return this.fs.collection(this.apartments, (res) =>
       res.where("isarchive", "==", false).where("status", "==", "Open")
     );
+  }
+  getSalebyApartment(id:string)
+  {
+    return this.fs.collection(this.salesCollection,(res)=>res.where("apartmentname","==",id));
   }
   async getApartments(arr: String[], isarchive: boolean = false) {
     var apartment = await this.fs

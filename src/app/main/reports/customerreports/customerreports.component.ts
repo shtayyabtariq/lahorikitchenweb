@@ -23,6 +23,14 @@ import { FilteroptionselectComponent } from "app/main/filteroptionselect/filtero
 import { doesNotReject } from "assert";
 import saveAs from "file-saver";
 
+   
+import jsPDF, { TextOptions, TextOptionsLight } from 'jspdf'
+import 'jspdf-autotable'
+import autoTable from "jspdf-autotable";
+import { disconnect } from "process";
+import { AginReportDto, customersalesDto } from '../../../auth/models/plandto';
+
+
 @Component({
   selector: "app-customerreports",
   templateUrl: "./customerreports.component.html",
@@ -32,7 +40,9 @@ export class CustomerreportsComponent implements OnInit {
   public rows: any;
   public ColumnMode = ColumnMode;
   public currentCustomer: CustomerDto;
+  viewall:boolean=false;
   filters: String[] = [];
+  allaging:AginReportDto[]=[];
   @ViewChild(DatatableComponent) table: DatatableComponent;
   cust: CustomerDto[] = [];
   sales: SalesDto[] = [];
@@ -50,6 +60,7 @@ export class CustomerreportsComponent implements OnInit {
   selectedagingfilter:string=this.ApputilsService.Aging30;
   report: number = 0;
   filtertext:string="Choose Filter Options";
+  html:HTMLTableElement;
   
   constructor(
     public modal: NgbModal,
@@ -63,8 +74,57 @@ export class CustomerreportsComponent implements OnInit {
     private _coreSidebarService: CoreSidebarService,
     public fs: firebaseStoreService
   ) {}
+   generatePdf() {
+    var head = [['ID', 'Country', 'Rank', 'Capital']]
+    var body = [
+      [1, 'Denmark', 7.526, 'Copenhagen'],
+      [2, 'Switzerland', 7.509, 'Bern'],
+      [3, 'Iceland', 7.501, 'Reykjavík'],
+      [4, 'Norway', 7.498, 'Oslo'],
+      [5, 'Finland', 7.413, 'Helsinki'],
+    ]
+  
 
+
+const doc = new jsPDF({
+  orientation: 'p',
+  unit: 'mm',
+  format: 'a4',
+  putOnlyUsedFonts:true,
+
+ });
+
+let txtOptions:TextOptionsLight={
+   
+};
+doc.setFontSize(5);
+doc.text(new Date().toDateString(),5,5);
+doc.setFontSize(14);
+doc.text("NIAZ ARBAZ PVT LTD",30,15);
+doc.setFontSize(10);
+
+doc.text("Tayyab",30,20);
+
+var img = new Image()
+img.src = '/assets/images/Bedroonm.jpg'
+doc.addImage(img, 'jpg', 10, 10, 12, 15)
+
+// Or use javascript directly:
+autoTable(doc,{
+  html:'.pdftable',
+  startY:30
+})
+
+doc.save('table.pdf')
+  }
   ngOnInit() {
+
+    
+
+
+    this.onviewall();
+
+
     this.fs
       .getCustomer()
       .valueChanges()
@@ -102,7 +162,13 @@ export class CustomerreportsComponent implements OnInit {
       
   }
   onCustomerSelect($event) {
+    this.viewall = false;
     this.currentCustomer = $event;
+    this.generateparticularreport();
+  }
+  onviewall()
+  {
+    this.viewall = true;
     this.generateparticularreport();
   }
   generateparticularreport() {
@@ -154,26 +220,129 @@ export class CustomerreportsComponent implements OnInit {
     this.upcominginvoicesreport(this.drp);
   }
   filterCustomerSales() {
-    this.customersales = this.sales.filter(
-      (e) => e.customerid == this.currentCustomer.id
-    );
-    this.customerinvoices = this.invoices.filter(
-      (e) => this.customersales.filter((r) => r.id == e.planid).length > 0
-    );
+    if(this.viewall)
+    {
+      this.customersales = this.sales;
+      this.customerinvoices = this.invoices;
+    }
+    else{
+      this.customersales = this.sales.filter(
+        (e) => e.customerid == this.currentCustomer.id
+      );
+      this.customerinvoices = this.invoices.filter(
+        (e) => this.customersales.filter((r) => r.id == e.planid).length > 0
+      );
+    }
+    
   }
+    getCustomerSales(id:string) {
+    
+        debugger;
+        let customersales = this.sales.filter(
+          (e) => e.customerid == id
+        );
+        let customerinvoices = this.invoices.filter(
+          (e) => customersales.filter((r) => r.id == e.planid).length > 0
+        );
+      
+        let cst:customersalesDto={
+          sales: customersales,
+          invoices: customerinvoices
+        };
+        return cst;
+      
+    }
   agingreport(startdate: any) {
+
     debugger;
     this.filterCustomerSales();
+    if(startdate == "All")
+    {
+      startdate = 0;
+      this.allagingreport();
+    }
     var dt = new Date();
     dt.setDate(dt.getDate() - startdate);
     var d30 = new Date();
-    d30.setDate(d30.getDate() - (startdate + 31));
+    d30.setDate(d30.getDate() - (startdate + startdate == "All" ? 91:31));
     this.aginginvoices = this.customerinvoices.filter(
       (e) =>
       (!e.invoicepaid)&&
         new Date(e.invoicedueon?.seconds * 1000) < dt &&
         new Date(e.invoicedueon?.seconds * 1000) >= d30
     );
+  }
+  allagingreport() {
+
+    debugger;
+    this.viewall = true;
+    this.allaging =[];
+    this.cust.forEach(e=>{
+      let age:AginReportDto={
+        customername: e.name,
+        amount30: 0,
+        amount60: 0,
+        amount90: 0,
+        total: 0,
+        amount100: 0
+      }
+      var salesdto =  this.getCustomerSales(e.id);
+      var drp = this.getdatefilter(0);
+      age.amount30 = salesdto.invoices.filter(e=>(!e.invoicepaid)&&
+        new Date(e.invoicedueon?.seconds * 1000) < drp.startdate &&
+        new Date(e.invoicedueon?.seconds * 1000) >= drp.enddate).reduce((sum, current) => sum + current.amountleft, 0);
+      
+      drp = this.getdatefilter(31);
+      age.amount60 = salesdto.invoices.filter(e=>(!e.invoicepaid)&&
+      new Date(e.invoicedueon?.seconds * 1000) < drp.startdate &&
+      new Date(e.invoicedueon?.seconds * 1000) >= drp.enddate).reduce((sum, current) => sum + current.amountleft, 0);
+   
+      drp = this.getdatefilter(61);
+      age.amount90 = salesdto.invoices.filter(e=>(!e.invoicepaid)&&
+      new Date(e.invoicedueon?.seconds * 1000) < drp.startdate &&
+      new Date(e.invoicedueon?.seconds * 1000) >= drp.enddate).reduce((sum, current) => sum + current.amountleft, 0);
+
+      age.amount100 = salesdto.invoices.filter(e=>(!e.invoicepaid)&&
+      new Date(e.invoicedueon?.seconds * 1000) < drp.enddate 
+      ).reduce((sum, current) => sum + current.amountleft, 0);
+
+      age.total = age.amount30+age.amount60+age.amount90+age.amount100;
+      debugger;
+      this.allaging.push(age);
+    });
+    
+    let totalage:AginReportDto ={
+      customername: "",
+      amount30: this.allaging.reduce((sum, current) => sum + current.amount30, 0),
+      amount60: this.allaging.reduce((sum, current) => sum + current.amount60, 0),
+      amount90: this.allaging.reduce((sum, current) => sum + current.amount90, 0),
+      total: this.allaging.reduce((sum, current) => sum + current.total, 0),
+      amount100: this.allaging.reduce((sum, current) => sum + current.amount100, 0),
+    };
+    this.allaging.push(totalage);
+    // var dt = new Date();
+    // dt.setDate(dt.getDate() - startdate);
+    // var d30 = new Date();
+    // d30.setDate(d30.getDate() - (startdate + startdate == "All" ? 91:31));
+    // this.aginginvoices = this.customerinvoices.filter(
+    //   (e) =>
+    //   (!e.invoicepaid)&&
+    //     new Date(e.invoicedueon?.seconds * 1000) < dt &&
+    //     new Date(e.invoicedueon?.seconds * 1000) >= d30
+    // );
+  }
+  getdatefilter(startdate:any)
+  {
+    var dt = new Date();
+    dt.setDate(dt.getDate() - startdate);
+    var d30 = new Date();
+    d30.setDate(d30.getDate() - (startdate + startdate == "All" ? 91:31));
+  
+    let drp:daterangepickerdto={
+      startdate: dt,
+      enddate: d30
+    }
+    return drp;
   }
   filter() {
     this.modalservice
@@ -213,8 +382,11 @@ export class CustomerreportsComponent implements OnInit {
       this.agingreport(0);
     } else if (filter == this.ApputilsService.Aging60) {
       this.agingreport(31);
-    } else {
+    } else if(filter == this.ApputilsService.Aging90) {
       this.agingreport(61);
+    }
+    else{
+      this.agingreport("All");
     }
   }
   downloadFile(data: any) {

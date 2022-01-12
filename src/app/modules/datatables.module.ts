@@ -50,6 +50,8 @@ import { ChangepasswordComponent } from '../main/usermanagement/changepassword/c
 import { AuthGuard } from '../auth/helpers/auth.guards';
 import { ViewInvoicesComponent } from '../main/InventoryManagement/ViewInvoices/ViewInvoices.component';
 import { EmployeeRouteAuthGuard } from '../auth/roleguards/employeeguard';
+import { HomeComponent } from "app/main/sample/home.component";
+import { HomeRouteAuthGuard } from "app/auth/helpers/homerouteguard";
 
 const routes: Routes = [
   {
@@ -183,11 +185,27 @@ const routes: Routes = [
     canActivate:[AuthGuard],
     data: { animation: "datatables" },
   },
+  {
+    path: '',
+    component:HomeComponent,
+    pathMatch: 'full',
+    canActivate:[AuthGuard,HomeRouteAuthGuard]
+    
+    
+  },
+  {
+    path: 'home',
+    canActivate:[AuthGuard,HomeRouteAuthGuard],
+    component: HomeComponent,
+  
+    data: { animation: 'home' }
+  },
   
 ];
 
 @NgModule({
   declarations: [
+    
     ViewInvoicesComponent,
     ChangepasswordComponent,
     AdvanceinventorysearchComponent,
@@ -218,7 +236,8 @@ const routes: Routes = [
     InvoicereportComponent,
     BankbalancereportComponent,
     CustomersComponent,
-    CustomerreportsComponent
+    CustomerreportsComponent,
+    HomeComponent
   ],
   imports: [
     RouterModule.forChild(routes),

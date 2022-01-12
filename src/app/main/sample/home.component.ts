@@ -1,49 +1,62 @@
-import { Component, OnInit } from '@angular/core'
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { firebaseStoreService } from 'app/auth/service/firebasestoreservice';
-import { ApputilsService } from '../../auth/helpers/apputils.service';
-import { Transaction, PlanScheduleDto } from '../../auth/models/plandto';
-import { FilteroptionselectComponent } from '../filteroptionselect/filteroptionselect.component';
-import { daterangepickerdto } from '../../auth/models/daterangepickerdto';
-import { InvoicereportComponent } from '../reports/invoicereport/invoicereport.component';
-import { Apartmentdto, groupApartments } from '../../auth/models/apartmentdto';
-import { ViewinventorymodalComponent } from '../InventoryManagement/viewinventorymodal/viewinventorymodal.component';
-import { apartmenttypes } from '../../auth/models/apartmenttypesdto';
-import { abort } from 'process';
-import { toInteger } from '@ng-bootstrap/ng-bootstrap/util/util';
-import { firefunctionsservice } from '../../auth/service/firefunctionsservice';
+import { Component, OnInit, ViewChild } from "@angular/core";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { firebaseStoreService } from "app/auth/service/firebasestoreservice";
+import { ApputilsService } from "../../auth/helpers/apputils.service";
+import { Transaction, PlanScheduleDto } from "../../auth/models/plandto";
+import { FilteroptionselectComponent } from "../filteroptionselect/filteroptionselect.component";
+import { daterangepickerdto } from "../../auth/models/daterangepickerdto";
+import { InvoicereportComponent } from "../reports/invoicereport/invoicereport.component";
+import { Apartmentdto, groupApartments } from "../../auth/models/apartmentdto";
+import { ViewinventorymodalComponent } from "../InventoryManagement/viewinventorymodal/viewinventorymodal.component";
+import { apartmenttypes } from "../../auth/models/apartmenttypesdto";
+import { abort } from "process";
+import { toInteger } from "@ng-bootstrap/ng-bootstrap/util/util";
+import { firefunctionsservice } from "../../auth/service/firefunctionsservice";
+import { ColumnMode, DatatableComponent } from "@swimlane/ngx-datatable";
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  selector: "app-home",
+  templateUrl: "./home.component.html",
+  styleUrls: ["./home.component.scss"],
 })
 export class HomeComponent implements OnInit {
-  totaldueinvoices:number = 0;
-  totalupcominginvoices:number = 0;
-  totalsoldapartments:number = 0;
-  totalavailableapartments:number = 0;
-  totalownerapartments:number=0;
-  apartments:Apartmentdto[] =[];
-  soldapartments:Apartmentdto[]=[];
-  ownerapartments:Apartmentdto[]=[];
-  unsoldapartments:Apartmentdto[]=[];
-  transactions:Transaction[]=[];
-  dueinvoices:PlanScheduleDto[]=[];
-  upcominginvoices:PlanScheduleDto[]=[];
-  totalAmountReceived=0;
-  drp:daterangepickerdto;
-  
-  floorwiseapartments:groupApartments[]=[];
-  typewiseapartments:groupApartments[]=[];
-  apartmenttypes:groupApartments[]=[];
+  totaldueinvoices: number = 0;
+  totalupcominginvoices: number = 0;
+  totalsoldapartments: number = 0;
+  totalavailableapartments: number = 0;
+  totalownerapartments: number = 0;
+  apartments: Apartmentdto[] = [];
+  soldapartments: Apartmentdto[] = [];
+  ownerapartments: Apartmentdto[] = [];
+  unsoldapartments: Apartmentdto[] = [];
+  transactions: Transaction[] = [];
+  dueinvoices: PlanScheduleDto[] = [];
+  overdueinvoices: PlanScheduleDto[] = [];
+  totaloverdueinvoices: number = 0;
+  upcominginvoices: PlanScheduleDto[] = [];
+  totalAmountReceived = 0;
+  drp: daterangepickerdto;
 
-  constructor(public afs:firefunctionsservice,    public modalservice: NgbModal,public fs:firebaseStoreService,public appUtil:ApputilsService) {
+  floorwiseapartments: groupApartments[] = [];
+  typewiseapartments: groupApartments[] = [];
+  apartmenttypes: groupApartments[] = [];
+  beddingtypes: apartmenttypes[] = [];
+
+  public rows: any;
+  public ColumnMode = ColumnMode;
+  @ViewChild(DatatableComponent) table: DatatableComponent;
+  apt: Apartmentdto[] = [];
+
+  constructor(
+    public afs: firefunctionsservice,
+    public modalservice: NgbModal,
+    public fs: firebaseStoreService,
+    public appUtil: ApputilsService
+  ) {
     debugger;
-    
   }
 
-  public contentHeader: object
+  public contentHeader: object;
 
   // Lifecycle Hooks
   // -----------------------------------------------------------------------------------------------------
@@ -52,206 +65,257 @@ export class HomeComponent implements OnInit {
    * On init
    */
   async ngOnInit() {
-    
+    this.fs
+      .getapartmenttypes()
+      .valueChanges()
+      .subscribe((e) => {
+        this.beddingtypes = e;
+      });
     this.totalAmountReceived = 0;
     this.contentHeader = {
-      headerTitle: 'Home',
+      headerTitle: "Home",
       actionButton: true,
       breadcrumb: {
-        type: '',
+        type: "",
         links: [
           {
-            name: 'Home',
+            name: "Home",
             isLink: true,
-            link: '/'
+            link: "/",
           },
           {
-            name: 'Sample',
-            isLink: false
-          }
-        ]
-      }
-    }
+            name: "Sample",
+            isLink: false,
+          },
+        ],
+      },
+    };
 
     this.drp = this.appUtil.getMonthRange();
-    this.fs.getapartments(false).valueChanges().subscribe(e=>{
-      this.apartments = e as Apartmentdto[];
-      this.totalavailableapartments = this.apartments.filter(e=>e.status==this.appUtil.OpenStatus).length;
-      this.unsoldapartments = this.apartments.filter(e=>e.status==this.appUtil.OpenStatus);
-      this.soldapartments = this.apartments.filter(e=>e.status == this.appUtil.BookedStatus);
-      this.generateApartmentDistributions(this.apartments);
-    });
-    this.fs.getapartments(true).valueChanges().subscribe(e=>{
-      this.totalownerapartments = e.length;
-      this.ownerapartments = e as Apartmentdto[];
-    });
+    this.fs
+      .getapartments(false)
+      .valueChanges()
+      .subscribe((e) => {
+        this.apartments = e as Apartmentdto[];
+        this.totalavailableapartments = this.apartments.filter(
+          (e) => e.status == this.appUtil.OpenStatus
+        ).length;
+        this.unsoldapartments = this.apartments.filter(
+          (e) => e.status == this.appUtil.OpenStatus
+        );
+        this.soldapartments = this.apartments.filter(
+          (e) => e.status == this.appUtil.BookedStatus
+        );
+        this.generateApartmentDistributions(this.apartments);
+      });
+    this.fs
+      .getapartments(true)
+      .valueChanges()
+      .subscribe((e) => {
+        this.totalownerapartments = e.length;
+        this.ownerapartments = e as Apartmentdto[];
+      });
     this.generatestats(this.drp);
-    
   }
 
-  async generateApartmentDistributions(ap:Apartmentdto[])
-  {
+  async generateApartmentDistributions(ap: Apartmentdto[]) {
     debugger;
     this.floorwiseapartments = [];
-    var result = this.appUtil.groupBy(ap, (Apartmentdto)=>Apartmentdto.floorno);
+    var result = this.appUtil.groupBy(
+      ap,
+      (Apartmentdto) => Apartmentdto.floorno
+    );
     console.log(result);
-    result.forEach(e=>{
-      var soldapartments = e.filter(e=>e.status==this.appUtil.BookedStatus);
-      var openapartments = e.filter(e=>e.status == this.appUtil.OpenStatus);
-      let flw:groupApartments={
+    result.forEach((e) => {
+      var soldapartments = e.filter(
+        (e) => e.status == this.appUtil.BookedStatus
+      );
+      var openapartments = e.filter((e) => e.status == this.appUtil.OpenStatus);
+      let flw: groupApartments = {
         type: e[0].floorno,
         availablecount: openapartments.length,
-        soldcount:soldapartments.length,
-        soldaparments:soldapartments,
-        availableapartments:openapartments
+        soldcount: soldapartments.length,
+        soldaparments: soldapartments,
+        availableapartments: openapartments,
       };
-      this.floorwiseapartments.push(flw)
-    });
 
+      this.floorwiseapartments.push(flw);
+    });
 
     this.apartmenttypes = [];
 
-
-    result = this.appUtil.groupBy(ap, (Apartmentdto)=>Apartmentdto.type);
+    result = this.appUtil.groupBy(ap, (Apartmentdto) => Apartmentdto.type);
     console.log(result);
-    result.forEach(e=>{
-      var soldapartments = e.filter(e=>e.status==this.appUtil.BookedStatus);
-      var openapartments = e.filter(e=>e.status == this.appUtil.OpenStatus);
-      let flw:groupApartments={
+    result.forEach((e) => {
+      var soldapartments = e.filter(
+        (e) => e.status == this.appUtil.BookedStatus
+      );
+      var openapartments = e.filter((e) => e.status == this.appUtil.OpenStatus);
+      let flw: groupApartments = {
         type: e[0].type,
         availablecount: openapartments.length,
-        soldcount:soldapartments.length,
-        soldaparments:soldapartments,
-        availableapartments:openapartments
+        soldcount: soldapartments.length,
+        soldaparments: soldapartments,
+        availableapartments: openapartments,
       };
-      this.apartmenttypes.push(flw)
+      this.apartmenttypes.push(flw);
     });
-    this.apartmenttypes.sort((a,b)=> Number.parseInt(a.type) > Number.parseInt(b.type) ? 1:-1)
- 
+    this.apartmenttypes.sort((a, b) =>
+      Number.parseInt(a.type) > Number.parseInt(b.type) ? 1 : -1
+    );
+
     this.typewiseapartments = [];
 
-    result = this.appUtil.groupBy(ap, (Apartmentdto)=>Apartmentdto.apartmenttype);
+    result = this.appUtil.groupBy(
+      ap,
+      (Apartmentdto) => Apartmentdto.apartmenttype
+    );
     console.log(result);
-    result.forEach(e=>{
-      var soldapartments = e.filter(e=>e.status==this.appUtil.BookedStatus);
-      var openapartments = e.filter(e=>e.status == this.appUtil.OpenStatus);
-      let flw:groupApartments={
+    result.forEach((e) => {
+      var soldapartments = e.filter(
+        (e) => e.status == this.appUtil.BookedStatus
+      );
+      var openapartments = e.filter((e) => e.status == this.appUtil.OpenStatus);
+      debugger;
+      console.log(
+        this.beddingtypes.filter((a) => a.name === e[0].apartmenttype)
+      );
+      let flw: groupApartments = {
         type: e[0].apartmenttype,
         availablecount: openapartments.length,
-        soldcount:soldapartments.length,
-        soldaparments:soldapartments,
-        availableapartments:openapartments
+        soldcount: soldapartments.length,
+        soldaparments: soldapartments,
+        availableapartments: openapartments,
+        sort: this.beddingtypes.filter((a) => a.name == e[0].apartmenttype)[0]
+          .orderno,
       };
-      this.typewiseapartments.push(flw)
+      this.typewiseapartments.push(flw);
     });
-    
+    this.typewiseapartments = this.typewiseapartments.sort((a, b) =>
+      a.sort > b.sort ? 1 : -1
+    );
   }
   groupBy(list, keyGetter) {
     const map = new Map();
     list.forEach((item) => {
-         const key = keyGetter(item);
-         const collection = map.get(key);
-         if (!collection) {
-             map.set(key, [item]);
-         } else {
-             collection.push(item);
-         }
+      const key = keyGetter(item);
+      const collection = map.get(key);
+      if (!collection) {
+        map.set(key, [item]);
+      } else {
+        collection.push(item);
+      }
     });
     return map;
-}
-async generatestats(drp:daterangepickerdto)
-{
-  debugger;
+  }
+  async generatestats(drp: daterangepickerdto) {
+    debugger;
 
+    var dueinvoices = await this.fs.GetDueInvoices(new Date());
+    this.dueinvoices = dueinvoices;
+    this.totaldueinvoices = dueinvoices.length;
 
+    var drpp = this.appUtil.getdatefilter(0);
+    this.dueinvoices = this.dueinvoices.filter(
+      (e) =>
+        !e.invoicepaid &&
+        new Date(e.invoicedueon.seconds * 1000) <= drpp.startdate &&
+        new Date(e.invoicedueon.seconds * 1000) >= drpp.enddate
+    );
+    this.totaldueinvoices = this.dueinvoices.length;
 
-   var dueinvoices = await this.fs.GetDueInvoices(new Date());
-   this.dueinvoices = dueinvoices;
-   this.totaldueinvoices = dueinvoices.length;
-   console.log(dueinvoices);
-   if(drp.option != "All")
-   {
-    var resp = await this.fs.GetUpComingInvoices(new Date(),drp.enddate);
-    console.log(resp); 
-    this.upcominginvoices = resp;
-    this.totalupcominginvoices = resp.length;
+    this.overdueinvoices = dueinvoices.filter(
+      (e) =>
+        !e.invoicepaid &&
+        new Date(e.invoicedueon.seconds * 1000) <= drpp.enddate
+    );
+    this.totaloverdueinvoices = this.overdueinvoices.length;
 
-     this.dueinvoices = this.dueinvoices.filter(e=> new Date(e.invoicedueon.seconds * 1000) >= drp.startdate);
-     this.totaldueinvoices = this.dueinvoices.length;
-     
-    (await this.fs.getTotalAmountReceivedThisMonth(drp.startdate,drp.enddate)).valueChanges().subscribe(e=>{
-      this.transactions = e;
-      this.generateStatsByTransactions();
-    });
-   }
-   else{
-    var resp = await this.fs.GetAllUpComingInvoices(new Date());
-    console.log(resp); 
-    this.upcominginvoices = resp;
-    this.totalupcominginvoices = resp.length;
+    console.log(dueinvoices);
+    if (drp.option != "All") {
+      var resp = await this.fs.GetUpComingInvoices(new Date(), drp.enddate);
+      console.log(resp);
+      this.upcominginvoices = resp;
+      this.totalupcominginvoices = resp.length;
 
-    (await this.fs.getAllTotalAmountReceivedThisMonth()).valueChanges().subscribe(e=>{
-     debugger;
-      this.transactions = e;
-      this.generateStatsByTransactions();
-    });
-   }
-  //  var customerinvoice = await this.fs.GetCustomerUpComingInvoices("fqHbVfHDgvQz0GmNfJGD",new Date(),newdate);
-  //  console.log(customerinvoice);
+      (
+        await this.fs.getTotalAmountReceivedThisMonth(
+          drp.startdate,
+          drp.enddate
+        )
+      )
+        .valueChanges()
+        .subscribe((e) => {
+          this.transactions = e;
+          this.generateStatsByTransactions();
+        });
+    } else {
+      var resp = await this.fs.GetAllUpComingInvoices(new Date());
+      console.log(resp);
+      this.upcominginvoices = resp;
+      this.totalupcominginvoices = resp.length;
 
- 
- 
-  
-   this.totalsoldapartments = this.soldapartments.length;
-  
+      (await this.fs.getAllTotalAmountReceivedThisMonth())
+        .valueChanges()
+        .subscribe((e) => {
+          debugger;
+          this.transactions = e;
+          this.generateStatsByTransactions();
+        });
+    }
+    //  var customerinvoice = await this.fs.GetCustomerUpComingInvoices("fqHbVfHDgvQz0GmNfJGD",new Date(),newdate);
+    //  console.log(customerinvoice);
 
-}
-  generateStatsByTransactions()
-  {
-    this.totalAmountReceived =0;
-    this.transactions.forEach(e=>{
+    this.totalsoldapartments = this.soldapartments.length;
+  }
+  generateStatsByTransactions() {
+    this.totalAmountReceived = 0;
+    this.transactions.forEach((e) => {
       this.totalAmountReceived += e.amount;
     });
   }
 
-  viewinvoicedetail(id:number)
-  {
-    if(id == 0)
-    {
-      var modal = this.modalservice.open(InvoicereportComponent,{
+  viewinvoicedetail(id: number) {
+    if (id == 0) {
+      var modal = this.modalservice.open(InvoicereportComponent, {
         centered: true,
-        size: 'xl',
-        backdrop:false
+        size: "xl",
+        backdrop: false,
       });
       modal.componentInstance.invoices = this.upcominginvoices;
+    } else if(id == 1) 
+    {
+      var modal = this.modalservice.open(InvoicereportComponent, {
+        centered: true,
+        size: "xl",
+        backdrop: false,
+      });
+      modal.componentInstance.invoices = this.overdueinvoices;
     }
     else{
-      var modal = this.modalservice.open(InvoicereportComponent,{
+      var modal = this.modalservice.open(InvoicereportComponent, {
         centered: true,
-        size: 'xl',
-        backdrop:false
+        size: "xl",
+        backdrop: false,
       });
       modal.componentInstance.invoices = this.dueinvoices;
     }
-    
   }
-  filter()
-  {
-    
-    this.modalservice.open(FilteroptionselectComponent).closed.subscribe(e=>{
-      var drp = e as daterangepickerdto;
-      console.log(drp);
-      this.drp = drp;
-      this.generatestats(this.drp);
-    });
+  filter() {
+    this.modalservice
+      .open(FilteroptionselectComponent)
+      .closed.subscribe((e) => {
+        var drp = e as daterangepickerdto;
+        console.log(drp);
+        this.drp = drp;
+        this.generatestats(this.drp);
+      });
   }
-  viewapartment(apt:Apartmentdto[])
-  {
-    var modal =  this.modalservice.open(ViewinventorymodalComponent,{
+  viewapartment(apt: Apartmentdto[]) {
+    var modal = this.modalservice.open(ViewinventorymodalComponent, {
       centered: true,
-        size: 'xl',
-        backdrop:false,
-        
+      size: "xl",
+      backdrop: false,
     });
     modal.componentInstance.ap = apt;
   }

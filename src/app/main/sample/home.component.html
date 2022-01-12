@@ -28,7 +28,7 @@
                     </div>
                     <div class="card-body statistics-body">
                         <div class="row">
-                            <div class="col-sm-6 col-xl-6 mb-2 mb-xl-0">
+                            <div class="col-sm-6 col-xl-4 mb-2 ">
                                 <div class="media" (click)="viewinvoicedetail(0)">
                                     <div class="avatar bg-light-primary mr-2">
                                         <div class="avatar-content">
@@ -41,8 +41,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-6 col-xl-6 mb-2 mb-xl-0">
-                                <div class="media" (click)="viewinvoicedetail(1)">
+                            <div class="col-sm-6 col-xl-4 mb-2 ">
+                                <div class="media" (click)="viewinvoicedetail(2)">
                                     <div class="avatar bg-light-danger mr-2">
                                         <div class="avatar-content">
                                             <i data-feather="alert-circle" class="avatar-icon"></i>
@@ -51,6 +51,19 @@
                                     <div class="media-body my-auto">
                                         <h4 class="font-weight-bolder mb-0">{{this.totaldueinvoices}}</h4>
                                         <p class="card-text font-small-3 mb-0">Due Invoices</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-xl-4 ">
+                                <div class="media" (click)="viewinvoicedetail(1)">
+                                    <div class="avatar bg-light-danger mr-2">
+                                        <div class="avatar-content">
+                                            <i data-feather="alert-circle" class="avatar-icon"></i>
+                                        </div>
+                                    </div>
+                                    <div class="media-body my-auto">
+                                        <h4 class="font-weight-bolder mb-0">{{this.totaloverdueinvoices}}</h4>
+                                        <p class="card-text font-small-3 mb-0">Over Due Invoices</p>
                                     </div>
                                 </div>
                             </div>
@@ -118,7 +131,120 @@
                 </div>
             </div>
             <!--/ Statistics Card -->
+
+
         </div>
+        <div class="row match-height">
+            <!-- Medal Card -->
+            <div class="col-xl-2 col-md-6 col-12" *ngFor="let apt of typewiseapartments">
+                <div class="card">
+                    <div class="card-header" style="padding:1rem">
+                        <div class="card-title" style="font-size:0.9rem;">
+                            {{ apt.type }}
+                        </div>
+                    </div>
+                    <div class="card-body">
+
+
+
+                        <table class="table table-bordered table-responsive">
+                            <thead>
+                                <tr>
+                                    <td>
+                                        Sold
+                                    </td>
+                                    <td>
+                                        Available
+                                    </td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        {{apt.soldcount}}
+                                    </td>
+                                    <td>
+                                        {{apt.availablecount}}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!--/ Medal Card -->
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            Apartment Floor Wise Stats
+                        </div>
+
+                    </div>
+                    <div class="card-body">
+
+                        <ngx-datatable #table class="bootstrap core-bootstrap" [columnMode]="ColumnMode.force" [headerHeight]="20" [rowHeight]="30" [footerHeight]="20" rowHeight="auto" [limit]="10" [rows]="floorwiseapartments" [scrollbarH]="true">
+                            <ngx-datatable-column name="Floor No" prop="type">
+
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Sold" prop="soldcount">
+
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Available" prop="availablecount">
+
+                            </ngx-datatable-column>
+                        </ngx-datatable>
+
+
+
+                        <!-- <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Type
+                                    </th>
+                                    <th>
+                                        Sold
+                                    </th>
+                                    <th>
+                                        Available
+                                    </th>
+                                    <th>
+                                        Action
+                                    </th>
+                                </tr>
+                            </thead>
+
+
+                            <tbody>
+                                <tr *ngFor="let apt of floorwiseapartments">
+                                    <td>
+                                        {{apt.type}}
+                                    </td>
+                                    <td>
+                                        {{apt.soldcount}}
+                                    </td>
+                                    <td>
+                                        {{apt.availablecount}}
+                                    </td>
+                                    <td>
+                                        <span style="color:blue;">
+                                            {{view}}
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table> -->
+                    </div>
+
+                </div>
+            </div>
+
+
+        </div>
+
         <div class="row match-height">
             <div class="col-12">
                 <div class="card">
@@ -167,7 +293,11 @@
             </div>
 
         </div>
-        <div class="row">
+
+
+
+
+        <!-- <div class="row">
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
@@ -221,116 +351,6 @@
             </div>
 
 
-        </div>
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">
-                            Apartment Bedding Types
-                        </div>
-
-                    </div>
-                    <div class="card-body">
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>
-                                        Type
-                                    </th>
-                                    <th>
-                                        Sold
-                                    </th>
-                                    <th>
-                                        Available
-                                    </th>
-                                    <th>
-                                        Action
-                                    </th>
-                                </tr>
-                            </thead>
-
-
-                            <tbody>
-                                <tr *ngFor="let apt of typewiseapartments">
-                                    <td>
-                                        {{apt.type}}
-                                    </td>
-                                    <td>
-                                        {{apt.soldcount}}
-                                    </td>
-                                    <td>
-                                        {{apt.availablecount}}
-                                    </td>
-                                    <td>
-                                        <span style="color:blue;">
-                                            {{view}}
-                                        </span>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                </div>
-            </div>
-
-
-        </div>
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">
-                            Apartment Floor Wise Stats
-                        </div>
-
-                    </div>
-                    <div class="card-body">
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>
-                                        Type
-                                    </th>
-                                    <th>
-                                        Sold
-                                    </th>
-                                    <th>
-                                        Available
-                                    </th>
-                                    <th>
-                                        Action
-                                    </th>
-                                </tr>
-                            </thead>
-
-
-                            <tbody>
-                                <tr *ngFor="let apt of floorwiseapartments">
-                                    <td>
-                                        {{apt.type}}
-                                    </td>
-                                    <td>
-                                        {{apt.soldcount}}
-                                    </td>
-                                    <td>
-                                        {{apt.availablecount}}
-                                    </td>
-                                    <td>
-                                        <span style="color:blue;">
-                                            {{view}}
-                                        </span>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                </div>
-            </div>
-
-
-        </div>
+        </div> -->
     </div>
 </div>
