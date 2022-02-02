@@ -1,4 +1,5 @@
 import { Installments } from "../helpers/apputils.service";
+import { CustomerDto } from './customerinfo';
 
 export interface PlanDto {
     perinstallmentamount: number;
@@ -58,6 +59,30 @@ export class AginReportDto{
     amount90:number;
     amount100:number;
     total:number;
+}
+export class CustomersLedgerDto{
+    cust:CustomerDto;
+    bankbalances:bankbalancedetaildto[];
+
+}
+export class InvoicesDetailDto implements PlanScheduleDto{
+    installmentno: number;
+    amount: number;
+    amountpaid: number;
+    amountleft: number;
+    invoicedueon: any;
+    invoicepaid: boolean;
+    invoicepaidon: any;
+    approvedby: any;
+    approvalpicture: string;
+    id: string;
+    planid: string;
+    type: string;
+    createdat: any;
+    updateat: any;
+    orderno: number;
+    customer:string;
+    
 }
 export class TrialBalanceReportDto{
     customername:string;

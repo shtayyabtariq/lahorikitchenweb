@@ -1,0 +1,52 @@
+<div class="modal-header">
+    <h4 class="modal-title" id="myModalLabel1">Apartments </h4>
+
+    <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+      </button>
+
+</div>
+<div class="modal-body" tabindex="0" ngbAutofocus id="print-section">
+    <button type="button" class="float-right mb-2 btn btn-primary" (click)="generatePdf()" aria-label="Close">
+    Save PDF
+     </button>
+    <table class="table  table-bordered pdftable">
+        <thead>
+            <tr>
+                <th scope="col" sortable="name" (sort)="onSort($event)">
+                    Apartment Name
+                </th>
+                <th scope="col" sortable="floorno" (sort)="onSort($event)">
+                    Floor No
+                </th>
+                <th scope="col" sortable="type" (sort)="onSort($event)"> Type</th>
+
+
+            </tr>
+
+        </thead>
+        <tbody>
+            <tr *ngFor="let inst of apt" (click)="dismissdialog()" routerLink="/sales/{{this.inst.id}}">
+                <td> {{inst.name}} </td>
+                <td> {{inst.floorno}} </td>
+
+
+                <td> {{inst.type}}</td>
+                <td> {{inst.price | number}}</td>
+
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="d-flex justify-content-between p-2">
+        <ngb-pagination [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize" (pageChange)="refreshApt()">
+        </ngb-pagination>
+
+        <select class="custom-select" style="width: auto" [(ngModel)]="pageSize" (ngModelChange)="refreshApt()">
+        <option [ngValue]="10">10 items per page</option>
+        <option [ngValue]="15">15 items per page</option>
+        <option [ngValue]="30">30 items per page</option>
+      </select>
+    </div>
+
+</div>

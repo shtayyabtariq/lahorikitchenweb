@@ -1,33 +1,36 @@
 <div class="modal-header">
-    <h4 class="modal-title" id="myModalLabel1">Apartments </h4>
+    <h4 class="modal-title" id="myModalLabel1">{{PdfTitle}} </h4>
     <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
 <span aria-hidden="true">&times;</span>
 </button>
 </div>
-<div class="modal-body" tabindex="0" ngbAutofocus>
+<div class="modal-body" tabindex="0" ngbAutofocus id="content" #content>
 
-
-    <table class="table  table-bordered">
+    <button type="button" class="mb-2 btn btn-primary" (click)="generatePdf()" aria-label="Close">
+       Save PDF
+        </button>
+    <table class="table  table-bordered pdftable">
         <thead>
+            <tr>
+                <th scope="col" sortable="customer" (sort)="onSort($event)">
+                    Customer
+                </th>
+                <th scope="col" sortable="apartmentname" (sort)="onSort($event)">
+                    Apartment Name
+                </th>
+                <th scope="col" sortable="type" (sort)="onSort($event)"> Apartment Type</th>
 
-            <th>
-                Type
-            </th>
-            <th>
-                ApartmentType
-            </th>
-            <th> Name</th>
-            <th>
-                Rate
-            </th>
+
+            </tr>
 
         </thead>
         <tbody>
-            <tr *ngFor="let apt of ap">
+            <tr *ngFor="let inst of apt" (click)="dismissdialog()" routerLink="/sales/{{this.inst.id}}">
 
-                <td> {{apt.name}} </td>
-                <td> {{apt.type}} </td>
-                <td> {{apt.apartmenttype}} </td>
+                <td> {{inst.customer}} </td>
+
+                <td> {{inst.apartmentname}} </td>
+                <td> {{inst.type}}</td>
 
 
             </tr>

@@ -32,7 +32,7 @@ import { CreditadjustmentsComponent } from '../main/InventoryManagement/creditad
 import { InvoicereportComponent } from '../main/reports/invoicereport/invoicereport.component';
 import { BankbalancereportComponent } from '../main/reports/bankbalancereport/bankbalancereport.component';
 import { FilteroptionselectComponent } from '../main/filteroptionselect/filteroptionselect.component';
-import { ViewinventorymodalComponent } from '../main/InventoryManagement/viewinventorymodal/viewinventorymodal.component';
+import { ViewinventorymodalComponent, NgbdSortableHeader } from '../main/InventoryManagement/viewinventorymodal/viewinventorymodal.component';
 import { ChoosereportsComponent } from '../main/reports/choosereports/choosereports.component';
 import { CustomersComponent } from '../main/customers/customers.component';
 import { CustomerreportsComponent } from "app/main/reports/customerreports/customerreports.component";
@@ -52,6 +52,8 @@ import { ViewInvoicesComponent } from '../main/InventoryManagement/ViewInvoices/
 import { EmployeeRouteAuthGuard } from '../auth/roleguards/employeeguard';
 import { HomeComponent } from "app/main/sample/home.component";
 import { HomeRouteAuthGuard } from "app/auth/helpers/homerouteguard";
+import { ApartmentreportComponent } from '../main/reports/apartmentreport/apartmentreport.component';
+import { NgxPrintModule } from "ngx-print";
 
 const routes: Routes = [
   {
@@ -205,7 +207,8 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [
-    
+    ApartmentreportComponent,
+    ViewinventorymodalComponent,
     ViewInvoicesComponent,
     ChangepasswordComponent,
     AdvanceinventorysearchComponent,
@@ -237,7 +240,8 @@ const routes: Routes = [
     BankbalancereportComponent,
     CustomersComponent,
     CustomerreportsComponent,
-    HomeComponent
+    HomeComponent,
+    NgbdSortableHeader,
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -246,8 +250,9 @@ const routes: Routes = [
     CoreCommonModule,
     ContentHeaderModule,
     CardSnippetModule,
-    
+    NgxPrintModule,
     NgxDatatableModule,
+   
     CsvModule,
     NgSelectModule,
     Ng2FlatpickrModule,

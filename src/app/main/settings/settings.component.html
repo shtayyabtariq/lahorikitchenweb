@@ -20,7 +20,7 @@
                     </div>
 
                     <!-- ngx-datatables responsive -->
-                    <ngx-datatable #table class="bootstrap core-bootstrap" [columnMode]="ColumnMode.force" [headerHeight]="40" [rowHeight]="58" [footerHeight]="50" rowHeight="auto" [limit]="10" [rows]="apt" [scrollbarH]="true">
+                    <ngx-datatable #table class="bootstrap core-bootstrap" [columnMode]="ColumnMode.force" [headerHeight]="30" [rowHeight]="35" [footerHeight]="40" rowHeight="auto" [limit]="100" [rows]="apt" [scrollbarH]="true">
                         <ngx-datatable-column name="Name" prop="name">
                             <ng-template let-row="row" let-name="value" ngx-datatable-cell-template>
                                 {{ row.name }}

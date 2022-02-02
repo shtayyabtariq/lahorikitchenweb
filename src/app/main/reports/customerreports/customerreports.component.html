@@ -6,13 +6,19 @@
 
                 <div class="card">
                     <div class="card-body">
-                        <a (click)="generatePdf()" class="btn btn-outline-secondary float-right mr-1" rippleEffect>Download PDF</a
-                            >
+
+                        <div class="row mb-2 float-right">
+                            <a (click)="onviewall()" class="btn btn-danger btn-outline-primary float-right mr-1" rippleEffect>View All</a
+                                >
+                            <a (click)="generatePdf()" class="btn btn-outline-secondary float-right mr-1" rippleEffect>Download PDF</a
+                                >
+                         
+                        </div>
                         <div class="form-group">
                             <label>
                             Choose Customer
                           </label>
-                            <ng-select class="ng-select-size-lg" #SelectSizeLarge (change)="onCustomerSelect($event)" [items]="cust" [searchable]="true" bindLabel="cnic" bindValue="id">
+                            <ng-select class="ng-select-size-lg" #SelectSizeLarge (change)="onCustomerSelect($event)" [items]="cust" [searchable]="true" bindLabel="cnic" bindValue="id" [(ngModel)]="this.selectedCustomer">
                                 <ng-template ng-header-tmp>
                                     <input class="form-control w-100" placeholder="search customer by cnic" type="text" (input)="SelectSizeLarge.filter($event.target.value)" />
                                 </ng-template>
@@ -79,151 +85,151 @@
                                     <td>
                                         <a class="mr-1" (click)="dismissdialog()" routerLink="/sales/{{this.apt.id}}" container="body" placement="top" ngbTooltip="Preview Invoice"><i size="18" data-feather="eye"></i
                                             ></a>
-                        </td>
-                        </tr>
-                        </tbody>
-                        </table>
+                            </td>
+                            </tr>
+                            </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="row" *ngIf="this.report == 0">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">
-                            Customer Aging Report
+            <div class="row" *ngIf="this.report == 0">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                Customer Aging Report
+                            </div>
                         </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="mb-2">
-                            <label>
+                        <div class="card-body">
+                            <div class="mb-2">
+                                <label>
                         Choose Filter Option
                       </label>
-                            <select class="form-control" (ngModel)="this.selectedagingfilter" (change)="agingfilter($event.target.value)">
+                                <select class="form-control" (ngModel)="this.selectedagingfilter" (change)="agingfilter($event.target.value)">
                               <option *ngFor="let opt of this.ApputilsService.AgingFilters" value="{{this.opt}}">
                                 {{this.opt}}
                               </option>
                             </select>
-                        </div>
-                        <div class="row">
-                            <div class="col-12 mb-2">
-                                <!-- <a csvLink [data]="this.agingreport" class="btn btn-outline-secondary float-right mr-1" rippleEffect>Export CSV</a
+                            </div>
+                            <div class="row">
+                                <div class="col-12 mb-2">
+                                    <!-- <a csvLink [data]="this.agingreport" class="btn btn-outline-secondary float-right mr-1" rippleEffect>Export CSV</a
                                     > -->
 
+                                </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <table *ngIf="viewall" id="table" class="pdftable table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <td>
-                                            Name
-                                        </td>
-                                        <td>
-                                            0-30
-                                        </td>
-                                        <td>
-                                            31-60
-                                        </td>
-                                        <td>
-                                            60-90
-                                        </td>
-                                        <td>
-                                            > 90
-                                        </td>
-                                        <td>
-                                            Total
-                                        </td>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr *ngFor="let in of this.allaging">
-                                        <td>
-                                            {{this.in.customername }}
-                                        </td>
-                                        <td>
-                                            {{this.in.amount30 | number}}
-                                        </td>
-                                        <td>
-                                            {{this.in.amount60 | number}}
-                                        </td>
-                                        <td>
-                                            {{this.in.amount90 | number}}
-                                        </td>
-                                        <td>
-                                            {{this.in.amount100 | number}}
-                                        </td>
-                                        <td>
-                                            {{this.in.total | number}}
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <table *ngIf="!viewall" id="table" class="pdftable table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <td>
-                                            TotalAmount
-                                        </td>
-                                        <td>
-                                            Amount Paid
-                                        </td>
-                                        <td>
-                                            Amount Left
-                                        </td>
-                                        <td>
-                                            Type
-                                        </td>
-                                        <td>
-                                            Date
-                                        </td>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr *ngFor="let invoice of this.aginginvoices">
-                                        <td>
-                                            {{invoice.amount | number}}
-                                        </td>
-                                        <td>
-                                            {{invoice.amountpaid | number}}
-                                        </td>
-                                        <td>
-                                            {{invoice.amountleft | number}}
-                                        </td>
-                                        <td>
-                                            {{invoice.type}}
-                                        </td>
-                                        <td>
-                                            {{invoice?.invoicedueon?.seconds * 1000 | date}}
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <div class="row">
+                                <table *ngIf="viewall" id="table" class="pdftable table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <td>
+                                                Name
+                                            </td>
+                                            <td>
+                                                0-30
+                                            </td>
+                                            <td>
+                                                31-60
+                                            </td>
+                                            <td>
+                                                60-90
+                                            </td>
+                                            <td>
+                                                > 90
+                                            </td>
+                                            <td>
+                                                Total
+                                            </td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let in of this.allaging">
+                                            <td>
+                                                {{this.in.customername }}
+                                            </td>
+                                            <td>
+                                                {{this.in.amount30 | number}}
+                                            </td>
+                                            <td>
+                                                {{this.in.amount60 | number}}
+                                            </td>
+                                            <td>
+                                                {{this.in.amount90 | number}}
+                                            </td>
+                                            <td>
+                                                {{this.in.amount100 | number}}
+                                            </td>
+                                            <td>
+                                                {{this.in.total | number}}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <table *ngIf="!viewall" id="table" class="pdftable table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <td>
+                                                TotalAmount
+                                            </td>
+                                            <td>
+                                                Amount Paid
+                                            </td>
+                                            <td>
+                                                Amount Left
+                                            </td>
+                                            <td>
+                                                Type
+                                            </td>
+                                            <td>
+                                                Date
+                                            </td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let invoice of this.aginginvoices">
+                                            <td>
+                                                {{invoice.amount | number}}
+                                            </td>
+                                            <td>
+                                                {{invoice.amountpaid | number}}
+                                            </td>
+                                            <td>
+                                                {{invoice.amountleft | number}}
+                                            </td>
+                                            <td>
+                                                {{invoice.type}}
+                                            </td>
+                                            <td>
+                                                {{invoice?.invoicedueon?.seconds * 1000 | date}}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
                         </div>
 
                     </div>
-
                 </div>
             </div>
-        </div>
 
-        <div class="row" *ngIf="this.report == 1">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">
-                            Over Due Invoices
-                        </div>
-                        <label (click)="filter()">
+            <div class="row" *ngIf="this.report == 1">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                Over Due Invoices
+                            </div>
+                            <label (click)="filter()">
                             {{this.filtertext}}
                           </label>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-12 mb-2">
-                                <div class="mb-2">
-                                    <a csvLink [data]="this.overdueinvoices" class="btn btn-outline-secondary float-right mr-1" rippleEffect>Export CSV</a
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-12 mb-2">
+                                    <div class="mb-2">
+                                        <a csvLink [data]="this.overduecustomerinvoices" class="btn btn-outline-secondary float-right mr-1" rippleEffect>Export CSV</a
                                         >
                                 </div>
                             </div>
@@ -234,6 +240,9 @@
                                 <thead>
                                     <tr>
                                         <td>
+                                            Customer Name
+                                        </td>
+                                        <td>
                                             TotalAmount
                                         </td>
                                         <td>
@@ -251,7 +260,10 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr *ngFor="let invoice of this.overdueinvoices">
+                                    <tr *ngFor="let invoice of this.overduecustomerinvoices">
+                                      <td>
+                                          {{invoice.customer}}
+                                      </td>
                                         <td>
                                             {{invoice.amount | number}}
                                         </td>
@@ -305,53 +317,81 @@
                             <thead>
                                 <tr>
                                     <td>
-                                        Date
+                                        Name
                                     </td>
+                                   
+                                   
                                     <td>
-                                        Bank
-                                    </td>
-                                    <td>
-                                        Apartment Name
-                                    </td>
-                                    <td>
-                                        Transaction Id
-                                    </td>
-                                    <td>
-                                        Debit
-                                    </td>
-                                    <td>
-                                        Credit
-                                    </td>
-                                    <td>
-                                        Balance
+                                        Ledger
                                     </td>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr *ngFor="let balance of this.bankbalancedetail">
+                            <tbody >
+                                <tr *ngFor="let cust of this.customerledgers">
                                     <td>
-                                        {{balance.transactiondate?.seconds * 1000 | date }}
+                                        {{cust.cust.name}}
                                     </td>
-                                    <td>
-                                        {{balance.bank }}
-                                    </td>
-                                    <td>
-                                        {{balance.apartmentname }}
-                                    </td>
-                                    <td>
-                                        {{balance.transactionid }}
-                                    </td>
-                                    <td>
-                                        {{balance.debit | number}}
-                                    </td>
-                                    <td>
-                                        {{balance.credit | number}}
-                                    </td>
-                                    <td>
-                                        {{balance.bankamount | number}}
-                                    </td>
+                                   
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <td>
+                                                    Date
+                                                </td>
+                                                <td>
+                                                    Bank
+                                                </td>
+                                                <td>
+                                                    Apartment Name
+                                                </td>
+                                                <td>
+                                                    Invoice Id
+                                                </td>
+                                                <td>
+                                                    Transaction Id
+                                                </td>
+                                                <td>
+                                                    Debit
+                                                </td>
+                                                <td>
+                                                    Credit
+                                                </td>
+                                                <td>
+                                                    Balance
+                                                </td>
+                                            </tr>
+                                        </thead>
+                                        <tr *ngFor="let balance of cust.bankbalances">
+                                            <td>
+                                                {{balance.transactiondate?.seconds * 1000 | date }}
+                                            </td>
+                                            <td>
+                                                {{balance.bank }}
+                                            </td>
+                                            <td>
+                                                {{balance.apartmentname }}
+                                            </td>
+                                            <td>
+                                                {{balance.invoicename}}
+                                            </td>
+                                            <td>
+                                                {{balance.transactionid }}
+                                            </td>
+
+                                            <td>
+                                                {{balance.debit | number}}
+                                            </td>
+                                            <td>
+                                                {{balance.credit | number}}
+                                            </td>
+                                            <td>
+                                                {{balance.bankamount | number}}
+                                            </td>
+                                        </tr>
+                                    </table>
 
                                 </tr>
+                          
                             </tbody>
                         </table>
                     </div>
@@ -376,12 +416,15 @@
 
                         </div>
                         <div class="mb-2">
-                            <a csvLink [data]="this.upcominginvoices" class="btn btn-outline-secondary float-right mr-1" rippleEffect>Export CSV</a
+                            <a csvLink [data]="this.upcomingcustomerinvoices" class="btn btn-outline-secondary float-right mr-1" rippleEffect>Export CSV</a
                                 >
                         </div>
                         <table class="pdftable table table-bordered">
                             <thead>
                                 <tr>
+                                    <td>
+                                        Customer
+                                    </td>
                                     <td>
                                         TotalAmount
                                     </td>
@@ -400,7 +443,10 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let invoice of this.upcominginvoices">
+                                <tr *ngFor="let invoice of this.upcomingcustomerinvoices">
+                                   <td>
+                                       {{invoice.customer}}
+                                   </td>
                                     <td>
                                         {{invoice.amount | number}}
                                     </td>

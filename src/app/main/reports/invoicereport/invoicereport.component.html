@@ -6,35 +6,35 @@
 </div>
 <div class="modal-body" tabindex="0" ngbAutofocus>
 
-
-    <table class="table  table-bordered">
+    <button type="button" class="float-right mb-2 btn btn-primary" (click)="generatePdf()" aria-label="Close">
+        Save PDF
+         </button>
+    <table class="table  table-bordered pdftable">
         <thead>
+            <tr>
+                <th>
+                    Customer
+                </th>
+                <th>
+                    Amount
+                </th>
+                <th> Apartment</th>
+                <th>
+                    Due On
+                </th>
 
-            <th>
-                Total Amount
-            </th>
-            <th>
-                Amount Paid
-            </th>
-            <th> Amount Left</th>
-            <th>
-                Due On
-            </th>
-            <th>
-                Actions
-            </th>
+            </tr>
+
         </thead>
         <tbody>
-            <tr *ngFor="let inst of invoices">
+            <tr *ngFor="let inst of invoices" (click)="dismissdialog()" routerLink="/sales/{{this.inst.saleid}}/invoice/{{ inst.id }}">
 
-                <td> {{inst.amount}} </td>
-                <td> {{inst.amountpaid}} </td>
-                <td> {{inst.amountleft}} </td>
-                <td> {{inst.invoicedueon.seconds * 1000 | date:'dd/MM/yyyy' }} </td>
+                <td> {{inst.customer}} </td>
+                <td> {{inst.amount | number}} </td>
+                <td> {{inst.apartmentname}} </td>
+                <td> {{inst.dueon.seconds * 1000 | date:'dd/MM/yyyy' }} </td>
                 <td>
-                    <a class="mr-1" (click)="dismissdialog()" routerLink="/sales/{{this.inst.planid}}/invoice/{{ inst.id }}" container="body" placement="top" ngbTooltip="Preview Invoice"><i size="18" data-feather="eye"></i
-  ></a>
-                </td>
+
             </tr>
         </tbody>
     </table>

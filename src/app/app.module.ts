@@ -22,6 +22,7 @@ import { AppComponent } from 'app/app.component';
 import { LayoutModule } from 'app/layout/layout.module';
 
 import { environment } from 'environments/environment';
+import {NgxPrintModule} from 'ngx-print';
 
 
 import { DatatablesModule } from './modules/datatables.module';
@@ -34,6 +35,7 @@ import { AuthGuard } from './auth/helpers';
 import { HomeComponent } from './main/sample/home.component';
 import { HomeRouteAuthGuard } from './auth/helpers/homerouteguard';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+
 
 
 const appRoutes: Routes = [
@@ -67,10 +69,11 @@ const appRoutes: Routes = [
 @NgModule({
   declarations: [AppComponent,ApartmentComponent],
   imports: [
+   
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
- 
+    
     Ng2FlatpickrModule,
     AngularFireModule.initializeApp(environment.firebase),
   
@@ -97,7 +100,8 @@ const appRoutes: Routes = [
     LayoutModule,
    
     DatatablesModule,
-    FormsModule
+    FormsModule,
+   
 
   ],
   providers: [

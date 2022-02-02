@@ -25,6 +25,7 @@ export class ViewInvoicesComponent implements OnInit {
   @ViewChild(DatatableComponent) table: DatatableComponent;
   invoices: PlanScheduleDto[] = [];
   tempinvoice:PlanScheduleDto[]=[];
+  exportCSVData: Object[] = [];
   constructor(
     public modal: NgbModal,
 
@@ -44,7 +45,14 @@ export class ViewInvoicesComponent implements OnInit {
       .valueChanges()
       .subscribe((e) => {
         this.invoices = e;
+        this.invoices.forEach(i=>{
+
+          i.invoicedueon = new Date(i.invoicedueon?.seconds * 1000);
+          i.invoicepaidon = i.invoicepaid ? new Date(i.invoicepaidon?.seconds * 1000) : "";
+        
+        });
         this.tempinvoice = e;
+        this.exportCSVData = e as Object[];
       });
   }
   filterselect(val: string) {
@@ -52,6 +60,7 @@ export class ViewInvoicesComponent implements OnInit {
     switch (val) {
       case this.ApputilsService.All:
         this.invoices = this.tempinvoice;
+        this.exportCSVData = this.invoices as Object[];
         break;
       case this.ApputilsService.ThisMonth:
         var drp = this.ApputilsService.getMonthRange();
@@ -115,5 +124,7 @@ export class ViewInvoicesComponent implements OnInit {
             i.invoicepaid == true
         );
     }
+  
+    this.exportCSVData = this.invoices as Object[];
   }
 }

@@ -73,6 +73,7 @@
     "ngx-mask": "12.0.0",
     "ngx-perfect-scrollbar": "10.1.1",
     "ngx-plyr": "4.0.0",
+    "ngx-print": "^1.2.1",
     "ngx-quill": "14.0.0",
     "ngx-swiper-wrapper": "10.0.0",
     "ngx-toastr": "^14.0.0",
@@ -84,6 +85,7 @@
     "sweetalert2": "9.17.2",
     "swiper": "6.7.0",
     "tslib": "2.2.0",
+    "util": "^0.12.4",
     "zone.js": "0.11.4"
   },
   "devDependencies": {

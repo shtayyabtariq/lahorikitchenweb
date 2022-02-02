@@ -86,7 +86,7 @@
                         <div class="row">
 
                             <div class="col-sm-6 col-xl-4 mb-2 mb-sm-0">
-                                <div class="media" (click)="viewapartment(this.soldapartments)">
+                                <div class="media" (click)="soldapartmentsreport(this.soldapartments,'Sold Apartments')">
                                     <div class="avatar bg-light-danger mr-2">
                                         <div class="avatar-content">
                                             <i data-feather="home" class="avatar-icon"></i>
@@ -160,10 +160,10 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>
+                                    <td (click)="soldapartmentsreport(apt.soldaparments,apt.type)">
                                         {{apt.soldcount}}
                                     </td>
-                                    <td>
+                                    <td (click)="viewapartment(apt.availableapartments)">
                                         {{apt.availablecount}}
                                     </td>
                                 </tr>
@@ -185,35 +185,26 @@
                     </div>
                     <div class="card-body">
 
-                        <ngx-datatable #table class="bootstrap core-bootstrap" [columnMode]="ColumnMode.force" [headerHeight]="20" [rowHeight]="30" [footerHeight]="20" rowHeight="auto" [limit]="10" [rows]="floorwiseapartments" [scrollbarH]="true">
-                            <ngx-datatable-column name="Floor No" prop="type">
-
-                            </ngx-datatable-column>
-                            <ngx-datatable-column name="Sold" prop="soldcount">
-
-                            </ngx-datatable-column>
-                            <ngx-datatable-column name="Available" prop="availablecount">
-
-                            </ngx-datatable-column>
-                        </ngx-datatable>
+                        <button type="button" class="float-right mb-2 btn btn-primary" (click)="generatePdf()" aria-label="Close">
+                            Save PDF
+                             </button>
 
 
 
-                        <!-- <table class="table table-bordered">
+
+                        <table class="table table-bordered ppdftable">
                             <thead>
                                 <tr>
-                                    <th>
+                                    <th scope="col" sortable="type" (sort)="onSort($event)">
                                         Type
                                     </th>
-                                    <th>
+                                    <th scope="col" sortable="soldcount" (sort)="onSort($event)">
                                         Sold
                                     </th>
-                                    <th>
+                                    <th scope="col" sortable="availablecount" (sort)="onSort($event)">
                                         Available
                                     </th>
-                                    <th>
-                                        Action
-                                    </th>
+
                                 </tr>
                             </thead>
 
@@ -223,20 +214,16 @@
                                     <td>
                                         {{apt.type}}
                                     </td>
-                                    <td>
+                                    <td (click)="soldapartmentsreport(apt.soldaparments,apt.type)">
                                         {{apt.soldcount}}
                                     </td>
-                                    <td>
+                                    <td (click)="viewapartment(apt.availableapartments)">
                                         {{apt.availablecount}}
                                     </td>
-                                    <td>
-                                        <span style="color:blue;">
-                                            {{view}}
-                                        </span>
-                                    </td>
+
                                 </tr>
                             </tbody>
-                        </table> -->
+                        </table>
                     </div>
 
                 </div>

@@ -23,13 +23,16 @@ import { FilteroptionselectComponent } from "app/main/filteroptionselect/filtero
 import { doesNotReject } from "assert";
 import saveAs from "file-saver";
 
-   
-import jsPDF, { TextOptions, TextOptionsLight } from 'jspdf'
-import 'jspdf-autotable'
+import jsPDF, { TextOptions, TextOptionsLight } from "jspdf";
+import "jspdf-autotable";
 import autoTable from "jspdf-autotable";
 import { disconnect } from "process";
-import { AginReportDto, customersalesDto } from '../../../auth/models/plandto';
-
+import { InvoicesDetailDto } from "../../../auth/models/plandto";
+import {
+  AginReportDto,
+  customersalesDto,
+  CustomersLedgerDto,
+} from "../../../auth/models/plandto";
 
 @Component({
   selector: "app-customerreports",
@@ -40,9 +43,9 @@ export class CustomerreportsComponent implements OnInit {
   public rows: any;
   public ColumnMode = ColumnMode;
   public currentCustomer: CustomerDto;
-  viewall:boolean=false;
+  viewall: boolean = false;
   filters: String[] = [];
-  allaging:AginReportDto[]=[];
+  allaging: AginReportDto[] = [];
   @ViewChild(DatatableComponent) table: DatatableComponent;
   cust: CustomerDto[] = [];
   sales: SalesDto[] = [];
@@ -57,11 +60,14 @@ export class CustomerreportsComponent implements OnInit {
   aginginvoices: PlanScheduleDto[] = [];
   upcominginvoices: PlanScheduleDto[] = [];
   drp: daterangepickerdto;
-  selectedagingfilter:string=this.ApputilsService.Aging30;
+  selectedagingfilter: string = this.ApputilsService.Aging30;
   report: number = 0;
-  filtertext:string="Choose Filter Options";
-  html:HTMLTableElement;
-  
+  filtertext: string = "Choose Filter Options";
+  html: HTMLTableElement;
+  selectedCustomer: CustomerDto;
+  customerledgers: CustomersLedgerDto[] = [];
+  overduecustomerinvoices: InvoicesDetailDto[] = [];
+  upcomingcustomerinvoices: InvoicesDetailDto[] = [];
   constructor(
     public modal: NgbModal,
     public modalservice: NgbModal,
@@ -74,56 +80,46 @@ export class CustomerreportsComponent implements OnInit {
     private _coreSidebarService: CoreSidebarService,
     public fs: firebaseStoreService
   ) {}
-   generatePdf() {
-    var head = [['ID', 'Country', 'Rank', 'Capital']]
+  generatePdf() {
+    var head = [["ID", "Country", "Rank", "Capital"]];
     var body = [
-      [1, 'Denmark', 7.526, 'Copenhagen'],
-      [2, 'Switzerland', 7.509, 'Bern'],
-      [3, 'Iceland', 7.501, 'Reykjavík'],
-      [4, 'Norway', 7.498, 'Oslo'],
-      [5, 'Finland', 7.413, 'Helsinki'],
-    ]
-  
+      [1, "Denmark", 7.526, "Copenhagen"],
+      [2, "Switzerland", 7.509, "Bern"],
+      [3, "Iceland", 7.501, "Reykjavík"],
+      [4, "Norway", 7.498, "Oslo"],
+      [5, "Finland", 7.413, "Helsinki"],
+    ];
 
+    const doc = new jsPDF({
+      orientation: "p",
+      unit: "mm",
+      format: "a4",
+      putOnlyUsedFonts: true,
+    });
 
-const doc = new jsPDF({
-  orientation: 'p',
-  unit: 'mm',
-  format: 'a4',
-  putOnlyUsedFonts:true,
+    let txtOptions: TextOptionsLight = {};
+    doc.setFontSize(5);
+    doc.text(new Date().toDateString(), 5, 5);
+    doc.setFontSize(14);
+    doc.text("NIAZ ARBAZ PVT LTD", 30, 15);
+    doc.setFontSize(10);
 
- });
+    doc.text("Tayyab", 30, 20);
 
-let txtOptions:TextOptionsLight={
-   
-};
-doc.setFontSize(5);
-doc.text(new Date().toDateString(),5,5);
-doc.setFontSize(14);
-doc.text("NIAZ ARBAZ PVT LTD",30,15);
-doc.setFontSize(10);
+    var img = new Image();
+    img.src = "/assets/images/Bedroonm.jpg";
+    doc.addImage(img, "jpg", 10, 10, 12, 15);
 
-doc.text("Tayyab",30,20);
+    // Or use javascript directly:
+    autoTable(doc, {
+      html: ".pdftable",
+      startY: 30,
+    });
 
-var img = new Image()
-img.src = '/assets/images/Bedroonm.jpg'
-doc.addImage(img, 'jpg', 10, 10, 12, 15)
-
-// Or use javascript directly:
-autoTable(doc,{
-  html:'.pdftable',
-  startY:30
-})
-
-doc.save('table.pdf')
+    doc.save("table.pdf");
   }
   ngOnInit() {
-
-    
-
-
     this.onviewall();
-
 
     this.fs
       .getCustomer()
@@ -149,40 +145,39 @@ doc.save('table.pdf')
       .subscribe((e) => {
         this.transactions = e;
       });
-      
-      let dr:daterangepickerdto={
-        startdate: new Date(),
-        enddate: new Date(),
-        option:"All"
-        
-      };
-      this.drp = dr;
 
-      
-      
+    let dr: daterangepickerdto = {
+      startdate: new Date(),
+      enddate: new Date(),
+      option: "All",
+    };
+    this.drp = dr;
   }
   onCustomerSelect($event) {
+    debugger;
     this.viewall = false;
     this.currentCustomer = $event;
-    this.generateparticularreport();
+    this.generateparticularreport(this.currentCustomer.id);
   }
-  onviewall()
-  {
+  onviewall() {
     this.viewall = true;
+    this.selectedCustomer = null;
     this.generateparticularreport();
   }
-  generateparticularreport() {
+  generateparticularreport(id: string = "") {
     switch (this.report) {
       case 0:
         this.agingfilter(this.selectedagingfilter);
         break;
       case 1:
+        this.filterCustomerSales();
         this.overdueinvoicesreport(this.drp);
         break;
       case 2:
-        this.customledgerreport();
+        this.generatecustomerledgers(id);
         break;
       case 3:
+        this.filterCustomerSales();
         this.upcominginvoicesreport(this.drp);
         break;
       case 4:
@@ -219,13 +214,39 @@ doc.save('table.pdf')
     this.overdueinvoicesreport(this.drp);
     this.upcominginvoicesreport(this.drp);
   }
+  generatecustomerledgers(id: string) {
+    debugger;
+    this.customerledgers = [];
+    this.cust.forEach((e) => {
+      let cld: CustomersLedgerDto = new CustomersLedgerDto();
+      cld.cust = e;
+      this.selectedCustomer = this.currentCustomer;
+      this.currentCustomer = e;
+      this.customersales = this.sales.filter(
+        (e) => e.customerid == this.currentCustomer.id
+      );
+      this.customerinvoices = this.invoices.filter(
+        (e) => this.customersales.filter((r) => r.id == e.planid).length > 0
+      );
+      this.customledgerreport();
+      cld.bankbalances = this.bankbalancedetail;
+
+      this.customerledgers.push(cld);
+    });
+    if (id != "") {
+      this.currentCustomer = this.selectedCustomer;
+      this.customerledgers = this.customerledgers.filter(
+        (e) => e.cust.id == id
+      );
+    }
+    console.log(this.customerledgers);
+  }
   filterCustomerSales() {
-    if(this.viewall)
-    {
+    debugger;
+    if (this.viewall) {
       this.customersales = this.sales;
       this.customerinvoices = this.invoices;
-    }
-    else{
+    } else {
       this.customersales = this.sales.filter(
         (e) => e.customerid == this.currentCustomer.id
       );
@@ -233,91 +254,115 @@ doc.save('table.pdf')
         (e) => this.customersales.filter((r) => r.id == e.planid).length > 0
       );
     }
-    
   }
-    getCustomerSales(id:string) {
-    
-        debugger;
-        let customersales = this.sales.filter(
-          (e) => e.customerid == id
-        );
-        let customerinvoices = this.invoices.filter(
-          (e) => customersales.filter((r) => r.id == e.planid).length > 0
-        );
-      
-        let cst:customersalesDto={
-          sales: customersales,
-          invoices: customerinvoices
-        };
-        return cst;
-      
-    }
-  agingreport(startdate: any) {
+  getCustomerSales(id: string) {
+    debugger;
+    let customersales = this.sales.filter((e) => e.customerid == id);
+    let customerinvoices = this.invoices.filter(
+      (e) => customersales.filter((r) => r.id == e.planid).length > 0
+    );
 
+    let cst: customersalesDto = {
+      sales: customersales,
+      invoices: customerinvoices,
+    };
+    return cst;
+  }
+  agingreport(startdate: any) {
     debugger;
     this.filterCustomerSales();
-    if(startdate == "All")
-    {
+    if (startdate == "All") {
       startdate = 0;
+      this.selectedCustomer = null;
       this.allagingreport();
     }
     var dt = new Date();
     dt.setDate(dt.getDate() - startdate);
     var d30 = new Date();
-    d30.setDate(d30.getDate() - (startdate + startdate == "All" ? 91:31));
+    d30.setDate(d30.getDate() - (startdate + startdate == "All" ? 91 : 31));
     this.aginginvoices = this.customerinvoices.filter(
       (e) =>
-      (!e.invoicepaid)&&
+        !e.invoicepaid &&
         new Date(e.invoicedueon?.seconds * 1000) < dt &&
         new Date(e.invoicedueon?.seconds * 1000) >= d30
     );
   }
   allagingreport() {
-
     debugger;
     this.viewall = true;
-    this.allaging =[];
-    this.cust.forEach(e=>{
-      let age:AginReportDto={
+    this.allaging = [];
+    this.cust.forEach((e) => {
+      let age: AginReportDto = {
         customername: e.name,
         amount30: 0,
         amount60: 0,
         amount90: 0,
         total: 0,
-        amount100: 0
-      }
-      var salesdto =  this.getCustomerSales(e.id);
+        amount100: 0,
+      };
+      var salesdto = this.getCustomerSales(e.id);
       var drp = this.getdatefilter(0);
-      age.amount30 = salesdto.invoices.filter(e=>(!e.invoicepaid)&&
-        new Date(e.invoicedueon?.seconds * 1000) < drp.startdate &&
-        new Date(e.invoicedueon?.seconds * 1000) >= drp.enddate).reduce((sum, current) => sum + current.amountleft, 0);
-      
+      age.amount30 = salesdto.invoices
+        .filter(
+          (e) =>
+            !e.invoicepaid &&
+            new Date(e.invoicedueon?.seconds * 1000) < drp.startdate &&
+            new Date(e.invoicedueon?.seconds * 1000) >= drp.enddate
+        )
+        .reduce((sum, current) => sum + current.amountleft, 0);
+
       drp = this.getdatefilter(31);
-      age.amount60 = salesdto.invoices.filter(e=>(!e.invoicepaid)&&
-      new Date(e.invoicedueon?.seconds * 1000) < drp.startdate &&
-      new Date(e.invoicedueon?.seconds * 1000) >= drp.enddate).reduce((sum, current) => sum + current.amountleft, 0);
-   
+      age.amount60 = salesdto.invoices
+        .filter(
+          (e) =>
+            !e.invoicepaid &&
+            new Date(e.invoicedueon?.seconds * 1000) < drp.startdate &&
+            new Date(e.invoicedueon?.seconds * 1000) >= drp.enddate
+        )
+        .reduce((sum, current) => sum + current.amountleft, 0);
+
       drp = this.getdatefilter(61);
-      age.amount90 = salesdto.invoices.filter(e=>(!e.invoicepaid)&&
-      new Date(e.invoicedueon?.seconds * 1000) < drp.startdate &&
-      new Date(e.invoicedueon?.seconds * 1000) >= drp.enddate).reduce((sum, current) => sum + current.amountleft, 0);
+      age.amount90 = salesdto.invoices
+        .filter(
+          (e) =>
+            !e.invoicepaid &&
+            new Date(e.invoicedueon?.seconds * 1000) < drp.startdate &&
+            new Date(e.invoicedueon?.seconds * 1000) >= drp.enddate
+        )
+        .reduce((sum, current) => sum + current.amountleft, 0);
 
-      age.amount100 = salesdto.invoices.filter(e=>(!e.invoicepaid)&&
-      new Date(e.invoicedueon?.seconds * 1000) < drp.enddate 
-      ).reduce((sum, current) => sum + current.amountleft, 0);
+      age.amount100 = salesdto.invoices
+        .filter(
+          (e) =>
+            !e.invoicepaid &&
+            new Date(e.invoicedueon?.seconds * 1000) < drp.enddate
+        )
+        .reduce((sum, current) => sum + current.amountleft, 0);
 
-      age.total = age.amount30+age.amount60+age.amount90+age.amount100;
+      age.total = age.amount30 + age.amount60 + age.amount90 + age.amount100;
       debugger;
       this.allaging.push(age);
     });
-    
-    let totalage:AginReportDto ={
+
+    let totalage: AginReportDto = {
       customername: "",
-      amount30: this.allaging.reduce((sum, current) => sum + current.amount30, 0),
-      amount60: this.allaging.reduce((sum, current) => sum + current.amount60, 0),
-      amount90: this.allaging.reduce((sum, current) => sum + current.amount90, 0),
+      amount30: this.allaging.reduce(
+        (sum, current) => sum + current.amount30,
+        0
+      ),
+      amount60: this.allaging.reduce(
+        (sum, current) => sum + current.amount60,
+        0
+      ),
+      amount90: this.allaging.reduce(
+        (sum, current) => sum + current.amount90,
+        0
+      ),
       total: this.allaging.reduce((sum, current) => sum + current.total, 0),
-      amount100: this.allaging.reduce((sum, current) => sum + current.amount100, 0),
+      amount100: this.allaging.reduce(
+        (sum, current) => sum + current.amount100,
+        0
+      ),
     };
     this.allaging.push(totalage);
     // var dt = new Date();
@@ -331,17 +376,16 @@ doc.save('table.pdf')
     //     new Date(e.invoicedueon?.seconds * 1000) >= d30
     // );
   }
-  getdatefilter(startdate:any)
-  {
+  getdatefilter(startdate: any) {
     var dt = new Date();
     dt.setDate(dt.getDate() - startdate);
     var d30 = new Date();
-    d30.setDate(d30.getDate() - (startdate + startdate == "All" ? 91:31));
-  
-    let drp:daterangepickerdto={
+    d30.setDate(d30.getDate() - (startdate + startdate == "All" ? 91 : 31));
+
+    let drp: daterangepickerdto = {
       startdate: dt,
-      enddate: d30
-    }
+      enddate: d30,
+    };
     return drp;
   }
   filter() {
@@ -355,53 +399,118 @@ doc.save('table.pdf')
         this.generateparticularreport();
       });
   }
-  overdueinvoicesreport(drp:daterangepickerdto) {
+  overdueinvoicesreport(drp: daterangepickerdto) {
+    debugger;
     var dt = new Date();
     drp.enddate = dt;
+    this.overduecustomerinvoices = [];
     this.overdueinvoices = this.customerinvoices.filter(
       (e) =>
-      (!e.invoicepaid) &&
-      (drp.option == "All" || drp.startdate == undefined || +new Date(e.invoicedueon?.seconds * 1000) >= +drp.startdate)
-      && ( drp.enddate == undefined || +new Date(e.invoicedueon?.seconds * 1000) <= +drp.enddate)
+        !e.invoicepaid &&
+        (drp.option == "All" ||
+          drp.startdate == undefined ||
+          +new Date(e.invoicedueon?.seconds * 1000) >= +drp.startdate) &&
+        (drp.enddate == undefined ||
+          +new Date(e.invoicedueon?.seconds * 1000) <= +drp.enddate)
     );
+   
+
+    this.overdueinvoices.forEach((e) => {
+      let overdcustomer: InvoicesDetailDto = {
+        installmentno: e.installmentno,
+        amount: e.amount,
+        amountpaid: e.amountpaid,
+        amountleft: e.amountleft,
+        invoicedueon: e.invoicedueon,
+        invoicepaid: e.invoicepaid,
+        invoicepaidon: e.invoicepaidon,
+        approvedby: e.approvedby,
+        approvalpicture: e.approvalpicture,
+        id: e.id,
+        planid: e.planid,
+        type: e.type,
+        createdat: e.createdat,
+        updateat: e.updateat,
+        orderno: e.orderno,
+        customer: this.cust.filter(
+          (d) =>
+            d.id ==
+            this.customersales.filter((c) => c.id == e.planid)[0].customerid
+        )[0].name,
+      };
+      this.overduecustomerinvoices.push(overdcustomer);
+    });
   }
-  upcominginvoicesreport(drp:daterangepickerdto)
-  {
+  upcominginvoicesreport(drp: daterangepickerdto) {
     var dt = new Date();
     drp.startdate = dt;
     this.upcominginvoices = this.customerinvoices.filter(
       (e) =>
-      (!e.invoicepaid) &&
-      (+new Date(e.invoicedueon?.seconds * 1000) > +drp.startdate)
-      && ( drp.option == "All" || drp.enddate == undefined || +new Date(e.invoicedueon?.seconds * 1000) <= +drp.enddate)
+        !e.invoicepaid &&
+        +new Date(e.invoicedueon?.seconds * 1000) > +drp.startdate &&
+        (drp.option == "All" ||
+          drp.enddate == undefined ||
+          +new Date(e.invoicedueon?.seconds * 1000) <= +drp.enddate)
     );
-    this.upcominginvoices = this.upcominginvoices.sort((e,b)=>{return e.invoicedueon > b.invoicedueon ? 1:-1})
+    this.upcominginvoices = this.upcominginvoices.sort((e, b) => {
+      return e.invoicedueon > b.invoicedueon ? 1 : -1;
+    });
+    this.upcomingcustomerinvoices = [];
+    this.upcominginvoices.forEach((e) => {
+      let overdcustomer: InvoicesDetailDto = {
+        installmentno: e.installmentno,
+        amount: e.amount,
+        amountpaid: e.amountpaid,
+        amountleft: e.amountleft,
+        invoicedueon: e.invoicedueon,
+        invoicepaid: e.invoicepaid,
+        invoicepaidon: e.invoicepaidon,
+        approvedby: e.approvedby,
+        approvalpicture: e.approvalpicture,
+        id: e.id,
+        planid: e.planid,
+        type: e.type,
+        createdat: e.createdat,
+        updateat: e.updateat,
+        orderno: e.orderno,
+        customer: this.cust.filter(
+          (d) =>
+            d.id ==
+            this.customersales.filter((c) => c.id == e.planid)[0].customerid
+        )[0].name,
+      };
+      this.upcomingcustomerinvoices.push(overdcustomer);
+    });
   }
   agingfilter(filter: string) {
     if (filter == this.ApputilsService.Aging30) {
       this.agingreport(0);
     } else if (filter == this.ApputilsService.Aging60) {
       this.agingreport(31);
-    } else if(filter == this.ApputilsService.Aging90) {
+    } else if (filter == this.ApputilsService.Aging90) {
       this.agingreport(61);
-    }
-    else{
+    } else {
       this.agingreport("All");
     }
   }
   downloadFile(data: any) {
-    const replacer = (key, value) => value === null ? '' : value; // specify how you want to handle null values here
+    const replacer = (key, value) => (value === null ? "" : value); // specify how you want to handle null values here
     const header = Object.keys(data[0]);
-    let csv = data.map(row => header.map(fieldName => JSON.stringify(row[fieldName], replacer)).join(','));
-    csv.unshift(header.join(','));
-    let csvArray = csv.join('rn');
+    let csv = data.map((row) =>
+      header
+        .map((fieldName) => JSON.stringify(row[fieldName], replacer))
+        .join(",")
+    );
+    csv.unshift(header.join(","));
+    let csvArray = csv.join("rn");
 
-    var blob = new Blob([csvArray], {type: 'text/csv' })
+    var blob = new Blob([csvArray], { type: "text/csv" });
     saveAs(blob, "myFile.csv");
-}
+  }
   customledgerreport() {
-    this.bankbalancedetail=[];
-    this.filterCustomerSales();
+    debugger;
+    this.bankbalancedetail = [];
+
     this.customertransaction = this.transactions.filter(
       (e) => this.customerinvoices.filter((i) => i.id == e.invoiceid).length > 0
     );
@@ -414,12 +523,15 @@ doc.save('table.pdf')
       var credit = 0;
 
       if (e.status == this.ApputilsService.TransactionSuccessfull) {
-        bankamount += e.amount;
-        debit = e.amount;
-      } else {
         credit = e.amount;
+      } else {
       }
-
+      debit = this.customerinvoices.filter((i) => i.id == e.invoiceid)[0]
+        .amount;
+      bankamount += debit - credit;
+      this.customerinvoices.filter((i) => i.id == e.invoiceid)[0].amount =
+        this.customerinvoices.filter((i) => i.id == e.invoiceid)[0].amount -
+        debit;
       debugger;
       let bb: bankbalancedetaildto = {
         id: e.id,
@@ -440,9 +552,12 @@ doc.save('table.pdf')
 
       this.bankbalancedetail.push(bb);
     });
-    if(this.drp.option != "All" && this.drp.enddate != undefined)
-    {
-      this.bankbalancedetail = this.bankbalancedetail.filter(e=> new Date(e.transactiondate.seconds  * 1000) >= this.drp.startdate && new Date(e.transactiondate.seconds * 1000) <= this.drp.enddate)
+    if (this.drp.option != "All" && this.drp.enddate != undefined) {
+      this.bankbalancedetail = this.bankbalancedetail.filter(
+        (e) =>
+          new Date(e.transactiondate.seconds * 1000) >= this.drp.startdate &&
+          new Date(e.transactiondate.seconds * 1000) <= this.drp.enddate
+      );
     }
     //this.bankbalancedetail = this.bankbalancedetail.sort((a,b)=>{ return a > b ? 1 : -1 });
   }

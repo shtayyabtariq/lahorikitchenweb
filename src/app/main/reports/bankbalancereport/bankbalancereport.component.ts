@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, QueryList, ViewChildren } from "@angular/core";
 import { firebaseStoreService } from "../../../auth/service/firebasestoreservice";
 import {
   bankbalancedetaildto,
@@ -10,6 +10,10 @@ import { ApputilsService } from "../../../auth/helpers/apputils.service";
 import { daterangepickerdto } from "../../../auth/models/daterangepickerdto";
 import { FlatpickrOptions } from "ng2-flatpickr";
 import { metadata } from '../../../auth/models/metadata';
+import { NgbdSortableHeader, SortEvent, compare } from "app/main/InventoryManagement/viewinventorymodal/viewinventorymodal.component";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+
 
 
 @Component({
@@ -21,6 +25,7 @@ export class BankbalancereportComponent implements OnInit {
   public rows: any;
   public ColumnMode = ColumnMode;
   show = false;
+  exportCSVData: Object[] = [];
   public DateRangeOptions: FlatpickrOptions = {
     altInput: true,
     mode: 'range',
@@ -208,7 +213,64 @@ debugger;
       };
       this.tempbankbalancedetail.push(bb);
     }
-  
+  this.exportCSVData = this.tempbankbalancedetail as Object[];
     this.show = true;
+  }
+
+  @ViewChildren(NgbdSortableHeader) headers: QueryList<NgbdSortableHeader>;
+
+  onSort({ column, direction }: SortEvent) {
+    debugger;
+    // resetting other headers
+    this.headers.forEach((header) => {
+      if (header.sortable !== column) {
+        header.direction = "";
+      }
+    });
+
+    // sorting countries
+    if (direction === "" || column === "") {
+     this.tempbankbalancedetail = this.tempbankbalancedetail;
+    } else {
+      this.tempbankbalancedetail = [...this.tempbankbalancedetail].sort((a, b) => {
+        const res = compare(a[column], b[column]);
+        return direction === "asc" ? res : -res;
+      });
+    }
+  }
+  generatePdf() {
+    var head = [["ID", "Country", "Rank", "Capital"]];
+    var body = [
+      [1, "Denmark", 7.526, "Copenhagen"],
+      [2, "Switzerland", 7.509, "Bern"],
+      [3, "Iceland", 7.501, "Reykjavík"],
+      [4, "Norway", 7.498, "Oslo"],
+      [5, "Finland", 7.413, "Helsinki"],
+    ];
+
+    const doc = new jsPDF({
+      orientation: "p",
+      unit: "mm",
+      format: "a4",
+      putOnlyUsedFonts: true,
+    });
+
+    doc.setFontSize(5);
+    doc.text(new Date().toDateString(), 5, 5);
+    doc.setFontSize(14);
+    doc.text("NIAZ ARBAZ PVT LTD", 30, 15);
+    doc.setFontSize(10);
+
+    doc.text("Floor Wise Apartments", 30, 20);
+
+    var img = new Image();
+    img.src = "/assets/images/Bedroonm.jpg";
+    doc.addImage(img, "jpg", 10, 10, 12, 15);
+
+    autoTable(doc, {
+      html: ".ppdftable",
+      startY: 30,
+    }),
+      doc.save("bankbalancereport" + ".pdf");
   }
 }

@@ -1,18 +1,22 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { Component, OnInit, QueryList, ViewChild, ViewChildren } from "@angular/core";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { firebaseStoreService } from "app/auth/service/firebasestoreservice";
 import { ApputilsService } from "../../auth/helpers/apputils.service";
-import { Transaction, PlanScheduleDto } from "../../auth/models/plandto";
+import { Transaction, PlanScheduleDto, SalesDto } from '../../auth/models/plandto';
 import { FilteroptionselectComponent } from "../filteroptionselect/filteroptionselect.component";
 import { daterangepickerdto } from "../../auth/models/daterangepickerdto";
 import { InvoicereportComponent } from "../reports/invoicereport/invoicereport.component";
-import { Apartmentdto, groupApartments } from "../../auth/models/apartmentdto";
-import { ViewinventorymodalComponent } from "../InventoryManagement/viewinventorymodal/viewinventorymodal.component";
+import { Apartmentdto, groupApartments } from '../../auth/models/apartmentdto';
+import { compare, NgbdSortableHeader, SortEvent, ViewinventorymodalComponent } from "../InventoryManagement/viewinventorymodal/viewinventorymodal.component";
 import { apartmenttypes } from "../../auth/models/apartmenttypesdto";
 import { abort } from "process";
 import { toInteger } from "@ng-bootstrap/ng-bootstrap/util/util";
 import { firefunctionsservice } from "../../auth/service/firefunctionsservice";
 import { ColumnMode, DatatableComponent } from "@swimlane/ngx-datatable";
+import { ReportGenerator } from '../reports/reportgenerator';
+import { ApartmentreportComponent } from '../reports/apartmentreport/apartmentreport.component';
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 @Component({
   selector: "app-home",
@@ -36,7 +40,7 @@ export class HomeComponent implements OnInit {
   upcominginvoices: PlanScheduleDto[] = [];
   totalAmountReceived = 0;
   drp: daterangepickerdto;
-
+  sale:SalesDto[]=[];
   floorwiseapartments: groupApartments[] = [];
   typewiseapartments: groupApartments[] = [];
   apartmenttypes: groupApartments[] = [];
@@ -115,6 +119,9 @@ export class HomeComponent implements OnInit {
         this.totalownerapartments = e.length;
         this.ownerapartments = e as Apartmentdto[];
       });
+      this.fs.getSales().valueChanges().subscribe(e=>{
+        this.sale = e;
+      });
     this.generatestats(this.drp);
   }
 
@@ -137,6 +144,7 @@ export class HomeComponent implements OnInit {
         soldcount: soldapartments.length,
         soldaparments: soldapartments,
         availableapartments: openapartments,
+
       };
 
       this.floorwiseapartments.push(flw);
@@ -282,7 +290,10 @@ export class HomeComponent implements OnInit {
         size: "xl",
         backdrop: false,
       });
-      modal.componentInstance.invoices = this.upcominginvoices;
+      var salesinfo = new ReportGenerator().getReportFromInvoices(this.upcominginvoices,this.sale);
+      console.log(salesinfo);
+      modal.componentInstance.invoices = salesinfo;
+      modal.componentInstance.invoicetitle = "UpComing Invoices";
     } else if(id == 1) 
     {
       var modal = this.modalservice.open(InvoicereportComponent, {
@@ -290,7 +301,11 @@ export class HomeComponent implements OnInit {
         size: "xl",
         backdrop: false,
       });
-      modal.componentInstance.invoices = this.overdueinvoices;
+      var salesinfo = new ReportGenerator().getReportFromInvoices(this.overdueinvoices,this.sale);
+      console.log(salesinfo);
+      modal.componentInstance.invoices = salesinfo;
+     // modal.componentInstance.invoices = this.overdueinvoices;
+     modal.componentInstance.invoicetitle = "OverDue Invoices";
     }
     else{
       var modal = this.modalservice.open(InvoicereportComponent, {
@@ -298,7 +313,11 @@ export class HomeComponent implements OnInit {
         size: "xl",
         backdrop: false,
       });
-      modal.componentInstance.invoices = this.dueinvoices;
+      var salesinfo = new ReportGenerator().getReportFromInvoices(this.dueinvoices,this.sale);
+      console.log(salesinfo);
+      modal.componentInstance.invoices = salesinfo;
+      modal.componentInstance.invoicetitle = "Due Invoices";
+     
     }
   }
   filter() {
@@ -312,11 +331,84 @@ export class HomeComponent implements OnInit {
       });
   }
   viewapartment(apt: Apartmentdto[]) {
+    var modal = this.modalservice.open(ApartmentreportComponent, {
+      centered: true,
+      size: "xl",
+      backdrop: false,
+      scrollable:true
+    });
+    modal.componentInstance.apt = apt;
+  }
+  soldapartmentsreport(apt:Apartmentdto[],title:string)
+  {
+    let aptt = new ReportGenerator().getReportFromApartments(apt,this.sale);
+   
     var modal = this.modalservice.open(ViewinventorymodalComponent, {
       centered: true,
       size: "xl",
       backdrop: false,
+      scrollable:true
     });
-    modal.componentInstance.ap = apt;
+    modal.componentInstance.apt = aptt;
+    modal.componentInstance.PdfTitle = title;
+    console.log(aptt);
+  }
+
+
+  @ViewChildren(NgbdSortableHeader) headers: QueryList<NgbdSortableHeader>;
+
+  onSort({ column, direction }: SortEvent) {
+    debugger;
+    // resetting other headers
+    this.headers.forEach((header) => {
+      if (header.sortable !== column) {
+        header.direction = "";
+      }
+    });
+
+    // sorting countries
+    if (direction === "" || column === "") {
+     this.floorwiseapartments = this.floorwiseapartments;
+    } else {
+      this.floorwiseapartments = [...this.floorwiseapartments].sort((a, b) => {
+        const res = compare(a[column], b[column]);
+        return direction === "asc" ? res : -res;
+      });
+    }
+  }
+  generatePdf() {
+    var head = [["ID", "Country", "Rank", "Capital"]];
+    var body = [
+      [1, "Denmark", 7.526, "Copenhagen"],
+      [2, "Switzerland", 7.509, "Bern"],
+      [3, "Iceland", 7.501, "Reykjavík"],
+      [4, "Norway", 7.498, "Oslo"],
+      [5, "Finland", 7.413, "Helsinki"],
+    ];
+
+    const doc = new jsPDF({
+      orientation: "p",
+      unit: "mm",
+      format: "a4",
+      putOnlyUsedFonts: true,
+    });
+
+    doc.setFontSize(5);
+    doc.text(new Date().toDateString(), 5, 5);
+    doc.setFontSize(14);
+    doc.text("NIAZ ARBAZ PVT LTD", 30, 15);
+    doc.setFontSize(10);
+
+    doc.text("Floor Wise Apartments", 30, 20);
+
+    var img = new Image();
+    img.src = "/assets/images/Bedroonm.jpg";
+    doc.addImage(img, "jpg", 10, 10, 12, 15);
+
+    autoTable(doc, {
+      html: ".ppdftable",
+      startY: 30,
+    }),
+      doc.save("floorwiseapartments" + ".pdf");
   }
 }

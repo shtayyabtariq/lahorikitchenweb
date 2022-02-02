@@ -210,7 +210,7 @@ this.Aging90,
 ];
 CustomerAgingReport = "Customer Aging Report";
 CustomerLedgerReport = "Customer Ledger Report";
-CustomerOutStandingInvoices = "Customer Outstanding Invoices";
+CustomerOutStandingInvoices = "Customer UpComing Invoices";
 CustomerOverDueInvoices = "Customer OverDue Invoices";
 CustomerOpenBalanceReports = "Customer Open Balance Reports";
 CustomerAccountReceivableReports ="Customer Account Receivabel Reports";
@@ -218,10 +218,10 @@ CustomerAccountReceivableReports ="Customer Account Receivabel Reports";
 CustomerReports:String[]=[
   this.CustomerAgingReport,
   this.CustomerLedgerReport,
-  this.CustomerOpenBalanceReports,
+
   this.CustomerOverDueInvoices,
   this.CustomerOutStandingInvoices,
-  this.CustomerAccountReceivableReports
+  
 ];
 Type:String[]=["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20"];
 PossesionStatus="Completed";
