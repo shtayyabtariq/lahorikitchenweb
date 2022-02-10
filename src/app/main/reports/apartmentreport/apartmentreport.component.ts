@@ -142,20 +142,29 @@ export class ApartmentreportComponent implements OnInit {
     if (direction === "" || column === "") {
       this.apt = this.apt;
     } else {
-      this.apt = [...this.apt].sort((a, b) => {
-        const res = compare(a[column], b[column]);
+      
+      this.aptall = [...this.aptall].sort((a, b) => {
+        let res = compare(a[column],b[column]);
+        if(column == "type")
+        {
+          res = compare(Number.parseInt( a[column]), Number.parseInt(b[column]));
+        }
+        
         return direction === "asc" ? res : -res;
       });
+      this.refreshApt();
     }
   }
   page = 1;
   pageSize = 15;
   refreshApt() {
+    debugger;
     this.apt = this.aptall
       .map((country, i) => ({ id: i + 1, ...country }))
       .slice(
         (this.page - 1) * this.pageSize,
         (this.page - 1) * this.pageSize + this.pageSize
       );
+      
   }
 }

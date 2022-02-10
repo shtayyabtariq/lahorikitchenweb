@@ -13,6 +13,7 @@ export class ApputilsService {
   ThisMonth = "This Month";
   ThisYear = "This Year";
   ThisMonthDue = "This Month Due";
+  OverDue = "OverDue";
   ThisMonthUpComing = "This Month UpComing";
   Due = "Due";
   Paid = "Paid";
@@ -98,6 +99,19 @@ getdatefilter(startdate:any)
     return drp;
   }
 getMonthRange()
+{
+    let drp = new daterangepickerdto();
+    var date = new Date();
+    date.setDate(1);
+    drp.startdate = date;
+    date = new Date();
+    date.setMonth(date.getMonth()+1);
+    date.setDate(0);
+    drp.enddate = date;
+    drp.option = "Month";
+    return drp;
+}
+getOverdueMonthRange()
 {
     let drp = new daterangepickerdto();
     var date = new Date();

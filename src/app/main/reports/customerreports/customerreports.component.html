@@ -260,7 +260,8 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr *ngFor="let invoice of this.overduecustomerinvoices">
+                                    <tr *ngFor="let invoice of this.overduecustomerinvoices"  >
+                                      
                                       <td>
                                           {{invoice.customer}}
                                       </td>
@@ -305,7 +306,7 @@
                         <div class="row">
                             <div class="col-12 mb-2">
                                 <div class="mb-2">
-                                    <a csvLink [data]="this.bankbalancedetail" class="btn btn-outline-secondary float-right mr-1" rippleEffect>Export CSV</a
+                                    <a (click)="ledgercsv()" class="btn btn-outline-secondary float-right mr-1" rippleEffect>Export CSV</a
                                         >
                                 </div>
                             </div>
@@ -322,46 +323,42 @@
                                    
                                    
                                     <td>
-                                        Ledger
+                                        Date
+                                    </td>
+                                    <td>
+                                        Bank
+                                    </td>
+                                    <td>
+                                        Apartment Name
+                                    </td>
+                                    <td>
+                                        Invoice Id
+                                    </td>
+                                    <td>
+                                        Transaction Id
+                                    </td>
+                                    <td>
+                                        Debit
+                                    </td>
+                                    <td>
+                                        Credit
+                                    </td>
+                                    <td>
+                                        Balance
                                     </td>
                                 </tr>
                             </thead>
                             <tbody >
-                                <tr *ngFor="let cust of this.customerledgers">
+                                <tr *ngFor="let balance of this.ALLbalancedetail" [ngStyle]="{  'background-color':(balance.customername=='Total') ? 'rgb(2 165 22)':'#ffffffff' }"
+                                
+                                [style.font-size]="{'font-size':(balance.customername=='Total') ? '18px':'12px'}"
+                                
+                                >
                                     <td>
-                                        {{cust.cust.name}}
+                                        {{balance.customername}}
                                     </td>
                                    
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <td>
-                                                    Date
-                                                </td>
-                                                <td>
-                                                    Bank
-                                                </td>
-                                                <td>
-                                                    Apartment Name
-                                                </td>
-                                                <td>
-                                                    Invoice Id
-                                                </td>
-                                                <td>
-                                                    Transaction Id
-                                                </td>
-                                                <td>
-                                                    Debit
-                                                </td>
-                                                <td>
-                                                    Credit
-                                                </td>
-                                                <td>
-                                                    Balance
-                                                </td>
-                                            </tr>
-                                        </thead>
-                                        <tr *ngFor="let balance of cust.bankbalances">
+                                    
                                             <td>
                                                 {{balance.transactiondate?.seconds * 1000 | date }}
                                             </td>
@@ -387,8 +384,7 @@
                                             <td>
                                                 {{balance.bankamount | number}}
                                             </td>
-                                        </tr>
-                                    </table>
+                                        
 
                                 </tr>
                           

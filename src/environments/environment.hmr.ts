@@ -2,12 +2,12 @@ export const environment = {
   production: false,
   hmr: true,
   firebase: {
-    apiKey: "AIzaSyBxxNtKIE8iAqjZ6p9sXQDvpLimXA2yJDw",
-    authDomain: "managementinformationsys-84eaf.firebaseapp.com",
-    projectId: "managementinformationsys-84eaf",
-    storageBucket: "managementinformationsys-84eaf.appspot.com",
-    messagingSenderId: "556039535982",
-    appId: "1:556039535982:web:7ff5ec15f6b94dc48bd57f",
-    measurementId: "G-LN6G7N6N48"
+    apiKey: "AIzaSyDfygYnoTtcDk7eXPUto5pcCo5gI6cTtm0",
+    authDomain: "moonlit-sphinx-483.firebaseapp.com",
+    projectId: "moonlit-sphinx-483",
+    storageBucket: "moonlit-sphinx-483.appspot.com",
+    messagingSenderId: "543004578013",
+    appId: "1:543004578013:web:ce6d188c933d4b7a600b34",
+    measurementId: "G-GJ5KWZ3K6M"
   }
 };

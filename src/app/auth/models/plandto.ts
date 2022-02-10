@@ -81,7 +81,7 @@ export class InvoicesDetailDto implements PlanScheduleDto{
     createdat: any;
     updateat: any;
     orderno: number;
-    customer:string;
+    customer?:string;
     
 }
 export class TrialBalanceReportDto{

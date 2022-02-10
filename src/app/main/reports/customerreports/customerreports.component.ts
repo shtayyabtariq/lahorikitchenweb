@@ -27,7 +27,7 @@ import jsPDF, { TextOptions, TextOptionsLight } from "jspdf";
 import "jspdf-autotable";
 import autoTable from "jspdf-autotable";
 import { disconnect } from "process";
-import { InvoicesDetailDto } from "../../../auth/models/plandto";
+import { InvoicesDetailDto,  } from '../../../auth/models/plandto';
 import {
   AginReportDto,
   customersalesDto,
@@ -46,6 +46,7 @@ export class CustomerreportsComponent implements OnInit {
   viewall: boolean = false;
   filters: String[] = [];
   allaging: AginReportDto[] = [];
+  ledger:Object[];
   @ViewChild(DatatableComponent) table: DatatableComponent;
   cust: CustomerDto[] = [];
   sales: SalesDto[] = [];
@@ -56,6 +57,7 @@ export class CustomerreportsComponent implements OnInit {
   customertransaction: Transaction[] = [];
   bankbalancedetail: bankbalancedetaildto[] = [];
   tempbankbalancedetail: bankbalancedetaildto[] = [];
+  ALLbalancedetail: bankbalancedetaildto[] = [];
   overdueinvoices: PlanScheduleDto[] = [];
   aginginvoices: PlanScheduleDto[] = [];
   upcominginvoices: PlanScheduleDto[] = [];
@@ -217,6 +219,7 @@ export class CustomerreportsComponent implements OnInit {
   generatecustomerledgers(id: string) {
     debugger;
     this.customerledgers = [];
+    this.ALLbalancedetail = [];
     this.cust.forEach((e) => {
       let cld: CustomersLedgerDto = new CustomersLedgerDto();
       cld.cust = e;
@@ -231,7 +234,7 @@ export class CustomerreportsComponent implements OnInit {
       this.customledgerreport();
       cld.bankbalances = this.bankbalancedetail;
 
-      this.customerledgers.push(cld);
+      this.ALLbalancedetail = this.ALLbalancedetail.concat(cld.bankbalances);
     });
     if (id != "") {
       this.currentCustomer = this.selectedCustomer;
@@ -240,6 +243,9 @@ export class CustomerreportsComponent implements OnInit {
       );
     }
     console.log(this.customerledgers);
+    this.ledger = this.customerledgers  as Object[];
+
+   
   }
   filterCustomerSales() {
     debugger;
@@ -255,6 +261,7 @@ export class CustomerreportsComponent implements OnInit {
       );
     }
   }
+  
   getCustomerSales(id: string) {
     debugger;
     let customersales = this.sales.filter((e) => e.customerid == id);
@@ -413,7 +420,6 @@ export class CustomerreportsComponent implements OnInit {
         (drp.enddate == undefined ||
           +new Date(e.invoicedueon?.seconds * 1000) <= +drp.enddate)
     );
-   
 
     this.overdueinvoices.forEach((e) => {
       let overdcustomer: InvoicesDetailDto = {
@@ -493,23 +499,11 @@ export class CustomerreportsComponent implements OnInit {
       this.agingreport("All");
     }
   }
-  downloadFile(data: any) {
-    const replacer = (key, value) => (value === null ? "" : value); // specify how you want to handle null values here
-    const header = Object.keys(data[0]);
-    let csv = data.map((row) =>
-      header
-        .map((fieldName) => JSON.stringify(row[fieldName], replacer))
-        .join(",")
-    );
-    csv.unshift(header.join(","));
-    let csvArray = csv.join("rn");
 
-    var blob = new Blob([csvArray], { type: "text/csv" });
-    saveAs(blob, "myFile.csv");
-  }
   customledgerreport() {
     debugger;
     this.bankbalancedetail = [];
+   
 
     this.customertransaction = this.transactions.filter(
       (e) => this.customerinvoices.filter((i) => i.id == e.invoiceid).length > 0
@@ -518,49 +512,148 @@ export class CustomerreportsComponent implements OnInit {
     this.customertransaction = this.customertransaction.sort((a, b) => {
       return a.transactiondate > b.transactiondate ? 1 : -1;
     });
-    this.customertransaction.forEach((e) => {
-      var debit = 0;
-      var credit = 0;
-
-      if (e.status == this.ApputilsService.TransactionSuccessfull) {
-        credit = e.amount;
-      } else {
-      }
-      debit = this.customerinvoices.filter((i) => i.id == e.invoiceid)[0]
-        .amount;
-      bankamount += debit - credit;
-      this.customerinvoices.filter((i) => i.id == e.invoiceid)[0].amount =
-        this.customerinvoices.filter((i) => i.id == e.invoiceid)[0].amount -
-        debit;
-      debugger;
-      let bb: bankbalancedetaildto = {
-        id: e.id,
-        apartmentname: e.apartmentname,
-        customername: e.customername,
-        invoicename: e.invoicename,
-        bank: e.bank,
-        iban: e.iban,
-        paymentmethod: e.paymentmethod,
-        transactionid: e.transactionid,
-        invoiceid: e.invoiceid,
-        bankamount: bankamount,
-        status: e.status,
-        transactiondate: e.transactiondate,
-        debit: debit,
-        credit: credit,
-      };
-
-      this.bankbalancedetail.push(bb);
+    this.customerinvoices = this.customerinvoices.sort((a, b) => {
+      return a.createdat < b.createdat ? 1 : -1;
     });
+    
+    this.customerinvoices.forEach((i) => {
+      
+      
+      
+        var debit = 0;
+          var credit = 0;
+  
+         
+          debit = i.amount;
+          bankamount = 0;
+        
+          
+          let sl = this.sales.filter(s => s.id == i.planid)[0];
+          debugger;
+          let bb: bankbalancedetaildto = {
+            id: "",
+            apartmentname: sl.apartmentname,
+            customername: "",
+            invoicename: i.type+" "+(i.type == "Installment" ? i?.orderno?.toString() ?? 0:""),
+            bank: "",
+            iban: "",
+            paymentmethod: "",
+            transactionid: "",
+            invoiceid: i.id,
+            bankamount: bankamount,
+            status: "",
+            transactiondate: i.invoicedueon,
+            debit: debit,
+            credit: credit,
+          };
+  
+          this.bankbalancedetail.push(bb);
+      
+      
+    });
+
+    
+    
+    
+      this.customertransaction.forEach((e) => {
+        var debit = 0;
+        var credit = 0;
+
+        if (e.status == this.ApputilsService.TransactionSuccessfull) {
+          credit = e.amount;
+        }
+       
+     
+        let bb: bankbalancedetaildto = {
+          id: e.id,
+          apartmentname: e.apartmentname,
+          customername: "",
+          invoicename: e.invoicename,
+          bank: e.bank,
+          iban: e.iban,
+          paymentmethod: e.paymentmethod,
+          transactionid: e.transactionid,
+          invoiceid: e.invoiceid,
+          bankamount: bankamount,
+          status: e.status,
+          transactiondate: e.transactiondate,
+          debit: debit,
+          credit: credit,
+        };
+
+        this.bankbalancedetail.push(bb);
+      });
+    
+      this.bankbalancedetail = this.bankbalancedetail.sort((a, b) => {
+        return a.transactiondate == null || b.transactiondate == null ? 1:  b.transactiondate != null && a.transactiondate != null && new Date(a.transactiondate.seconds * 1000) > new Date(b.transactiondate.seconds * 1000) ? 1 : -1;
+      });
     if (this.drp.option != "All" && this.drp.enddate != undefined) {
       this.bankbalancedetail = this.bankbalancedetail.filter(
         (e) =>
           new Date(e.transactiondate.seconds * 1000) >= this.drp.startdate &&
           new Date(e.transactiondate.seconds * 1000) <= this.drp.enddate
       );
+
     }
+
+
+
+    let debit = 0;
+    let credit = 0;
+    let total = 0;
+    this.bankbalancedetail.forEach(e=>{
+      debugger;
+        e.bankamount = (total+e.debit) - e.credit;
+        debit += e.debit;
+        credit += e.credit;
+        total = e.bankamount;
+      
+    });
+  this.bankbalancedetail.length > 0 ?  this.bankbalancedetail[0].customername = this.currentCustomer.name : "";
+    
+    let bb: bankbalancedetaildto = {
+      id: "",
+      apartmentname:"",
+      customername: "Total",
+      invoicename: "",
+      bank: "",
+      iban: "",
+      paymentmethod: "",
+      transactionid: "",
+      invoiceid: "",
+      bankamount: total,
+      status: "",
+      transactiondate: "",
+      debit: debit,
+      credit: credit,
+    };
+    this.bankbalancedetail.push(bb);
+   
+    
     //this.bankbalancedetail = this.bankbalancedetail.sort((a,b)=>{ return a > b ? 1 : -1 });
   }
+
+  ledgercsv()
+  {
+      this.ALLbalancedetail.forEach(e=>{
+
+        e.transactiondate = new Date(e.transactiondate?.seconds * 1000);
+      });
+    this.downloadFile(this.ALLbalancedetail);
+  }
+  downloadFile(data: any) {
+    debugger;
+    const replacer = (key, value) => value === null ? '' : value; // specify how you want to handle null values here
+    const header = Object.keys(data[0]);
+    let csv = data.map(row => header.map(fieldName => JSON.stringify(row[fieldName], replacer)).join(','));
+    csv.unshift(header.join(','));
+    let csvArray = csv.join('\r\n');
+
+    var blob = new Blob([csvArray], {type: 'text/csv' })
+    saveAs(blob, "myFile.csv");
+}
+
+
   // upcominginvoicesreport(st: Date, et: Date) {
   //   var dt = new Date();
   //   this.upcominginvoices = this.invoices.filter(

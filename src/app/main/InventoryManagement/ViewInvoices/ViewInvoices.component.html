@@ -26,6 +26,9 @@
                                     {{this.ApputilsService.ThisYear}}
                                 </option>
                                 <option>
+                                    {{this.ApputilsService.OverDue}}
+                                </option>
+                                <option>
                                     {{this.ApputilsService.ThisMonthDue}}
                                 </option>
                                 <option>
@@ -39,6 +42,9 @@
                                     {{this.ApputilsService.Due}}
                                 </option>
                                 <option>
+                                    {{this.ApputilsService.Paid}}
+                                </option>
+                                <option selected>
                                     {{this.ApputilsService.All}}
                                 </option>
                                 
@@ -47,33 +53,36 @@
                     </div>
 
                     <!-- ngx-datatables responsive -->
-                    <ngx-datatable #table class="bootstrap core-bootstrap" [columnMode]="ColumnMode.force" [headerHeight]="30" [rowHeight]="35" [footerHeight]="40" rowHeight="auto" [limit]="100" rowHeight="auto" [limit]="10" [rows]="invoices" [scrollbarH]="true">
+                    <ngx-datatable *ngIf="show" #table class="bootstrap core-bootstrap" [columnMode]="ColumnMode.force" [headerHeight]="30" [rowHeight]="35" [footerHeight]="40" rowHeight="auto" [limit]="100" rowHeight="auto" [limit]="10" [rows]="this.customerinvoices" [scrollbarH]="true">
+                        <ngx-datatable-column name="Customer" prop="customer">
+                           
+                        </ngx-datatable-column>
                         <ngx-datatable-column name="Amount" prop="amount">
                             <ng-template let-row="row" let-name="value" ngx-datatable-cell-template>
-                                {{ row.amount | number }}
+                                {{ row?.amount | number }}
                             </ng-template>
                         </ngx-datatable-column>
 
                         <ngx-datatable-column name="Amount Left" prop="amount">
                             <ng-template let-row="row" let-name="value" ngx-datatable-cell-template>
-                                {{ row.amountleft | number }}
+                                {{ row?.amountleft | number }}
                             </ng-template>
                         </ngx-datatable-column>
                         <ngx-datatable-column name="Amount Paid" prop="amount">
                             <ng-template let-row="row" let-name="value" ngx-datatable-cell-template>
-                                {{ row.amountpaid | number }}
+                                {{ row?.amountpaid | number }}
                             </ng-template>
                         </ngx-datatable-column>
                         <ngx-datatable-column name="Invoice Due On" prop="invoicedueon">
 
                             <ng-template let-row="row" let-name="value" ngx-datatable-cell-template>
-                                {{ row.invoicedueon | date }}
+                                {{ row?.invoicedueon | date }}
                             </ng-template>
                         </ngx-datatable-column>
                         <ngx-datatable-column name="Invoice Paid On" prop="invoicedueon">
 
                             <ng-template let-row="row" let-name="value" ngx-datatable-cell-template>
-                                {{ row.invoicepaidon | date }}
+                                {{ row?.invoicepaidon | date }}
                             </ng-template>
                         </ngx-datatable-column>
 
