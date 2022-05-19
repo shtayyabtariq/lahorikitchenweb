@@ -1,0 +1,121 @@
+<div class="content-wrapper container-xxl p-0">
+    <div class="content-body">
+
+        <div class="row">
+            <div class="col-12">
+
+                <div class="card">
+                    <div class="card-body">
+
+                        <div class="row mb-2 float-right">
+                            <a (click)="onviewall()" class="btn btn-danger btn-outline-primary float-right mr-1" rippleEffect>View All</a
+                              >
+                          <a (click)="generatePdf()" class="btn btn-outline-secondary float-right mr-1" rippleEffect>Download PDF</a
+                              >
+                              <a csvLink [data]="exportCSVData" class="btn btn-outline-secondary float-right mr-1" rippleEffect>Export CSV</a
+                                >
+                      </div>
+                      <div class="form-group">
+                        <div class="col-12" >
+                            <label>
+                          Choose Date 
+                        </label>
+                        <ng2-flatpickr [(ngModel)]="invoiceDate" [config]="InvoiceDateDto" name="Aging Date" ></ng2-flatpickr>
+                        </div>
+                      </div>
+                
+
+                  </div>
+              </div>
+          </div>
+
+
+      </div>
+
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                Customer Aging Report
+                            </div>
+                        </div>
+                        <div class="card-body">
+
+                            <div class="row">
+                                <div class="col-12 mb-2">
+                                    <!-- <a csvLink [data]="this.agingreport" class="btn btn-outline-secondary float-right mr-1" rippleEffect>Export CSV</a
+                                  > -->
+
+                                </div>
+                            </div>
+                            <div class="row">
+                                <table id="table" class="pdftable table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <td>
+                                                Name
+                                            </td>
+                                            <td>
+                                                0-30
+                                            </td>
+                                            <td>
+                                                31-60
+                                            </td>
+                                            <td>
+                                                60-90
+                                            </td>
+                                            <td>
+                                                > 90
+                                            </td>
+                                            <td>
+                                                Total
+                                            </td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let in of this.allaging">
+                                            <td>
+                                                {{this.in.customername }}
+                                            </td>
+                                            <td>
+                                                <span *ngIf="this.in.amount30  != 0">
+                                                {{this.in.amount30 | number}}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span *ngIf="this.in.amount60  != 0">
+                                                    {{this.in.amount60 | number}}
+                                                </span>
+                                                
+                                            </td>
+                                            <td>
+                                                <span *ngIf="this.in.amount90  != 0">
+                                                {{this.in.amount90 | number}}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span *ngIf="this.in.amount100 != 0">
+                                                {{this.in.amount100 | number}}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                
+                                                {{this.in.total | number}}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>

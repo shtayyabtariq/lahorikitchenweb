@@ -24,3 +24,20 @@
 .brouchure td {
     border: 1px solid black;
 }
+
+$invoiceyellowcolor: #ceb992;
+table.pl-color td:first-child {
+    background-color: $invoiceyellowcolor;
+}
+
+table.pl-color td:nth-child(2) {
+    background-color: white;
+}
+
+.bt-plan {
+    font-size: 9px;
+}
+
+.bt-plan span {
+    color: white
+}

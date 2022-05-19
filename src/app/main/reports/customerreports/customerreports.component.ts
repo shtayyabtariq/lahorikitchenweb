@@ -64,6 +64,7 @@ export class CustomerreportsComponent implements OnInit {
   drp: daterangepickerdto;
   selectedagingfilter: string = this.ApputilsService.Aging30;
   report: number = 0;
+  reportName:string = ""; 
   filtertext: string = "Choose Filter Options";
   html: HTMLTableElement;
   selectedCustomer: CustomerDto;
@@ -103,26 +104,30 @@ export class CustomerreportsComponent implements OnInit {
     doc.setFontSize(5);
     doc.text(new Date().toDateString(), 5, 5);
     doc.setFontSize(14);
-    doc.text("NIAZ ARBAZ PVT LTD", 30, 15);
+    doc.text("NIAZ ARBAZ PVT LTD",35, 15);
     doc.setFontSize(10);
 
-    doc.text("Tayyab", 30, 20);
+    doc.text(this.reportName, 35, 20);
 
     var img = new Image();
-    img.src = "/assets/images/Bedroonm.jpg";
-    doc.addImage(img, "jpg", 10, 10, 12, 15);
+    img.src = "/assets/images/logo/logo.png";
+    doc.addImage(img, "jpg", 5, 5, 35, 30);
 
     // Or use javascript directly:
     autoTable(doc, {
       html: ".pdftable",
-      startY: 30,
+      startY: 40,
+      headStyles:{
+        fillColor:"#ac8b5f"
+      }
+
     });
 
-    doc.save("table.pdf");
+    doc.save(this.reportName+"-"+new Date().toLocaleDateString()+".pdf");
   }
   ngOnInit() {
-    this.onviewall();
-
+    
+this.reportName = this.ApputilsService.CustomerLedgerReport;
     this.fs
       .getCustomer()
       .valueChanges()
@@ -146,6 +151,7 @@ export class CustomerreportsComponent implements OnInit {
       .valueChanges()
       .subscribe((e) => {
         this.transactions = e;
+        this.onviewall();
       });
 
     let dr: daterangepickerdto = {
@@ -156,7 +162,7 @@ export class CustomerreportsComponent implements OnInit {
     this.drp = dr;
   }
   onCustomerSelect($event) {
-    debugger;
+    
     this.viewall = false;
     this.currentCustomer = $event;
     this.generateparticularreport(this.currentCustomer.id);
@@ -169,7 +175,8 @@ export class CustomerreportsComponent implements OnInit {
   generateparticularreport(id: string = "") {
     switch (this.report) {
       case 0:
-        this.agingfilter(this.selectedagingfilter);
+        this.report = 2;
+        this.generateparticularreport(id);
         break;
       case 1:
         this.filterCustomerSales();
@@ -187,7 +194,8 @@ export class CustomerreportsComponent implements OnInit {
     }
   }
   onreportselect(val: any) {
-    debugger;
+    
+    this.reportName = val;
     switch (val) {
       case this.ApputilsService.CustomerAgingReport:
         this.report = 0;
@@ -217,7 +225,7 @@ export class CustomerreportsComponent implements OnInit {
     this.upcominginvoicesreport(this.drp);
   }
   generatecustomerledgers(id: string) {
-    debugger;
+   
     this.customerledgers = [];
     this.ALLbalancedetail = [];
     this.cust.forEach((e) => {
@@ -236,10 +244,12 @@ export class CustomerreportsComponent implements OnInit {
 
       this.ALLbalancedetail = this.ALLbalancedetail.concat(cld.bankbalances);
     });
+    debugger;
     if (id != "") {
+      debugger;
       this.currentCustomer = this.selectedCustomer;
-      this.customerledgers = this.customerledgers.filter(
-        (e) => e.cust.id == id
+      this.ALLbalancedetail = this.ALLbalancedetail.filter(
+        (e) => e.id == id
       );
     }
     console.log(this.customerledgers);
@@ -248,7 +258,7 @@ export class CustomerreportsComponent implements OnInit {
    
   }
   filterCustomerSales() {
-    debugger;
+    
     if (this.viewall) {
       this.customersales = this.sales;
       this.customerinvoices = this.invoices;
@@ -263,7 +273,7 @@ export class CustomerreportsComponent implements OnInit {
   }
   
   getCustomerSales(id: string) {
-    debugger;
+    
     let customersales = this.sales.filter((e) => e.customerid == id);
     let customerinvoices = this.invoices.filter(
       (e) => customersales.filter((r) => r.id == e.planid).length > 0
@@ -276,7 +286,7 @@ export class CustomerreportsComponent implements OnInit {
     return cst;
   }
   agingreport(startdate: any) {
-    debugger;
+    
     this.filterCustomerSales();
     if (startdate == "All") {
       startdate = 0;
@@ -295,7 +305,7 @@ export class CustomerreportsComponent implements OnInit {
     );
   }
   allagingreport() {
-    debugger;
+    
     this.viewall = true;
     this.allaging = [];
     this.cust.forEach((e) => {
@@ -306,6 +316,7 @@ export class CustomerreportsComponent implements OnInit {
         amount90: 0,
         total: 0,
         amount100: 0,
+        id: ""
       };
       var salesdto = this.getCustomerSales(e.id);
       var drp = this.getdatefilter(0);
@@ -347,12 +358,12 @@ export class CustomerreportsComponent implements OnInit {
         .reduce((sum, current) => sum + current.amountleft, 0);
 
       age.total = age.amount30 + age.amount60 + age.amount90 + age.amount100;
-      debugger;
+      
       this.allaging.push(age);
     });
 
     let totalage: AginReportDto = {
-      customername: "",
+      customername: "Total",
       amount30: this.allaging.reduce(
         (sum, current) => sum + current.amount30,
         0
@@ -370,6 +381,7 @@ export class CustomerreportsComponent implements OnInit {
         (sum, current) => sum + current.amount100,
         0
       ),
+      id: ""
     };
     this.allaging.push(totalage);
     // var dt = new Date();
@@ -407,7 +419,7 @@ export class CustomerreportsComponent implements OnInit {
       });
   }
   overdueinvoicesreport(drp: daterangepickerdto) {
-    debugger;
+    
     var dt = new Date();
     drp.enddate = dt;
     this.overduecustomerinvoices = [];
@@ -501,7 +513,7 @@ export class CustomerreportsComponent implements OnInit {
   }
 
   customledgerreport() {
-    debugger;
+    
     this.bankbalancedetail = [];
    
 
@@ -529,12 +541,12 @@ export class CustomerreportsComponent implements OnInit {
         
           
           let sl = this.sales.filter(s => s.id == i.planid)[0];
-          debugger;
+          
           let bb: bankbalancedetaildto = {
-            id: "",
+            id: this.currentCustomer.id,
             apartmentname: sl.apartmentname,
             customername: "",
-            invoicename: i.type+" "+(i.type == "Installment" ? i?.orderno?.toString() ?? 0:""),
+            invoicename: i.type+" "+(i.type == "Installment" ? i?.installmentno?.toString() ?? 0:""),
             bank: "",
             iban: "",
             paymentmethod: "",
@@ -565,7 +577,7 @@ export class CustomerreportsComponent implements OnInit {
        
      
         let bb: bankbalancedetaildto = {
-          id: e.id,
+          id: this.currentCustomer.id,
           apartmentname: e.apartmentname,
           customername: "",
           invoicename: e.invoicename,
@@ -602,32 +614,37 @@ export class CustomerreportsComponent implements OnInit {
     let credit = 0;
     let total = 0;
     this.bankbalancedetail.forEach(e=>{
-      debugger;
+      
         e.bankamount = (total+e.debit) - e.credit;
         debit += e.debit;
         credit += e.credit;
         total = e.bankamount;
       
     });
-  this.bankbalancedetail.length > 0 ?  this.bankbalancedetail[0].customername = this.currentCustomer.name : "";
+    if(this.bankbalancedetail.length > 0)
+    {
+      this.bankbalancedetail.length > 0 ?  this.bankbalancedetail[0].customername = this.currentCustomer.name : "";
     
-    let bb: bankbalancedetaildto = {
-      id: "",
-      apartmentname:"",
-      customername: "Total",
-      invoicename: "",
-      bank: "",
-      iban: "",
-      paymentmethod: "",
-      transactionid: "",
-      invoiceid: "",
-      bankamount: total,
-      status: "",
-      transactiondate: "",
-      debit: debit,
-      credit: credit,
-    };
-    this.bankbalancedetail.push(bb);
+      let bb: bankbalancedetaildto = {
+        id: this.currentCustomer.id,
+        apartmentname:"",
+        customername: "Total",
+        invoicename: "",
+        bank: "",
+        iban: "",
+        paymentmethod: "",
+        transactionid: "",
+        invoiceid: "",
+        bankamount: total,
+        status: "",
+        transactiondate: "",
+        debit: debit,
+        credit: credit,
+      };
+      
+      this.bankbalancedetail.push(bb);
+    }
+  
    
     
     //this.bankbalancedetail = this.bankbalancedetail.sort((a,b)=>{ return a > b ? 1 : -1 });
@@ -642,7 +659,7 @@ export class CustomerreportsComponent implements OnInit {
     this.downloadFile(this.ALLbalancedetail);
   }
   downloadFile(data: any) {
-    debugger;
+    
     const replacer = (key, value) => value === null ? '' : value; // specify how you want to handle null values here
     const header = Object.keys(data[0]);
     let csv = data.map(row => header.map(fieldName => JSON.stringify(row[fieldName], replacer)).join(','));

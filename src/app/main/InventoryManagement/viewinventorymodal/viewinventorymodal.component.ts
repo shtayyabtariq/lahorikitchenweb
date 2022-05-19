@@ -43,6 +43,7 @@ export class ViewinventorymodalComponent implements OnInit {
   @ViewChild('content') content:ElementRef;
   apt:ApartmentSoldReportDto[]=[];
   PdfTitle:string;
+  exportCSVData: Object[] = [];
   constructor(public modal: NgbActiveModal,
 
     public modalservice: NgbModal,
@@ -57,6 +58,7 @@ export class ViewinventorymodalComponent implements OnInit {
 
   async ngOnInit() {
    
+    this.exportCSVData = this.apt as Object[];
   }
 
   dismissdialog()

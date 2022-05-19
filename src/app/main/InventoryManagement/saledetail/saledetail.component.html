@@ -1,11 +1,19 @@
-<div class="container">
+<div class="content-wrapper container-xxl p-0 printRef">
+    <div class="row mb-2">
+        <div class="col-12">
+            <button type="submit" class="btn pull-right ml-2 btn-danger print-hide" (click)="onPrint()" rippleEffect>
+                Print
+              </button>
+        </div>
+    </div>
 
-    <ul ngbNav #navFilled="ngbNav" [activeId]="'general'" class="nav nav-fill nav-pills">
-        <li [ngbNavItem]="'general'">
-            <a ngbNavLink>General</a>
+    <ul ngbNav #navFilled="ngbNav" [activeId]="'general'" class="nav nav-fill nav-pills ">
+        <li [ngbNavItem]="'general'" class="print-show">
+            <a ngbNavLink class="print-hide">General</a>
+
             <ng-template ngbNavContent>
                 <div class="row">
-                    <div class="col-12 col-lg-6">
+                    <div class="col-5 col-lg-6">
                         <core-card-snippet>
                             <div class="card-body">
                                 <div class="card-title">
@@ -13,7 +21,7 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="table">
-                                        <table class="table table-responsive table-bordered fw-800" *ngIf="viewcustomer">
+                                        <table class="table  table-bordered fw-800" *ngIf="viewcustomer">
                                             <tr>
                                                 <td>
                                                     Name
@@ -92,7 +100,7 @@
                             </div>
                         </core-card-snippet>
                     </div>
-                    <div class="col-12 col-lg-6">
+                    <div class="col-7 col-lg-6">
                         <core-card-snippet>
                             <div class="card-body">
                                 <div class="card-title">
@@ -250,7 +258,7 @@
 
             </ng-template>
         </li>
-        <li [ngbNavItem]="'service'">
+        <li [ngbNavItem]="'service'" class="print-hide">
             <a ngbNavLink>Invoices</a>
             <ng-template ngbNavContent>
                 <core-card-snippet>

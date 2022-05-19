@@ -23,6 +23,7 @@ import { THIS_EXPR } from "@angular/compiler/src/output/output_ast";
 import { InvoiceManagement } from '../invoicemanagement';
 import { InvoiceType } from '../../../auth/helpers/apputils.service';
 import Swal from "sweetalert2";
+import { metadata } from "app/auth/models/metadata";
 
 @Component({
   selector: "app-plan-generator",
@@ -37,6 +38,7 @@ export class PlanGeneratorComponent implements OnInit {
   plan: number;
   aptId: string;
   show: boolean = false;
+  metadata: metadata;
   isupdate = false;
   planId:string;
   rate:number;
@@ -156,7 +158,14 @@ export class PlanGeneratorComponent implements OnInit {
       this.rate = this.apartment.price;
     }
     
-
+    this.fs
+    .getmetadata()
+    .valueChanges()
+    .subscribe((e) => {
+      this.metadata = e;
+      console.log(this.metadata);
+     
+    });
     this.viewform = true;
   }
   @ViewChild('pdfTable', { static: false }) pdfTable!: ElementRef;
@@ -174,14 +183,15 @@ export class PlanGeneratorComponent implements OnInit {
       html2canvas(this.pdfTable.nativeElement,{scrollY: -window.scrollY})
         .then((canvas) => {
           debugger;
-          var pdf = new jsPDF('l', 'pt', [
-            canvas.width + 100,
-            canvas.height + 100,
-          ]);
+          var pdf = new jsPDF("p", "pt", "a4");
 
           var imgData = canvas.toDataURL('image/jpeg', 1.0);
           window.open(imgData);
-          pdf.addImage(imgData, 0, 0, canvas.width, canvas.height);
+
+          var width = pdf.internal.pageSize.getWidth();
+          var height = pdf.internal.pageSize.getHeight();
+
+          pdf.addImage(imgData, 0, 0, width, height);
           pdf.save('converteddoc.pdf');
        
 

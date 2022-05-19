@@ -54,6 +54,7 @@ import { HomeComponent } from "app/main/sample/home.component";
 import { HomeRouteAuthGuard } from "app/auth/helpers/homerouteguard";
 import { ApartmentreportComponent } from '../main/reports/apartmentreport/apartmentreport.component';
 import { NgxPrintModule } from "ngx-print";
+import { AgingreportComponent } from '../main/reports/agingreport/agingreport.component';
 
 const routes: Routes = [
   {
@@ -202,6 +203,13 @@ const routes: Routes = [
   
     data: { animation: 'home' }
   },
+  {
+    path: 'agingreport',
+    canActivate:[AuthGuard,],
+    component: AgingreportComponent,
+  
+    data: { animation: 'home' }
+  },
   
 ];
 
@@ -242,6 +250,7 @@ const routes: Routes = [
     CustomerreportsComponent,
     HomeComponent,
     NgbdSortableHeader,
+    AgingreportComponent
   ],
   imports: [
     RouterModule.forChild(routes),

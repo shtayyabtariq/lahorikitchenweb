@@ -9,29 +9,34 @@
     <button type="button" class="mb-2 btn btn-primary" (click)="generatePdf()" aria-label="Close">
        Save PDF
         </button>
+    <a csvLink [data]="exportCSVData" class="btn btn-outline-secondary float-right mr-1" rippleEffect>Export CSV</a
+            >
     <table class="table  table-bordered pdftable">
         <thead>
             <tr>
+                <th>#</th>
                 <th scope="col" sortable="customer" (sort)="onSort($event)">
                     Customer
                 </th>
                 <th scope="col" sortable="apartmentname" (sort)="onSort($event)">
                     Apartment Name
                 </th>
-                <th scope="col" sortable="type" (sort)="onSort($event)"> Apartment Type</th>
+                <th scope="col" sortable="type" (sort)="onSort($event)"> Bedding Type</th>
+
+                <th scope="col" sortable="type" (sort)="onSort($event)"> Type</th>
 
 
             </tr>
 
         </thead>
         <tbody>
-            <tr *ngFor="let inst of apt" (click)="dismissdialog()" routerLink="/sales/{{this.inst.id}}">
-
+            <tr *ngFor="let inst of apt;let i = index" (click)="dismissdialog()" routerLink="/sales/{{this.inst.id}}">
+                <td> {{i+1}}</td>
                 <td> {{inst.customer}} </td>
 
                 <td> {{inst.apartmentname}} </td>
                 <td> {{inst.type}}</td>
-
+                <td> {{inst.beddingtype}}</td>
 
             </tr>
         </tbody>

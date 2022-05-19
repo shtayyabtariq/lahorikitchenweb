@@ -79,3 +79,50 @@ body {
 .card .card-title {
     font-weight: bold;
 }
+
+.text-primary {
+    color: #ac8b5f !important;
+}
+
+.main-menu.menu-light .navigation>li.active>a {
+    background: linear-gradient(118deg, #ac8b5f, rgba(206, 185, 146, 0.7));
+    box-shadow: 0 0 10px 1px rgb(206 185 146 / 70%);
+    color: #fff;
+    font-weight: 400;
+    border-radius: 4px;
+}
+
+.btn-primary {
+    border-color: #ac8b5f !important;
+    background-color: #ac8b5f !important;
+    color: #fff !important;
+}
+
+.main-menu .navbar-header .navbar-brand .brand-text {
+    color: #ac8b5f;
+}
+
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary.active {
+    color: #fff;
+    background-color: #ac8b5f !important;
+}
+
+.btn-primary:hover:not(.disabled):not(:disabled) {
+    box-shadow: 0 8px 25px -8px #ac8b5f;
+}
+
+.badge.badge-light-primary {
+    background-color: rgba(115, 103, 240, 0.12);
+    color: #ac8b5f !important;
+}
+
+.vl .feather {
+    color: #ac8b5f !important;
+}
+
+$invoiceyellowcolor: #ceb992;
+.bt-plan .feather {
+    color: #ceb992 !important;
+}

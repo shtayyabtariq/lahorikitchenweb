@@ -3,3 +3,13 @@
     box-shadow: 0 4px 24px 0 rgb(34 41 47 / 20%);
 }
 
+@media print {
+    /* invert the display (show/hide) properties of the main */
+    /* aplication component and the printing component       */
+    .print-show {
+        display: block;
+    }
+    .print-hide {
+        display: none;
+    }
+}

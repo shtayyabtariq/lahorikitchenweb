@@ -409,6 +409,13 @@ export class firebaseStoreService {
       .doc(Apartmentdto.docid)
       .update(Apartmentdto);
   }
+  getAllCustomerCredits(id: string) {
+    return this.fs
+      .collection(this.customersCollection)
+      .doc(id)
+      .collection<creditamounts>(this.creditCollection)
+      
+  }
   getapartments(isarchive: boolean) {
     return this.fs.collection(this.apartments, (res) =>
       res.where("isarchive", "==", isarchive)

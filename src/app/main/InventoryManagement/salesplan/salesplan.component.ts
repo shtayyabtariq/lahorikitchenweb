@@ -235,13 +235,13 @@ export class SalesplanComponent implements OnInit {
       applicaitonno: [{ value: null, disabled: this.isdisabled }, [Validators.required]],
       cnic: [{ value: null, disabled: this.isdisabled }, [Validators.required]],
       nationality: [{ value: null, disabled: this.isdisabled }, [Validators.required]],
-      mailaddress: [{ value: null, disabled: this.isdisabled }, [Validators.required]],
+      mailaddress: [{ value: null, disabled: this.isdisabled }, []],
       permanentaddress: [{ value: null, disabled: this.isdisabled }, [Validators.required]],
       email: [{ value: null, disabled: this.isdisabled }, [Validators.required]],
-      number: [{ value: null, disabled: this.isdisabled }, [Validators.required]],
-      officenumber: [{ value: null, disabled: this.isdisabled }, [Validators.required]],
-      source: [{ value: null, disabled: this.isdisabled }, [Validators.required]],
-      bname: [{ value: null, disabled: this.isdisabled }, [Validators.required]],
+      number: [{ value: null, disabled: this.isdisabled }, []],
+      officenumber: [{ value: null, disabled: this.isdisabled }, []],
+      source: [{ value: null, disabled: this.isdisabled }, []],
+      bname: [{ value: null, disabled: this.isdisabled }, []],
     });
     for (const field in form.controls) { // 'field' is a string
       this.form.get(field).enable();
@@ -300,18 +300,18 @@ export class SalesplanComponent implements OnInit {
 
       let cust: CustomerDto = {
         id: this.currentCustomer?.id ?? "",
-        name: this.form.controls["name"].value,
-        fathername: this.form.controls["fathername"].value,
+        name: this.form.controls["name"]?.value ?? "",
+        fathername: this.form.controls["fathername"]?.value ?? "",
         sex: false,
-        cnic: this.form.controls["cnic"].value,
-        nationality: this.form.controls["nationality"].value,
-        mailaddress: this.form.controls["mailaddress"].value,
-        permanentaddress: this.form.controls["permanentaddress"].value,
-        emailaddress: this.form.controls["email"].value,
-        phonenumber: this.form.controls["number"].value,
-        office: this.form.controls["officenumber"].value,
-        sourceofincome: this.form.controls["source"].value,
-        businessname: this.form.controls["bname"].value,
+        cnic: this.form.controls["cnic"]?.value ?? "",
+        nationality: this.form.controls["nationality"]?.value ?? "",
+        mailaddress: this.form.controls["mailaddress"]?.value ?? "",
+        permanentaddress: this.form.controls["permanentaddress"]?.value ?? "",
+        emailaddress: this.form.controls["email"]?.value ?? "",
+        phonenumber: this.form.controls["number"]?.value ?? "",
+        office: this.form.controls["officenumber"]?.value ?? "",
+        sourceofincome: this.form.controls["source"]?.value ?? "",
+        businessname: this.form.controls["bname"]?.value ?? "",
         status: true
       };
       if (cust.id != undefined && cust.id.trim().length == 0) {
@@ -386,7 +386,7 @@ export class SalesplanComponent implements OnInit {
         totalamountpaid: 0,
         totalamountleft: this.PlanInfo.apartmenttotalprice,
         status: SaleStatus.InProgress,
-        customername: cust.name+" "+cust.fathername,
+        customername: cust.name,
         customercnic: cust.cnic
       };
       this.fs.addSales(sal).then(async (e) => {

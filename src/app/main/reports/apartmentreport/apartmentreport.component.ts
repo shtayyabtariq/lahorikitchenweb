@@ -57,7 +57,7 @@ export class ApartmentreportComponent implements OnInit {
 
     public fs: firebaseStoreService
   ) {
-    this.exportCSVData = this.apt as Object[];
+    
   }
 
   //  export() {
@@ -79,6 +79,7 @@ export class ApartmentreportComponent implements OnInit {
     this.aptall = this.apt;
     this.collectionSize = this.apt.length;
     this.refreshApt();
+    this.exportCSVData = this.apt as Object[];
   }
 
   dismissdialog() {
@@ -87,6 +88,9 @@ export class ApartmentreportComponent implements OnInit {
   generatePdf() {
     let app = this.apt;
     this.apt = this.aptall;
+    let pg = this.page;
+    this.page = 1;
+  
 
     var head = [["ID", "Country", "Rank", "Capital"]];
     var body = [
@@ -124,6 +128,7 @@ export class ApartmentreportComponent implements OnInit {
       }),
         doc.save("pd" + ".pdf");
       this.apt = app;
+      this.page = pg;
     }, 1000);
   }
 

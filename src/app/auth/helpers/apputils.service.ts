@@ -230,7 +230,7 @@ CustomerOpenBalanceReports = "Customer Open Balance Reports";
 CustomerAccountReceivableReports ="Customer Account Receivabel Reports";
 
 CustomerReports:String[]=[
-  this.CustomerAgingReport,
+  
   this.CustomerLedgerReport,
 
   this.CustomerOverDueInvoices,

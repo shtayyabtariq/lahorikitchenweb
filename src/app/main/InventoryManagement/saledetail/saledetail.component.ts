@@ -82,4 +82,7 @@ export class SaledetailComponent implements OnInit {
         this.installmentinvoice = this.installmentinvoice.sort((a,b)=>a.installmentno > b.installmentno ? 1 : -1);
       });
   }
+  onPrint() {
+    window.print();
+  }
 }

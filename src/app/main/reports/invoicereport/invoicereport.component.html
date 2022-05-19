@@ -13,6 +13,9 @@
         <thead>
             <tr>
                 <th>
+                    #
+                </th>
+                <th>
                     Customer
                 </th>
                 <th>
@@ -27,8 +30,8 @@
 
         </thead>
         <tbody>
-            <tr *ngFor="let inst of invoices" (click)="dismissdialog()" routerLink="/sales/{{this.inst.saleid}}/invoice/{{ inst.id }}">
-
+            <tr *ngFor="let inst of invoices;let i = index " (click)="dismissdialog()" routerLink="/sales/{{this.inst.saleid}}/invoice/{{ inst.id }}">
+                <td> {{i+1}} </td>
                 <td> {{inst.customer}} </td>
                 <td> {{inst.amount | number}} </td>
                 <td> {{inst.apartmentname}} </td>

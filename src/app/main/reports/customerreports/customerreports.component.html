@@ -74,7 +74,10 @@
                                         {{this.apt.apartmentname}}
                                     </td>
                                     <td>
-                                        {{this.apt.apartmenttotalprice | number}}
+                                        <span *ngIf="this.apt.apartmenttotalprice != 0">
+                                            {{this.apt.apartmenttotalprice | number}}
+                                        </span>
+                                       
                                     </td>
                                     <td>
                                         {{this.apt.createdat.seconds * 1000 | date}}
@@ -93,126 +96,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row" *ngIf="this.report == 0">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="card-title">
-                                Customer Aging Report
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <div class="mb-2">
-                                <label>
-                        Choose Filter Option
-                      </label>
-                                <select class="form-control" (ngModel)="this.selectedagingfilter" (change)="agingfilter($event.target.value)">
-                              <option *ngFor="let opt of this.ApputilsService.AgingFilters" value="{{this.opt}}">
-                                {{this.opt}}
-                              </option>
-                            </select>
-                            </div>
-                            <div class="row">
-                                <div class="col-12 mb-2">
-                                    <!-- <a csvLink [data]="this.agingreport" class="btn btn-outline-secondary float-right mr-1" rippleEffect>Export CSV</a
-                                    > -->
 
-                                </div>
-                            </div>
-                            <div class="row">
-                                <table *ngIf="viewall" id="table" class="pdftable table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <td>
-                                                Name
-                                            </td>
-                                            <td>
-                                                0-30
-                                            </td>
-                                            <td>
-                                                31-60
-                                            </td>
-                                            <td>
-                                                60-90
-                                            </td>
-                                            <td>
-                                                > 90
-                                            </td>
-                                            <td>
-                                                Total
-                                            </td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr *ngFor="let in of this.allaging">
-                                            <td>
-                                                {{this.in.customername }}
-                                            </td>
-                                            <td>
-                                                {{this.in.amount30 | number}}
-                                            </td>
-                                            <td>
-                                                {{this.in.amount60 | number}}
-                                            </td>
-                                            <td>
-                                                {{this.in.amount90 | number}}
-                                            </td>
-                                            <td>
-                                                {{this.in.amount100 | number}}
-                                            </td>
-                                            <td>
-                                                {{this.in.total | number}}
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <table *ngIf="!viewall" id="table" class="pdftable table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <td>
-                                                TotalAmount
-                                            </td>
-                                            <td>
-                                                Amount Paid
-                                            </td>
-                                            <td>
-                                                Amount Left
-                                            </td>
-                                            <td>
-                                                Type
-                                            </td>
-                                            <td>
-                                                Date
-                                            </td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr *ngFor="let invoice of this.aginginvoices">
-                                            <td>
-                                                {{invoice.amount | number}}
-                                            </td>
-                                            <td>
-                                                {{invoice.amountpaid | number}}
-                                            </td>
-                                            <td>
-                                                {{invoice.amountleft | number}}
-                                            </td>
-                                            <td>
-                                                {{invoice.type}}
-                                            </td>
-                                            <td>
-                                                {{invoice?.invoicedueon?.seconds * 1000 | date}}
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-
-                        </div>
-
-                    </div>
-                </div>
-            </div>
 
             <div class="row" *ngIf="this.report == 1">
                 <div class="col-12">
@@ -266,13 +150,21 @@
                                           {{invoice.customer}}
                                       </td>
                                         <td>
-                                            {{invoice.amount | number}}
+                                            <span *ngIf="invoice.amount != 0">
+                                                {{invoice.amount | number}}
+                                            </span>
+                                           
                                         </td>
                                         <td>
-                                            {{invoice.amountpaid | number}}
+                                            <span *ngIf="invoice.amountpaid != 0">
+                                                {{invoice.amountpaid | number}}
+                                            </span>
+                                           
                                         </td>
                                         <td>
+                                            <span *ngIf="invoice.amountleft != 0">
                                             {{invoice.amountleft | number}}
+                                           </span>
                                         </td>
                                         <td>
                                             {{invoice.type}}
@@ -376,13 +268,20 @@
                                             </td>
 
                                             <td>
+                                                <span *ngIf="balance.debit != 0">
                                                 {{balance.debit | number}}
+                                                </span>
+                                            </td>
+                                            <td >
+                                                <span *ngIf="balance.credit != 0">
+                                                    {{balance.credit  | number}}
+                                                </span>
+                                                
                                             </td>
                                             <td>
-                                                {{balance.credit | number}}
-                                            </td>
-                                            <td>
+                                                <span *ngIf="balance.bankamount != 0">
                                                 {{balance.bankamount | number}}
+                                                </span>
                                             </td>
                                         
 
@@ -443,15 +342,23 @@
                                    <td>
                                        {{invoice.customer}}
                                    </td>
-                                    <td>
+                                   <td>
+                                    <span *ngIf="invoice.amount != 0">
                                         {{invoice.amount | number}}
-                                    </td>
-                                    <td>
+                                    </span>
+                                   
+                                </td>
+                                <td>
+                                    <span *ngIf="invoice.amountpaid != 0">
                                         {{invoice.amountpaid | number}}
-                                    </td>
-                                    <td>
-                                        {{invoice.amountleft | number}}
-                                    </td>
+                                    </span>
+                                   
+                                </td>
+                                <td>
+                                    <span *ngIf="invoice.amountleft != 0">
+                                    {{invoice.amountleft | number}}
+                                   </span>
+                                </td>
                                     <td>
                                         {{invoice.type}}
                                     </td>

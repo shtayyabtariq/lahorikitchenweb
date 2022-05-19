@@ -40,6 +40,7 @@ export class HomeComponent implements OnInit {
   upcominginvoices: PlanScheduleDto[] = [];
   totalAmountReceived = 0;
   drp: daterangepickerdto;
+  exportCSVData: Object[] = [];
   sale:SalesDto[]=[];
   floorwiseapartments: groupApartments[] = [];
   typewiseapartments: groupApartments[] = [];
@@ -133,6 +134,15 @@ export class HomeComponent implements OnInit {
       (Apartmentdto) => Apartmentdto.floorno
     );
     console.log(result);
+    let flww: groupApartments = {
+      type: 'Total',
+      availablecount: 0,
+      soldcount: 0,
+      soldaparments: null,
+      availableapartments: null
+      ,
+
+    };
     result.forEach((e) => {
       var soldapartments = e.filter(
         (e) => e.status == this.appUtil.BookedStatus
@@ -146,10 +156,13 @@ export class HomeComponent implements OnInit {
         availableapartments: openapartments,
 
       };
-
+      flww.availablecount += openapartments.length;
+      flww.soldcount += soldapartments.length;
       this.floorwiseapartments.push(flw);
     });
 
+    this.floorwiseapartments.push(flww);
+    this.exportCSVData = this.floorwiseapartments as Object[];
     this.apartmenttypes = [];
 
     result = this.appUtil.groupBy(ap, (Apartmentdto) => Apartmentdto.type);

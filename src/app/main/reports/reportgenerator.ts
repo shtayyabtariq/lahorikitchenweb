@@ -19,6 +19,7 @@ export class ApartmentSoldReportDto{
     type:string;
     id:string;
     saleid:string;
+    beddingtype:string;
 }
 export class ReportGenerator{
 
@@ -55,6 +56,7 @@ export class ReportGenerator{
           aparinfodto.customer = sal.customername;
           aparinfodto.id = sal.id;
           aparinfodto.type = sal.apartmenttype;
+          aparinfodto.beddingtype = sal.type
           aparinfo.push(aparinfodto);
           
 

@@ -54,6 +54,7 @@ export class customersalesDto{
 }
 export class AginReportDto{
     customername:string;
+    id:string;
     amount30:number;
     amount60:number;
     amount90:number;
@@ -88,6 +89,7 @@ export class TrialBalanceReportDto{
     customername:string;
     debit:number;
     credit:number;
+    bank:string;
 }
 export interface Transaction{
     totalamount:number;

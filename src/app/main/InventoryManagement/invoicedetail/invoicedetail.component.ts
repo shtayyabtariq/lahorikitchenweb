@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, ElementRef, Inject, OnInit, ViewChild } from "@angular/core";
 import { CoreSidebarService } from "@core/components/core-sidebar/core-sidebar.service";
 import { firebaseStoreService } from "../../../auth/service/firebasestoreservice";
 import { metadata, banksdto } from "../../../auth/models/metadata";
@@ -11,6 +11,9 @@ import { CustomerDto } from "app/auth/models/customerinfo";
 import { SalesDto } from "app/auth/models/plandto";
 import { PlanScheduleDto } from "../../../auth/models/plandto";
 import { FlatpickrOptions } from "ng2-flatpickr";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
+import { DOCUMENT } from "@angular/common";
 
 @Component({
   selector: "app-invoicedetail",
@@ -21,13 +24,19 @@ export class InvoicedetailComponent implements OnInit {
   metadata: metadata;
   showinvoice = false;
   sale: SalesDto;
+  floorno:string = '';
   invoiceid: string;
   planid: string;
   cust: CustomerDto;
+  previousamount:number = 0;
   invoicedetail: PlanScheduleDto;
   banksdto: banksdto;
-  invoiceDate = this.ApputilsService.getDateAfterMonths(new Date(), 2);
-  dueDate = this.ApputilsService.getDateAfterMonths(new Date(), 1);
+  invoiceDate = new Date();
+  dueDate = new Date();
+  invoicedetailDesc:string;
+  invoicedescription:string = "Description";
+  amountInWords:string;
+  customDesc:boolean = false;
   public InvoiceDateDto: FlatpickrOptions = {
     defaultDate: this.invoiceDate,
     altInput: true,
@@ -38,6 +47,7 @@ export class InvoicedetailComponent implements OnInit {
   };
 
   constructor(
+    @Inject(DOCUMENT) private document: Document,
     public modalservice: NgbModal,
     public route: ActivatedRoute,
     public routerser: Router,
@@ -66,19 +76,68 @@ export class InvoicedetailComponent implements OnInit {
       .valueChanges()
       .subscribe((e) => {
         this.sale = e;
+        this.fs.getapartmentbyid(this.sale.apartmentid).valueChanges().subscribe(e=>{
+          this.floorno = e.floorno;
+        });
         this.syncustomer(this.sale.customerid);
       });
+      
   }
-  syncustomer(id: string) {
+  async syncustomer(id: string) {
     this.fs
       .getCustomerbyId(id)
       .valueChanges()
       .subscribe((e) => {
         this.cust = e;
       });
+    var credits =   await this.fs.getAllCustomerCredits(id).get().toPromise();
+    debugger;
+    credits.docs.forEach(e=>{
+      this.previousamount += e.data().amount;
+    });
   }
   onBankSelect($event) {
     this.banksdto = $event;
+  }
+  @ViewChild('pdfTable', { static: false }) pdfTable!: ElementRef;
+
+  htmltoPDF() {
+    
+    debugger;
+    if (window.screen.width < 1024) {
+      this.document
+        .getElementById('viewport')
+        ?.setAttribute('content', 'width=1200px');
+    }
+
+    setTimeout(() => {
+      html2canvas(this.pdfTable.nativeElement,{scrollY: -window.scrollY})
+        .then((canvas) => {
+          debugger;
+          var pdf = new jsPDF("p", "pt", "a4");
+
+          var imgData = canvas.toDataURL('image/jpeg', 1.0);
+          window.open(imgData);
+
+          var width = pdf.internal.pageSize.getWidth();
+          var height = pdf.internal.pageSize.getHeight();
+
+          pdf.addImage(imgData, 0, 0, width, height);
+          pdf.save('converteddoc.pdf');
+       
+
+          if (window.screen.width < 1024) {
+            document
+              .getElementById('viewport')
+              ?.setAttribute('content', 'width=device-width, initial-scale=1');
+          }
+        })
+        .catch((e) => {
+          debugger;
+        });
+    }, 1500);
+
+    // parentdiv is the html element which has to be converted to PDF
   }
   getinvoice() {
     this.fs
@@ -87,6 +146,14 @@ export class InvoicedetailComponent implements OnInit {
       .subscribe((e) => {
         console.log(e);
         this.invoicedetail = e;
+        this.dueDate= new Date(this.invoicedetail?.invoicedueon.seconds * 1000)
       });
   }
+
+  configureInvoiceDescription()
+  {
+    
+  }
+
+
 }
