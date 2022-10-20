@@ -315,7 +315,7 @@
 .ng-dropdown-panel.ng-select-top .ng-dropdown-panel-items .ng-option:first-child{border-top-right-radius:4px;border-top-left-radius:4px}
 .ng-dropdown-panel .ng-dropdown-header{border-bottom:1px solid #ccc;padding:5px 7px}
 .ng-dropdown-panel .ng-dropdown-footer{border-top:1px solid #ccc;padding:5px 7px}
-.ng-dropdown-panel .ng-dropdown-panel-items .ng-optgroup{-webkit-user-select:none;-moz-user-select:none;user-select:none;padding:8px 10px;font-weight:500;color:rgba(0,0,0,0.54);cursor:pointer}
+.ng-dropdown-panel .ng-dropdown-panel-items .ng-optgroup{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;padding:8px 10px;font-weight:500;color:rgba(0,0,0,0.54);cursor:pointer}
 .ng-dropdown-panel .ng-dropdown-panel-items .ng-optgroup.ng-option-disabled{cursor:default}
 .ng-dropdown-panel .ng-dropdown-panel-items .ng-optgroup.ng-option-marked{background-color:#f5faff}
 .ng-dropdown-panel .ng-dropdown-panel-items .ng-optgroup.ng-option-selected,.ng-dropdown-panel .ng-dropdown-panel-items .ng-optgroup.ng-option-selected.ng-option-marked{background-color:#ebf5ff;font-weight:600}
@@ -334,7 +334,7 @@
  * Copyright 2018 - 2019 Johann-S <johann.servoire@gmail.com>
  * Licensed under MIT (https://github.com/Johann-S/bs-stepper/blob/master/LICENSE)
  */
-.bs-stepper .step-trigger{display:inline-flex;flex-wrap:wrap;align-items:center;justify-content:center;padding:20px;font-size:1rem;font-weight:700;line-height:1.5;color:#6c757d;text-align:center;text-decoration:none;white-space:nowrap;vertical-align:middle;-webkit-user-select:none;-moz-user-select:none;user-select:none;background-color:transparent;border:none;border-radius:.25rem;transition:background-color .15s ease-out,color .15s ease-out}
+.bs-stepper .step-trigger{display:inline-flex;flex-wrap:wrap;align-items:center;justify-content:center;padding:20px;font-size:1rem;font-weight:700;line-height:1.5;color:#6c757d;text-align:center;text-decoration:none;white-space:nowrap;vertical-align:middle;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;background-color:transparent;border:none;border-radius:.25rem;transition:background-color .15s ease-out,color .15s ease-out}
 .bs-stepper .step-trigger:not(:disabled):not(.disabled){cursor:pointer}
 .bs-stepper .step-trigger.disabled,.bs-stepper .step-trigger:disabled{pointer-events:none;opacity:.65}
 .bs-stepper .step-trigger:focus{color:#007bff;outline:0}
@@ -387,7 +387,7 @@
 .flatpickr-calendar:focus{outline:0}
 .flatpickr-wrapper{position:relative;display:inline-block}
 .flatpickr-months{display:flex}
-.flatpickr-months .flatpickr-month{background:transparent;color:rgba(0,0,0,0.9);fill:rgba(0,0,0,0.9);height:34px;line-height:1;text-align:center;position:relative;-webkit-user-select:none;-moz-user-select:none;user-select:none;overflow:hidden;flex:1}
+.flatpickr-months .flatpickr-month{background:transparent;color:rgba(0,0,0,0.9);fill:rgba(0,0,0,0.9);height:34px;line-height:1;text-align:center;position:relative;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;overflow:hidden;flex:1}
 .flatpickr-months .flatpickr-prev-month,.flatpickr-months .flatpickr-next-month{text-decoration:none;cursor:pointer;position:absolute;top:0;height:34px;padding:10px;z-index:3;color:rgba(0,0,0,0.9);fill:rgba(0,0,0,0.9)}
 .flatpickr-months .flatpickr-prev-month.flatpickr-disabled,.flatpickr-months .flatpickr-next-month.flatpickr-disabled{display:none}
 .flatpickr-months .flatpickr-prev-month i,.flatpickr-months .flatpickr-next-month i{position:relative}
@@ -479,7 +479,7 @@ span.flatpickr-weekday{cursor:default;font-size:90%;background:transparent;color
 .flatpickr-time input.flatpickr-hour{font-weight:bold}
 .flatpickr-time input.flatpickr-minute,.flatpickr-time input.flatpickr-second{font-weight:400}
 .flatpickr-time input:focus{outline:0;border:0}
-.flatpickr-time .flatpickr-time-separator,.flatpickr-time .flatpickr-am-pm{height:inherit;float:left;line-height:inherit;color:#393939;font-weight:bold;width:2%;-webkit-user-select:none;-moz-user-select:none;user-select:none;align-self:center}
+.flatpickr-time .flatpickr-time-separator,.flatpickr-time .flatpickr-am-pm{height:inherit;float:left;line-height:inherit;color:#393939;font-weight:bold;width:2%;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;align-self:center}
 .flatpickr-time .flatpickr-am-pm{outline:0;width:18%;cursor:pointer;text-align:center;font-weight:400}
 .flatpickr-time input:hover,.flatpickr-time .flatpickr-am-pm:hover,.flatpickr-time input:focus,.flatpickr-time .flatpickr-am-pm:focus{background:#eee}
 .flatpickr-input[readonly]{cursor:pointer}
@@ -601,6 +601,7 @@ span.flatpickr-weekday{cursor:default;font-size:90%;background:transparent;color
   overflow: hidden;
   -webkit-user-select: none;
   -moz-user-select: none;
+  -ms-user-select: none;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
 }
@@ -2763,6 +2764,10 @@ pre code {
   color: #b9b9c3;
   opacity: 1;
 }
+.form-control:-ms-input-placeholder {
+  color: #b9b9c3;
+  opacity: 1;
+}
 .form-control::placeholder {
   color: #b9b9c3;
   opacity: 1;
@@ -3127,6 +3132,7 @@ textarea.form-control {
   vertical-align: middle;
   -webkit-user-select: none;
      -moz-user-select: none;
+      -ms-user-select: none;
           user-select: none;
   background-color: transparent;
   border: 1px solid transparent;
@@ -8040,16 +8046,19 @@ button.bg-dark:focus {
 .user-select-all {
   -webkit-user-select: all !important;
      -moz-user-select: all !important;
+      -ms-user-select: all !important;
           user-select: all !important;
 }
 .user-select-auto {
   -webkit-user-select: auto !important;
      -moz-user-select: auto !important;
+      -ms-user-select: auto !important;
           user-select: auto !important;
 }
 .user-select-none {
   -webkit-user-select: none !important;
      -moz-user-select: none !important;
+      -ms-user-select: none !important;
           user-select: none !important;
 }
 .overflow-auto {
@@ -12445,12 +12454,21 @@ label {
   -moz-transition: all 0.2s ease;
   transition: all 0.2s ease;
 }
+.form-control:-ms-input-placeholder {
+  -ms-transition: all 0.2s ease;
+  transition: all 0.2s ease;
+}
 .form-control::placeholder {
   transition: all 0.2s ease;
 }
 .form-control:focus::-moz-placeholder {
   transform: translate(5px);
   -moz-transition: all 0.2s ease;
+  transition: all 0.2s ease;
+}
+.form-control:focus:-ms-input-placeholder {
+  transform: translate(5px);
+  -ms-transition: all 0.2s ease;
   transition: all 0.2s ease;
 }
 .form-control:focus::placeholder {
@@ -12711,6 +12729,12 @@ select.form-control.form-control-sm {
   transition: all 0.25s ease-in-out;
   opacity: 1;
 }
+.form-label-group > input:focus:not(:-ms-input-placeholder) ~ label, .form-label-group > input:not(:active):not(:-ms-input-placeholder) ~ label, .form-label-group textarea:focus:not(:-ms-input-placeholder) ~ label, .form-label-group textarea:not(:active):not(:-ms-input-placeholder) ~ label {
+  color: #7367f0 !important;
+  -ms-transition: all 0.25s ease-in-out;
+  transition: all 0.25s ease-in-out;
+  opacity: 1;
+}
 .form-label-group > input:focus:not(:placeholder-shown) ~ label, .form-label-group > input:not(:active):not(:placeholder-shown) ~ label,
 .form-label-group textarea:focus:not(:placeholder-shown) ~ label,
 .form-label-group textarea:not(:active):not(:placeholder-shown) ~ label {
@@ -12721,11 +12745,19 @@ select.form-control.form-control-sm {
 .form-label-group > input:not(:focus):not(:-moz-placeholder-shown) ~ label, .form-label-group textarea:not(:focus):not(:-moz-placeholder-shown) ~ label {
   color: rgba(34, 41, 47, 0.4) !important;
 }
+.form-label-group > input:not(:focus):not(:-ms-input-placeholder) ~ label, .form-label-group textarea:not(:focus):not(:-ms-input-placeholder) ~ label {
+  color: rgba(34, 41, 47, 0.4) !important;
+}
 .form-label-group > input:not(:focus):not(:placeholder-shown) ~ label,
 .form-label-group textarea:not(:focus):not(:placeholder-shown) ~ label {
   color: rgba(34, 41, 47, 0.4) !important;
 }
 .form-label-group > input:not(:-moz-placeholder-shown) ~ label, .form-label-group textarea:not(:-moz-placeholder-shown) ~ label {
+  padding: 0.25rem 0;
+  top: -20px;
+  left: 3px;
+}
+.form-label-group > input:not(:-ms-input-placeholder) ~ label, .form-label-group textarea:not(:-ms-input-placeholder) ~ label {
   padding: 0.25rem 0;
   top: -20px;
   left: 3px;
@@ -12739,11 +12771,17 @@ select.form-control.form-control-sm {
 .form-label-group > input.form-control-lg:not(:-moz-placeholder-shown) ~ label, .form-label-group textarea.form-control-lg:not(:-moz-placeholder-shown) ~ label {
   top: -23px;
 }
+.form-label-group > input.form-control-lg:not(:-ms-input-placeholder) ~ label, .form-label-group textarea.form-control-lg:not(:-ms-input-placeholder) ~ label {
+  top: -23px;
+}
 .form-label-group > input.form-control-lg:not(:placeholder-shown) ~ label,
 .form-label-group textarea.form-control-lg:not(:placeholder-shown) ~ label {
   top: -23px;
 }
 .form-label-group > input.form-control-sm:not(:-moz-placeholder-shown) ~ label, .form-label-group textarea.form-control-sm:not(:-moz-placeholder-shown) ~ label {
+  top: -18px;
+}
+.form-label-group > input.form-control-sm:not(:-ms-input-placeholder) ~ label, .form-label-group textarea.form-control-sm:not(:-ms-input-placeholder) ~ label {
   top: -18px;
 }
 .form-label-group > input.form-control-sm:not(:placeholder-shown) ~ label,
@@ -12773,6 +12811,7 @@ select.form-control.form-control-sm {
   cursor: pointer;
   -webkit-user-select: none;
      -moz-user-select: none;
+      -ms-user-select: none;
           user-select: none;
   top: 0;
   left: 0;
@@ -12787,6 +12826,7 @@ select.form-control.form-control-sm {
   cursor: pointer;
   -webkit-user-select: none;
      -moz-user-select: none;
+      -ms-user-select: none;
           user-select: none;
 }
 .custom-switch .custom-control-label .switch-text-left,
@@ -12797,6 +12837,7 @@ select.form-control.form-control-sm {
   cursor: pointer;
   -webkit-user-select: none;
      -moz-user-select: none;
+      -ms-user-select: none;
           user-select: none;
   line-height: 1.8;
 }
@@ -22652,6 +22693,9 @@ body.dark-layout {
 .dark-layout .header-navbar .navbar-container .nav .nav-item.nav-search .search-input.open .input::-moz-placeholder {
   color: #b4b7bd;
 }
+.dark-layout .header-navbar .navbar-container .nav .nav-item.nav-search .search-input.open .input:-ms-input-placeholder {
+  color: #b4b7bd;
+}
 .dark-layout .header-navbar .navbar-container .nav .nav-item.nav-search .search-input.open .input,
 .dark-layout .header-navbar .navbar-container .nav .nav-item.nav-search .search-input.open .input::placeholder,
 .dark-layout .header-navbar .navbar-container .nav .nav-item.nav-search .search-input.open .search-input-close {
@@ -23179,6 +23223,9 @@ body.dark-layout {
 .dark-layout input.form-control::-moz-placeholder, .dark-layout textarea.form-control::-moz-placeholder {
   color: #676d7d;
 }
+.dark-layout input.form-control:-ms-input-placeholder, .dark-layout textarea.form-control:-ms-input-placeholder {
+  color: #676d7d;
+}
 .dark-layout input.form-control::placeholder,
 .dark-layout textarea.form-control::placeholder {
   color: #676d7d;
@@ -23277,6 +23324,9 @@ body.dark-layout {
   box-shadow: none;
 }
 .dark-layout .form-label-group > input:not(:focus):not(:-moz-placeholder-shown) ~ label, .dark-layout .form-label-group > textarea:not(:focus):not(:-moz-placeholder-shown) ~ label {
+  color: #b4b7bd !important;
+}
+.dark-layout .form-label-group > input:not(:focus):not(:-ms-input-placeholder) ~ label, .dark-layout .form-label-group > textarea:not(:focus):not(:-ms-input-placeholder) ~ label {
   color: #b4b7bd !important;
 }
 .dark-layout .form-label-group > input:not(:focus):not(:placeholder-shown) ~ label, .dark-layout .form-label-group > textarea:not(:focus):not(:placeholder-shown) ~ label {
@@ -23776,6 +23826,9 @@ body.dark-layout {
   color: #b4b7bd;
 }
 .dark-layout .ecommerce-application .product-checkout .checkout-options .coupons input::-moz-placeholder {
+  color: #b4b7bd;
+}
+.dark-layout .ecommerce-application .product-checkout .checkout-options .coupons input:-ms-input-placeholder {
   color: #b4b7bd;
 }
 .dark-layout .ecommerce-application .product-checkout .checkout-options .coupons input::placeholder {
@@ -33225,6 +33278,64 @@ html[data-textdirection=rtl] .btn-next svg {
   white-space: normal !important;
   text-align: center !important;
   vertical-align: middle !important;
+}
+.ngx-datatable.bootstrap {
+  box-shadow: none;
+  font-size: 13px;
+  font-weight: bold;
+}
+.table th,
+.table td {
+  padding: 0.5rem 1rem;
+  vertical-align: middle;
+}
+body {
+  font-weight: bold;
+  line-height: 1;
+  color: #1e1e1e;
+}
+.table {
+  color: #020202;
+}
+.card .card-title {
+  font-weight: bold;
+}
+.text-primary {
+  color: #ac8b5f !important;
+}
+.main-menu.menu-light .navigation > li.active > a {
+  background: linear-gradient(118deg, #ac8b5f, rgba(206, 185, 146, 0.7));
+  box-shadow: 0 0 10px 1px rgba(206, 185, 146, 0.7);
+  color: #fff;
+  font-weight: 400;
+  border-radius: 4px;
+}
+.btn-primary {
+  border-color: #ac8b5f !important;
+  background-color: #ac8b5f !important;
+  color: #fff !important;
+}
+.main-menu .navbar-header .navbar-brand .brand-text {
+  color: #ac8b5f;
+}
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary.active {
+  color: #fff;
+  background-color: #ac8b5f !important;
+}
+.btn-primary:hover:not(.disabled):not(:disabled) {
+  box-shadow: 0 8px 25px -8px #ac8b5f;
+}
+.badge.badge-light-primary {
+  background-color: rgba(115, 103, 240, 0.12);
+  color: #ac8b5f !important;
+}
+.vl .feather {
+  color: #ac8b5f !important;
+}
+.bt-plan .feather {
+  color: #ceb992 !important;
 }
 /*
 

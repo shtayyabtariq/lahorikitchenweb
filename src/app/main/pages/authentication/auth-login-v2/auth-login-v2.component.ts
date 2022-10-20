@@ -91,8 +91,12 @@ export class AuthLoginV2Component implements OnInit {
       //  var currentUser = (await this.fs.getcurrentEmployee(e.user.uid).get().toPromise()).data();
         localStorage.setItem('currentUser', e.user.uid);
       var currentUser = await (await this.fs.getUserById(e.user.uid).get().toPromise()).data();
+      if(currentUser != undefined)
+      {
         localStorage.setItem('role',currentUser.role);
-         localStorage.setItem('name',currentUser.name);
+        localStorage.setItem('name',currentUser.name);
+      } 
+
         
         setTimeout(() => {
           this.document.location.href="/";

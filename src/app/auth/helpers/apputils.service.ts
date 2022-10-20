@@ -175,6 +175,11 @@ PaymentMethod:string[]=[
   "IBFT",
   "Deposit"
 ];
+Currency:string[]=[
+  "Dollar($)",
+  "Pound",
+  "PKR",
+];
 ReportThisMonth = "This Month";
 ReportThisYear = "This Year";
 ReportCustom = "Custom";

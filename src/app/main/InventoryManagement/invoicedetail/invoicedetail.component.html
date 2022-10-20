@@ -24,7 +24,7 @@
 
                                     <div class="col-8 vl">
                                         <h3 class="text-primary invoice-logo">
-                                            The Project Of Niaz Arbaaz Pvt Ltd
+                                            {{metadata.company[0].name}}
                                         </h3>
                                         <p class="card-text mb-25">
                                             <i data-feather="map-pin" style="color:green; background: greenyellow;"> </i> &nbsp;{{ this.metadata.company[0].address }}
@@ -33,13 +33,13 @@
                                             <i data-feather="phone"></i>&nbsp; {{this.metadata.company[0].phonenumber }}
                                         </p>
                                         <p class="card-text mb-25">
-                                            <i data-feather="mail"></i>&nbsp; act.rec@niazgroup.com
+                                            <i data-feather="mail"></i>&nbsp; {{this.metadata.company[0].email }}
                                         </p>
                                         <p class="card-text mb-25">
-                                            <i data-feather="globe"></i>&nbsp; www.niazgroup.com
+                                            <i data-feather="globe"></i>&nbsp; {{this.metadata.company[0].website }}
                                         </p>
                                         <p class="card-text mb-25">
-                                            <em style="color:#ac8b5f;"> NTN </em> &nbsp; 2586313-4
+                                            <em style="color:#ac8b5f;"> NTN </em> &nbsp; {{this.metadata.company[0].NTN }}
                                         </p>
 
                                     </div>
@@ -197,7 +197,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="pr-1">Rate Per Sqft</td>
+                                            <td class="pr-1">Rate Per Sqft (PKR)</td>
                                             <td>
                                                 <span class="font-weight-bold">{{
                         sale?.apartmentrate | number
@@ -205,11 +205,17 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="pr-1">Payment Terms</td>
+                                            <td class="pr-1">Payment Amount (PKR)</td>
                                             <td>
                                                 <span class="font-weight-bold">{{
                         invoicedetail?.amount | number  
-                      }} x {{sale?.installment?.text}}</span>
+                      }}</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="pr-1">Installment Plan</td>
+                                            <td>
+                                                <span class="font-weight-bold"> {{sale?.installment?.text}}</span>
                                             </td>
                                         </tr>
                                         <tr>
@@ -249,7 +255,7 @@
                                                     {{this.invoicedetail?.type}} Invoice
                                                   </span>
                                             <span *ngIf="this.invoicedetail?.type == 'Installment'">
-                                                  {{this.invoicedetail.type == "Installment" ? 'Installment # '+this.invoicedetail?.installmentno:''}} for the {{this.sale?.installment?.text}} of {{this.invoicedetail?.invoicedueon.seconds * 1000 | date:'MMMM'}}, {{this.invoicedetail?.invoicedueon.seconds * 1000 | date:'yyy'}}
+                                                  {{this.invoicedetail.type == "Installment" ? 'Installment # '+this.invoicedetail?.installmentno:''}} for the {{(this.sale?.installment?.text == "Monthly") ? "Month":"Quater"}} of {{this.invoicedetail?.invoicedueon.seconds * 1000 | date:'MMMM'}}, {{this.invoicedetail?.invoicedueon.seconds * 1000 | date:'yyy'}}
                                                  </span>
                                             </span>
                                             <span *ngIf="this.customDesc"> 
@@ -285,10 +291,10 @@
                                                 </tr>
                                                 <tr>
                                                     <td style="width:20%;">
-                                                        Ac#
+                                                        Account No
                                                     </td>
                                                     <td>
-                                                        {{this.banksdto?.AccountNumber}}
+                                                        {{this.banksdto?.Iban}}
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -356,7 +362,7 @@
                                 </h6>
                                 <ul class="p-0">
                                     <li>
-                                        Cheque Payable to M/S Niaz Arbaz (Pvt) Ltd.
+                                        Cheque Payable to M/S Niaz Arbaaz (Pvt) Ltd.
                                     </li>
 
                                     <li>
@@ -367,7 +373,7 @@
 
                             <div class="col-md-6 d-flex justify-content-end order-md-2 order-1">
                                 <h6>
-                                    For Niaz Arbaz Pvt.Ltd.
+                                    For Niaz Arbaaz Pvt.Ltd.
                                 </h6>
 
                             </div>

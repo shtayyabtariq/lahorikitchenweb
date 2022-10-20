@@ -14,6 +14,7 @@ import { FlatpickrOptions } from "ng2-flatpickr";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { DOCUMENT } from "@angular/common";
+import { Console, debug } from "console";
 
 @Component({
   selector: "app-invoicedetail",
@@ -146,7 +147,23 @@ export class InvoicedetailComponent implements OnInit {
       .subscribe((e) => {
         console.log(e);
         this.invoicedetail = e;
-        this.dueDate= new Date(this.invoicedetail?.invoicedueon.seconds * 1000)
+        this.dueDate= new Date(this.invoicedetail?.invoicedueon.seconds * 1000);
+        this.DueDateDto = {
+          defaultDate: this.dueDate,
+          altInput: true,
+        };
+
+        var dss = new Date(this.dueDate);
+       
+        dss.setDate(1);
+        console.log(dss);
+        this.invoiceDate = dss;
+        this.InvoiceDateDto =  {
+          defaultDate: this.invoiceDate,
+          altInput: true,
+        };
+        debugger;
+      
       });
   }
 

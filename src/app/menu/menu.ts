@@ -153,3 +153,23 @@ export const menu: CoreMenu[] = [
     url: 'changepassword'
   },
 ]
+export const generalmenu:CoreMenu[]=[
+  
+  {
+    id: 'inventory',
+    title: 'Apartments',
+    translate: 'Apartments',
+    type: 'item',
+    icon: 'paperclip',
+    url: 'inventory'
+  },
+  {
+    id: 'viewplan',
+    title: 'Plan',
+    translate: 'MENU.SAMPLE',
+    type: 'item',
+    icon: 'info',
+    url: 'plan'
+  },
+  
+];

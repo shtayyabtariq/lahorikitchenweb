@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { CoreSidebarService } from "@core/components/core-sidebar/core-sidebar.service";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { RouterHelper } from "app/auth/helpers/router-helper";
-import { SalesDto } from "app/auth/models/plandto";
+import { PlanScheduleDto, SalesDto } from "app/auth/models/plandto";
 import { firebaseStoreService } from "app/auth/service/firebasestoreservice";
 import { NotificationService } from "app/auth/service/notification.service";
 import { throwIfEmpty } from "rxjs/operators";
@@ -22,7 +22,7 @@ export class InvoicepreviewComponent implements OnInit {
   showReportBasic = true;
   sale: SalesDto;
   transactions: Transaction[] = [];
-  invoicedetail: import("/Users/a/MyProjects/MIS/MIS/src/app/auth/models/plandto").PlanScheduleDto;
+  invoicedetail: PlanScheduleDto;
   constructor(
     public route: ActivatedRoute,
     public routerser: Router,

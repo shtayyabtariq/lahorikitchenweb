@@ -11,7 +11,7 @@ import { CardSnippetModule } from "@core/components/card-snippet/card-snippet.mo
 import { ContentHeaderModule } from "app/layout/components/content-header/content-header.module";
 import { InventoryManagementComponent } from "../main/InventoryManagement/InventoryManagement.component";
 import { DatatablesService } from "./datatables.service";
-import { CurrencyPipe, NumberToWordsPipe } from "../auth/helpers/currency.pipe";
+import { CurrencyConvertPipe, CurrencyPipe, NumberToWordsPipe } from "../auth/helpers/currency.pipe";
 import { StatusPipe } from "../auth/helpers/status.pipe";
 import { SettingsComponent } from "../main/settings/settings.component";
 import { PlanGeneratorComponent } from "../main/InventoryManagement/plan-generator/plan-generator.component";
@@ -60,7 +60,7 @@ const routes: Routes = [
   {
     path: "inventory",
     component: InventoryManagementComponent,
-    canActivate:[ManagerEmployeeRouteAuthGuard],
+    canActivate:[],
     data: { animation: "datatables" },
   },
   {
@@ -71,19 +71,19 @@ const routes: Routes = [
   {
     path: ":id/plan",
     component: PlanGeneratorComponent,
-    canActivate:[ManagerEmployeeRouteAuthGuard],
+    canActivate:[],
     data: { animation: "datatables" },
   },
   {
     path: "generateplan",
     component: PlanGeneratorComponent,
-    canActivate:[ManagerEmployeeRouteAuthGuard],
+    canActivate:[],
     data: { animation: "datatables" },
   },
   {
     path: "plan",
     component: ViewPlanComponent,
-    canActivate:[ManagerEmployeeRouteAuthGuard],
+    canActivate:[],
     data: { animation: "datatables" },
   },
   {
@@ -242,6 +242,7 @@ const routes: Routes = [
     InventoryManagementComponent,
     SettingsComponent,
     CurrencyPipe,
+    CurrencyConvertPipe,
     StatusPipe,
     NumberToWordsPipe,
     InvoicereportComponent,

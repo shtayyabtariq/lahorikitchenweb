@@ -28,7 +28,20 @@ export class CurrencyPipe implements PipeTransform {
 }
 
 }
+@Pipe({
+  name: 'currencyconvert'
+})
+export class CurrencyConvertPipe implements PipeTransform {
 
+  transform(
+    value: number,
+    rate:number,
+): number | null {
+  debugger;
+    return Math.round(value/rate)
+}
+
+}
 
 
 @Pipe({

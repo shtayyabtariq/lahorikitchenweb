@@ -96,6 +96,8 @@
               " class="form-control" id="possession" formControlName="possession" required />
                                     </div>
                                 </div>
+                                
+
                             </div>
 
                             <div class="row">
@@ -140,7 +142,39 @@
                                 </div>
                             </div> -->
 
+                            <div class="row">
+                                <div class="col-12">
+                                    <h3 class="align-center">
+                                        Currency 
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 col-12">
+                                    <div class="form-group">
+                                        <label for="currency">Currency</label>
+                                        <select id="currency" formControlName="currency" (change)="currencyChange($event.target.value)"  [ngModel]="this.currency" class="form-control" required>
+                                            <option value="dollar">
+                                                Dollar ($)
+                                            </option>
+                                            <option value="pound">
+                                                Pound
+                                            </option>
+                                            <option value="pkr">
+                                                PKR 
+                                            </option>
+                                        </select>
 
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-4 col-12">
+                                    <div class="form-group">
+                                        <label for="possession">Conversion Rate</label>
+                                        <input  type="number" class="form-control"  formControlName="crate" required />
+                                    </div>
+                                </div>
+                                
+                            </div>
                             <div class="row">
                                 <div class="col-12">
                                     <button type="submit" class="btn btn-primary" (click)="onSubmit()" rippleEffect>
@@ -183,6 +217,14 @@
                             <tbody>
                                 <tr>
                                     <td>
+                                        Date
+                                    </td>
+                                    <td>
+                                        {{this.cr}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
                                         Client name
                                     </td>
                                     <td>
@@ -215,10 +257,10 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                        Total Price in PKR
+                                        Total Price in {{this.currency}}
                                     </td>
                                     <td>
-                                        {{this.PlanInfo.apartmenttotalprice | number}}
+                                        {{ this.PlanInfo.apartmenttotalprice | currencyconvert:this.crate | number}}
                                     </td>
                                 </tr>
                                 <tr>
@@ -249,7 +291,7 @@
                                     Percentage
                                 </th>
                                 <th>
-                                    Amount (PKR)
+                                    Amount ({{this.currency}})
                                 </th>
                             </thead>
                             <tbody>
@@ -261,7 +303,7 @@
                                         {{PlanInfo?.booking}}%
                                     </td>
                                     <td>
-                                        {{PlanInfo?.bookingamount | number}}
+                                        {{PlanInfo?.bookingamount | currencyconvert:this.crate | number}}
                                     </td>
                                 </tr>
                                 <tr>
@@ -272,7 +314,7 @@
                                         {{PlanInfo?.confirmation}}%
                                     </td>
                                     <td>
-                                        {{PlanInfo?.confirmationamount | number}}
+                                        {{PlanInfo?.confirmationamount | currencyconvert:this.crate | number}}
                                     </td>
                                 </tr>
                                 <tr>
@@ -283,7 +325,7 @@
                                         {{PlanInfo?.agreement}}%
                                     </td>
                                     <td>
-                                        {{PlanInfo?.agreementamount | number}}
+                                        {{PlanInfo?.agreementamount | currencyconvert:this.crate | number}}
                                     </td>
                                 </tr>
                                 <tr>
@@ -294,7 +336,7 @@
 
                                     </td>
                                     <td>
-                                        {{PlanInfo.agreementamount+PlanInfo.bookingamount+PlanInfo.confirmationamount | number}}
+                                        {{PlanInfo.agreementamount+PlanInfo.bookingamount+PlanInfo.confirmationamount | currencyconvert:this.crate | number}}
                                     </td>
                                 </tr>
                                 <tr>
@@ -305,7 +347,7 @@
                                         {{100- (PlanInfo.agreement+PlanInfo.booking+PlanInfo.confirmation+PlanInfo.possession)}}%
                                     </td>
                                     <td>
-                                        {{PlanInfo?.installmentamount | number}}
+                                        {{PlanInfo?.installmentamount | currencyconvert:this.crate | number}}
                                     </td>
                                 </tr>
                                 <tr>
@@ -316,7 +358,7 @@
 
                                     </td>
                                     <td>
-                                        {{this.PlanInfo.perinstallmentamount | number:'1.0-0'}}
+                                        {{this.PlanInfo.perinstallmentamount | currencyconvert:this.crate | number:'1.0-0'}}
                                     </td>
                                 </tr>
 
@@ -350,7 +392,7 @@
                                         {{PlanInfo?.possession}}%
                                     </td>
                                     <td>
-                                        {{PlanInfo?.possessionamount | number}}
+                                        {{PlanInfo?.possessionamount | currencyconvert:this.crate | number}}
                                     </td>
                                 </tr>
                                 <tr *ngIf="this.PlanInfo.updatedat != null">
@@ -419,18 +461,18 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                        Rate Per Sqft - PKR
+                                        Rate Per Sqft - {{this.currency}}
                                     </td>
                                     <td>
-                                        {{this.PlanInfo.apartmentrate | number}}
+                                        {{this.PlanInfo.apartmentrate | currencyconvert:this.crate | number}}
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
-                                        Total Cost Of Apartment PKR
+                                        Total Cost Of Apartment {{this.currency}}
                                     </td>
                                     <td>
-                                        {{this.PlanInfo.apartmenttotalprice | number}}
+                                        {{this.PlanInfo.apartmenttotalprice | currencyconvert:this.crate | number}}
                                     </td>
                                 </tr>
                                 <tr>
@@ -446,7 +488,7 @@
                                         Payment Terms
                                     </td>
                                     <td>
-                                        {{this.PlanInfo.apartmenttotalprice | number}}
+                                        {{this.PlanInfo.apartmenttotalprice | currencyconvert:this.crate | number}}
                                     </td>
                                 </tr>
                                 <tr>
@@ -462,7 +504,7 @@
                                         Advance 30%
                                     </td>
                                     <td>
-                                        {{PlanInfo.agreementamount+PlanInfo.bookingamount+PlanInfo.confirmationamount | number}}
+                                        {{PlanInfo.agreementamount+PlanInfo.bookingamount+PlanInfo.confirmationamount | currencyconvert:this.crate | number}}
                                     </td>
                                 </tr>
                                 <tr>
@@ -470,7 +512,7 @@
                                         Balance in installments 60%
                                     </td>
                                     <td>
-                                        {{PlanInfo?.installmentamount | number}}
+                                        {{PlanInfo?.installmentamount | currencyconvert:this.crate | number}}
                                     </td>
                                 </tr>
                                 <tr>
@@ -483,10 +525,10 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                        Monthly Installment PKR
+                                        Monthly Installment {{this.currency}}
                                     </td>
                                     <td>
-                                        {{this.PlanInfo.perinstallmentamount | number:'1.0-0'}}
+                                        {{this.PlanInfo.perinstallmentamount | currencyconvert:this.crate | number:'1.0-0'}}
                                     </td>
                                 </tr>
                                 <tr>
@@ -494,7 +536,7 @@
                                         On Possession 10%
                                     </td>
                                     <td>
-                                        {{PlanInfo?.possessionamount | number}}
+                                        {{PlanInfo?.possessionamount | currencyconvert:this.crate | number}}
                                     </td>
                                 </tr>
                                 <tr>

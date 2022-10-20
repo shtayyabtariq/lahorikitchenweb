@@ -41,9 +41,12 @@ export class PlanGeneratorComponent implements OnInit {
   metadata: metadata;
   isupdate = false;
   planId:string;
+  cr:Date = new Date();
+  crate:number;
   rate:number;
   viewform: boolean = false;
   PlanSchedule: PlanScheduleDto[] = [];
+  currency:string;
   apartmentlist: Apartmentdto[] = [];
   PlanInfo: PlanDto = {
     id: "",
@@ -100,7 +103,9 @@ export class PlanGeneratorComponent implements OnInit {
       agreement: [null, [Validators.required]],
       installments: [null, [Validators.required]],
       plan: [null, [Validators.required]],
-      rate:[null,Validators.required]
+      rate:[null,Validators.required],
+      crate:[null,Validators.required],
+      currency:[null,Validators.required]
       // discount: [null],
     });
     debugger;
@@ -134,7 +139,9 @@ export class PlanGeneratorComponent implements OnInit {
           agreement: [this?.PlanInfo?.agreement ?? "", [Validators.required]],
           installments: [this?.PlanInfo?.installment ?? "", [Validators.required]],
           plan: [this?.PlanInfo?.plan ?? "", [Validators.required]],
-          rate:[null,Validators.required]
+          rate:[null,Validators.required],
+          crate:[null,Validators.required],
+      currency:[null,Validators.required]
           // discount: [null],
         });  
         this.installmentSelected = this.ApputilsService.InstallmentPlan.filter(e=>e.months == this.PlanInfo.installment.months)[0];
@@ -169,7 +176,10 @@ export class PlanGeneratorComponent implements OnInit {
     this.viewform = true;
   }
   @ViewChild('pdfTable', { static: false }) pdfTable!: ElementRef;
-
+  currencyChange(events:any)
+  {
+    this.currency=events;
+  }
   htmltoPDF() {
     
     debugger;
@@ -208,6 +218,10 @@ export class PlanGeneratorComponent implements OnInit {
 
     // parentdiv is the html element which has to be converted to PDF
   }
+  converttocurrency()
+  {
+    
+  }
   async onSubmit() {
 
     
@@ -222,7 +236,8 @@ export class PlanGeneratorComponent implements OnInit {
       });
 
       debugger;
-    
+      this.currency = this.form.controls["currency"].value;
+      this.crate = this.form.controls["crate"].value;
       var contact = this.form.controls["contact"].value;
       var client = this.form.controls["client"].value;
       var booking = this.form.controls["booking"].value;
@@ -263,6 +278,8 @@ export class PlanGeneratorComponent implements OnInit {
       var totalInstallments = noInstallments ? 0:  (plan * 12) / installments.months;
       var perInstallmentAmount = noInstallments ? 0: installmentAmount / totalInstallments;
 
+      this.currency = this.form.controls["currency"].value;
+      this.crate = this.form.controls["crate"].value;
       this.PlanInfo.client = client;
       this.PlanInfo.contact = contact;
       this.PlanInfo.perinstallmentamount = perInstallmentAmount;

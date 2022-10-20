@@ -43,7 +43,7 @@ export class TransactiongeneratorComponent implements OnInit {
   invoiceselected: PlanScheduleDto;
   transactionstatus: string = this.ApputilsService.TransactionSuccessfull;
   paymentmethod: string = this.ApputilsService.PaymentMethod[0];
-  invoiceDate = this.ApputilsService.getDateAfterMonths(new Date(), 2);
+  invoiceDate = new Date();
 
   public InvoiceDateDto: FlatpickrOptions = {
     defaultDate: this.invoiceDate,
@@ -73,7 +73,7 @@ export class TransactiongeneratorComponent implements OnInit {
       this.transactionstatus = this.Transaction.status;
       this.bank = this.Transaction.iban;
       this.invoiceDate = new Date(
-        this.Transaction.transactiondate.seconds * 1000
+        
       );
       this.InvoiceDateDto = {
         defaultDate: this.invoiceDate,
@@ -113,7 +113,7 @@ export class TransactiongeneratorComponent implements OnInit {
       status: [this.Transaction?.status, Validators.required],
       method: [this.Transaction?.paymentmethod, Validators.required],
       tid: [this.Transaction?.transactionid],
-      invoicedate: [this.Transaction?.transactiondate, Validators.required],
+      invoicedate: [new Date(), Validators.required],
     });
   }
   invoiceselect(id: string) {

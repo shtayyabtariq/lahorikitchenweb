@@ -17,8 +17,12 @@ import { debug } from 'console';
           debugger;
           this.fs.getUserById(user.uid).valueChanges().subscribe(e=>{
            debugger;
+           if(e != null)
+           {
             localStorage.setItem("role",e.role);
             localStorage.setItem("name",e.name);
+           }
+
           });
         } else {
           localStorage.removeItem("user");
